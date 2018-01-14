@@ -4,7 +4,9 @@ bin/
 .settings/
 *.classpath
 *.properties
+META-INF/
+snail-portal-action/.classpath
 
 
-.gitignore
+*.gitignore
 
