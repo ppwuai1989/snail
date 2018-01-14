@@ -1,9 +1,9 @@
 target/
 bin/
-.project
-.settings
-.classpath
-.properties
+*.project
+.settings/
+*.classpath
+*.properties
 
 
 .gitignore
