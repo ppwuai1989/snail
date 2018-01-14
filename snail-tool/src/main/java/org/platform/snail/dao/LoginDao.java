@@ -3,6 +3,7 @@ package org.platform.snail.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.platform.snail.model.Agent;
 import org.platform.snail.model.Resources;
 import org.platform.snail.model.Users;
 
@@ -33,7 +34,15 @@ public interface LoginDao {
 			@Param("portal") String portal);
 
 	/**
-	 * 刷新登录时间*/
+	 * 刷新登录时间
+	 */
 	public abstract int updateUsersLastLoginTimeByPrimaryKey(@Param("userId") String userId);
+
+	/**
+	 * 根据id找到代理信息
+	 * @param agentId
+	 * @return
+	 */
+	public abstract Agent selectAgentById(@Param("agentId") String agentId);
 
 }

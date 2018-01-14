@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.platform.snail.beans.DataResponse;
 import org.platform.snail.beans.SystemUser;
 import org.platform.snail.dao.LoginDao;
+import org.platform.snail.model.Agent;
 import org.platform.snail.model.Resources;
 import org.platform.snail.model.Users;
 import org.platform.snail.service.DataBaseLogService;
@@ -75,5 +76,11 @@ public class LoginServiceImpl implements LoginService {
 			return true;
 		} else
 			return false;
+	}
+
+	@Override
+	public Agent selectAgentById(String agentId) {
+
+		return this.loginDao.selectAgentById(agentId);
 	}
 }

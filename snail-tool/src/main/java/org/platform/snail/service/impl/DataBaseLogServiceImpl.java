@@ -48,23 +48,23 @@ public class DataBaseLogServiceImpl implements DataBaseLogService {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String timeNow = df.format(new Date());
 		StringBuffer logDetail = new StringBuffer();
-		logDetail.append("id为" + systemUser.getUsers().getUserId());
-		logDetail.append("的用户" + systemUser.getUsers().getName());
-		logDetail.append(",在" + timeNow);
-		logDetail.append("对" + objectValue);
-		logDetail.append("做了" + operate + "操作");
+		logDetail.append("id为[" + systemUser.getUsers().getUserId());
+		logDetail.append("]的用户[" + systemUser.getUsers().getName() + "]\r\n");
+		logDetail.append("在[" + timeNow + "]\r\n");
+		logDetail.append("对[" + objectValue + "]\r\n");
+		logDetail.append("做了[" + operate + "]操作:" + "\r\n");
 		switch (operateType) {
 		case CommonKeys.logCreate:
-			logDetail.append(":添加了" + news + "。");
+			logDetail.append("添加了" + news + "。");
 			break;
 		case CommonKeys.logRetrieve:
 			logDetail.append("。");
 			break;
 		case CommonKeys.logUpdate:
-			logDetail.append(":将旧值" + old + "更新为" + news + "。");
+			logDetail.append("将旧值" + old + "\r\n更新为" + news + "。");
 			break;
 		case CommonKeys.logDelete:
-			logDetail.append(":删除了" + old + "。");
+			logDetail.append("删除了" + old + "。");
 			break;
 		}
 		logs.setLog(logDetail.toString());

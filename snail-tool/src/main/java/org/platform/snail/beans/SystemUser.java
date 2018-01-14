@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.platform.snail.model.Agent;
 import org.platform.snail.model.Department;
 import org.platform.snail.model.Resources;
 import org.platform.snail.model.Users;
@@ -15,6 +16,8 @@ public class SystemUser implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Users users;
+	
+	private Agent agent;
 
 
 	// 权限列表
@@ -57,6 +60,14 @@ public class SystemUser implements Serializable {
 
 	public void setMap(Map<String, Resources> map) {
 		this.map = map;
+	}
+
+	public Agent getAgent() {
+		return agent;
+	}
+
+	public void setAgent(Agent agent) {
+		this.agent = agent;
 	}
 
 	

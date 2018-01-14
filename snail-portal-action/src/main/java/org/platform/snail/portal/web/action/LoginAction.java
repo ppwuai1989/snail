@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.platform.snail.beans.DataResponse;
 import org.platform.snail.beans.SystemUser;
+import org.platform.snail.model.Agent;
 import org.platform.snail.model.Resources;
 import org.platform.snail.model.Users;
 import org.platform.snail.service.LoginService;
@@ -61,13 +62,14 @@ public class LoginAction extends BaseController {
 				Map<String, Resources> map = new HashMap<String, Resources>();
 				List<Resources> resources = this.loginService.getResourcesByUserId(users.getUserId());
 				systemUser.setUsers(users);
+				//找到代理信息存入systemUser
+				Agent agent = this.loginService.selectAgentById(users.getUserId());
+				systemUser.setAgent(agent);
 				systemUser.setResources(resources);
 				for (Resources o : resources) {
 					map.put(o.getResourcesId(), o);
 				}
 				systemUser.setMap(map);
-				// 先将用户密码清空再写入session 更新登录时间
-				// systemUser.getUsers().setPassword("");
 				this.loginService.updateLastLoginTimeByUserId(systemUser);
 				this.setSessionSystemUser(systemUser);
 				rst.setState(true);

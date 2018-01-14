@@ -68,7 +68,7 @@ public class ResourcesServiceImpl implements ResourcesService {
 		o.setStatus("1");
 		o.setCreateUserId(systemUser.getUsers().getUserId());
 		this.resourcesDao.insert(o);
-		this.dataBaseLogService.log(CommonKeys.logCreate, "添加", "", o.getResourcesName(), "资源", systemUser,"5");
+		this.dataBaseLogService.log(CommonKeys.logCreate, "添加", "", o.getResourcesName(), "资源", systemUser, "5");
 		return new DataResponse(true, "添加资源成功！");
 	}
 
@@ -89,9 +89,11 @@ public class ResourcesServiceImpl implements ResourcesService {
 			return new DataResponse(false, "类型不能为空！");
 		}
 		Resources r = this.resourcesDao.selectByPrimaryKey(o.getResourcesId());
-		this.resourcesDao.updateByPrimaryKey(o);		
-		this.dataBaseLogService.log(CommonKeys.logUpdate, "更新", o.toString(), r.toString(),
-				"资源名称--" + o.getResourcesName(), systemUser,"5");
+		int update = this.resourcesDao.updateByPrimaryKey(o);
+		if (update > 0) {
+			this.dataBaseLogService.log(CommonKeys.logUpdate, "更新", o.toString(), r.toString(),
+					"资源-" + o.getResourcesName(), systemUser, "5");
+		}
 		return new DataResponse(true, "变更资源成功！");
 	}
 
@@ -108,8 +110,8 @@ public class ResourcesServiceImpl implements ResourcesService {
 		String id = String.valueOf(jsonObject.get("id"));
 		int delete = this.resourcesDao.deleteByPrimaryKey(id);
 		if (delete > 0) {
-			this.dataBaseLogService.log(CommonKeys.logUpdate, "禁用", "[status:1]", "[status:0]", "资源id--" + id,
-					systemUser,"5");
+			this.dataBaseLogService.log(CommonKeys.logUpdate, "禁用", "[status:1]", "[status:0]", "资源id-" + id,
+					systemUser, "5");
 		}
 		return new DataResponse(true, "资源禁用成功！");
 	}

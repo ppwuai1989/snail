@@ -34,8 +34,24 @@
 		<result column="CREATE_USER_ID" jdbcType="VARCHAR" property="createUserId" />
 		<result column="REMARK" jdbcType="VARCHAR" property="remark" />
 		<result column="CHILD_COUNT" jdbcType="VARCHAR" property="childCount" />
-
 	</resultMap>
+	<resultMap id="agent" type="org.platform.snail.model.Agent">
+		<id column="agent_id" jdbcType="INTEGER" property="agentId" />
+		<result column="parent_agent_id" jdbcType="INTEGER" property="parentAgentId" />
+		<result column="agent_level" jdbcType="VARCHAR" property="agentLevel" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="sex" jdbcType="VARCHAR" property="sex" />
+		<result column="coins" jdbcType="VARCHAR" property="coins" />
+		<result column="gems" jdbcType="VARCHAR" property="gems" />
+		<result column="pk_card" jdbcType="VARCHAR" property="pkCard" />
+		<result column="wechat_id" jdbcType="VARCHAR" property="weChatId" />
+		<result column="mobile" jdbcType="VARCHAR" property="mobile" />
+		<result column="account" jdbcType="VARCHAR" property="account" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+	</resultMap>
+
 	<select id="init" resultType="int">
 		select 1 from dual
 	</select>
@@ -63,7 +79,7 @@
 		select t.resources_id,
 		t.parent_resources_id,
 		t.resources_name,
-			if(t.resources_type='2',concat(t.resources_url,'?id=',t.resources_id),t.resources_url)
+		if(t.resources_type='2',concat(t.resources_url,'?id=',t.resources_id),t.resources_url)
 		resources_url,
 		t.resources_path,
 		<if test='portal="ace"'>
@@ -89,14 +105,38 @@
 		from role_resources t
 		where
 		t.role_id in
-		(select t.role_id
+		(select
+		t.role_id
 		from users_role t where t.user_id =#{userId}))
-		order by t.resources_id
+		order by
+		t.resources_id
 	</select>
 	<update id="updateUsersLastLoginTimeByPrimaryKey">
 		update USERS
 		set last_login_time = now()
-		where USER_ID = #{userId,jdbcType=INTEGER}
+		where USER_ID
+		= #{userId,jdbcType=INTEGER}
 	</update>
-
+	<select id="selectAgentById" resultMap="agent">
+		select
+		t.agent_id,
+		t.parent_agent_id,
+		t.agent_level,
+		t.name,
+		t.sex,
+		t.coins,
+		t.gems,
+		t.pk_card,
+		t.wechat_id,
+		t.mobile,
+		u.account,
+		u.status,
+		u.last_login_time,
+		u.create_time
+		FROM t_users t,
+		users u
+		WHERE t.agent_id = u.user_id
+		and
+		t.agent_id=#{agentId,jdbcType=INTEGER}
+	</select>
 </mapper>

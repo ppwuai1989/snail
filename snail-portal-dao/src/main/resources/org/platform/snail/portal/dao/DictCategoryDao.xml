@@ -27,7 +27,7 @@
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">	
 		delete from
 		dict_category where category_id =#{categoryId,jdbcType=VARCHAR};
-		delete from dict where category_id==#{categoryId,jdbcType=VARCHAR};	
+		delete from dict where category_id=#{categoryId,jdbcType=VARCHAR};	
 	</delete>
 	<insert id="insert" parameterType="org.platform.snail.portal.model.DictCategory">
 		insert into dict_category

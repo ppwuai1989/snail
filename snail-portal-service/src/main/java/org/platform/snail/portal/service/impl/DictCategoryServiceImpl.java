@@ -58,7 +58,7 @@ public class DictCategoryServiceImpl implements DictCategoryService {
 		}
 		this.dictCategoryDao.insert(dictCategory);
 		this.dataBaseLogService.log(CommonKeys.logCreate, "添加", "", dictCategory.getName(),
-				"字典类型[" + dictCategory.getName() + "]", systemUser, "22");
+				"字典类型-" + dictCategory.getName(), systemUser, "22");
 		return new DataResponse(true, "添加字典类型成功！");
 	}
 
@@ -72,9 +72,12 @@ public class DictCategoryServiceImpl implements DictCategoryService {
 			return new DataResponse(false, "名称不能为空！");
 		}
 		DictCategory d = this.dictCategoryDao.selectByPrimaryKey(dictCategory.getCategoryId());
-		this.dictCategoryDao.updateByPrimaryKeySelective(dictCategory);
-		this.dataBaseLogService.log(CommonKeys.logUpdate, "更新", d.toString(), dictCategory.toString(),
-				"字典类型[" + d.getName() + "]", systemUser, "22");
+		int update = this.dictCategoryDao.updateByPrimaryKeySelective(dictCategory);
+		if (update > 0) {
+			this.dataBaseLogService.log(CommonKeys.logUpdate, "更新", d.toString(), dictCategory.toString(),
+					"字典类型-" + d.getName(), systemUser, "22");
+		}
+
 		return new DataResponse(true, "字典类型变更成功！");
 	}
 
@@ -89,9 +92,11 @@ public class DictCategoryServiceImpl implements DictCategoryService {
 	public DataResponse deleteDictCategoryByDictCategoryId(String dictCategoryId, SystemUser systemUser)
 			throws Exception {
 		DictCategory d = this.dictCategoryDao.selectByPrimaryKey(dictCategoryId);
-		this.dictCategoryDao.deleteByPrimaryKey(dictCategoryId);
-		this.dataBaseLogService.log(CommonKeys.logDelete, "删除", dictCategoryId, "", "字典类型[" + d.getName() + "]",
-				systemUser, "22");
+		int delete = this.dictCategoryDao.deleteByPrimaryKey(dictCategoryId);
+		if (delete > 0) {
+			this.dataBaseLogService.log(CommonKeys.logDelete, "删除", dictCategoryId, "", "字典类型-" + d.getName(),
+					systemUser, "22");
+		}
 		return new DataResponse(true, "字典类型删除成功！");
 	}
 
