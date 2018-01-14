@@ -1,6 +1,5 @@
 package org.platform.snail.portal.service.impl;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.platform.snail.beans.DataResponse;
@@ -29,10 +28,10 @@ public class AgentServiceImpl implements AgentService {
 	@Override
 	public DataResponse findAgentList(Agent condition, int start, int limit, String orderBy) throws Exception {
 		DataResponse rst = new DataResponse();
-		List<AgentVo> list = this.agentdao.findAgentList(condition, start, limit, orderBy);
+		List<AgentVo> list = this.agentDao.findAgentList(condition, start, limit, orderBy);
 		rst.setList(list);
 		if (start < 1) {
-			int allRows = this.agentdao.findAgentListCount(condition);
+			int allRows = this.agentDao.findAgentListCount(condition);
 			rst.setAllRows(allRows);
 		}
 		return rst;
