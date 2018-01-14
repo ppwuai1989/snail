@@ -1,0 +1,57 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "gg1",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 0.5,
+  "sample": 10,
+  "speed": 0.3,
+  "wrapMode": 2,
+  "curveData": {
+    "props": {
+      "position": [
+        {
+          "frame": 0,
+          "value": [
+            -90.8,
+            -0.2
+          ]
+        },
+        {
+          "frame": 0.5,
+          "value": [
+            145.1,
+            -0.2
+          ]
+        }
+      ],
+      "opacity": [
+        {
+          "frame": 0,
+          "value": 0
+        },
+        {
+          "frame": 0.1,
+          "value": 200
+        },
+        {
+          "frame": 0.2,
+          "value": 254
+        },
+        {
+          "frame": 0.3,
+          "value": 255
+        },
+        {
+          "frame": 0.4,
+          "value": 254
+        },
+        {
+          "frame": 0.5,
+          "value": 0
+        }
+      ]
+    }
+  },
+  "events": []
+}

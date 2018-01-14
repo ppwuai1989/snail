@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="lazyLoadingEnabled" value="false" />
+		<setting name="cacheEnabled" value="true" />
+		<setting name="proxyFactory" value="CGLIB" />
+	</settings>
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageHelper">
+			<property name="dialect" value="mysql" />
+			<!-- 默认为false;为true时,会将RowBounds第一个参数offset当成pageNum使用 -->
+			<property name="offsetAsPageNum" value="true" />
+			<!-- 默认为false;为true时,使用RowBounds分页进行count查询 -->
+			<property name="rowBoundsWithCount" value="true" />
+			<!-- 为true时,如果pageSize=0或者RowBounds.limit=0就会查询出全部的结果 -->
+			<property name="pageSizeZero" value="true" />
+		</plugin>
+	</plugins>
+</configuration>

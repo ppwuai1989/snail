@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "64585c09-95ba-4e95-89b9-7097654f585d",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "left button-fangka-default": {
+      "ver": "1.0.3",
+      "uuid": "aab2bf16-5c85-4eb6-be2d-c808b55dfdc2",
+      "rawTextureUuid": "64585c09-95ba-4e95-89b9-7097654f585d",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 298,
+      "height": 124,
+      "rawWidth": 298,
+      "rawHeight": 124,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

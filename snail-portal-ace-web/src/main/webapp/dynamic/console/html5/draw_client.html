@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<title>test</title>
+		<script src="http://10.1.118.54:9010/socket.io/socket.io.js"></script>
+		<script type="text/javascript">
+		var socket = io.connect('http://10.1.118.54:9010');
+		function mousePos(e){ 
+			var x,y; 
+			var e = e||window.event; 
+			var a = { 
+				x:e.clientX+document.body.scrollLeft+document.documentElement.scrollLeft, 
+				y:e.clientY+document.body.scrollTop+document.documentElement.scrollTop 
+			}; 
+			posi_data = {'posi':a, 'name':'xiuyetang', 'color':'green'};
+			// posi_data = JSON.stringify(posi_data);
+  		socket.emit('data', posi_data);
+		}
+
+		 socket.on('news', function (data) {
+    			draw(data.posi, data.color);
+
+  	 	 });
+		
+		</script>
+	</head>
+	<body>
+		<canvas id="test_draw_canvas" width=500 height=500 style="border:1px #000 solid;" onMousemove="mousePos(event);";>
+		</canvas>
+		<script type="text/javascript">
+			function $(id){
+				return document.getElementById(id);
+			}
+
+			function draw(data, color){
+				ctx = $('test_draw_canvas').getContext('2d');
+				ctx.fillStyle=color;
+				ctx.fillRect(data.x, data.y , 3, 3 );
+			}
+
+		</script>	
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	
+</body>
+</html>
+

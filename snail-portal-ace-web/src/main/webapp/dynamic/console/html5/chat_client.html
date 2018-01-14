@@ -1,0 +1,24 @@
+<script src="http://10.1.118.54:9100/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+function $(id){
+	return document.getElementById(id);
+}
+var socket = io.connect('http://10.1.118.54:9100');		
+	socket.on('news', function (data) {
+		$('chatinfo').innerHTML +=  data + "<br>";
+	});
+
+function sendinfo(){
+	var info_data       = {};
+	info_data.chat_name = $('myname').value;
+	info_data.words     = $('words').value;
+	info_data 					= JSON.stringify(info_data);
+	socket.emit('data', info_data);
+}
+
+</script>
+</head>
+<body>
+<div id="chatinfo" ></div>
+<input type="text" id="words">
+我：<input type="text" id="myname" value="秀野堂主"><input type="button" value="说出来" onClick="sendinfo()">

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.platform.snail.dao.DataBaseLogDao">
+	<resultMap id="logs" type="org.platform.snail.model.Logs">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="LOG" property="log" jdbcType="VARCHAR" />
+		<result column="USER_ID" property="userId" jdbcType="INTEGER" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="OBJECT_VALUE" property="objectValue" jdbcType="VARCHAR" />
+		<result column="OLD" property="old" jdbcType="VARCHAR" />
+		<result column="NEWS" property="news" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="IP" property="ip" jdbcType="VARCHAR" />
+		<result column="LOG_TYPE" property="logType" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="insert" parameterType="org.platform.snail.model.Logs">
+		insert into LOGS (
+		ID,
+		LOG,
+		USER_ID,
+		USER_NAME,
+		CREATE_TIME,
+		OBJECT_VALUE,
+		OLD,
+		NEWS,
+		NAME,
+		IP,
+		LOG_TYPE)
+		values (
+		0,
+		#{logs.log,jdbcType=VARCHAR},
+		#{logs.userId,jdbcType=INTEGER},
+		#{logs.userName,jdbcType=VARCHAR},
+		now(),
+		#{logs.objectValue,jdbcType=VARCHAR},
+		#{logs.old,jdbcType=VARCHAR},
+		#{logs.news,jdbcType=VARCHAR},
+		#{logs.name,jdbcType=VARCHAR},
+		#{logs.ip,jdbcType=VARCHAR},
+		#{logs.logType,jdbcType=VARCHAR})
+	</insert>
+	<sql id="whereCondition">
+		from logs where 0=0
+		<if test='condition.userId!=null and condition.userId!=""'>
+			and logs.user_id =#{condition.userId,jdbcType=INTEGER}
+		</if>
+		<if test='condition.log!=null and condition.log!=""'>
+			and logs.log like
+			concat(#{condition.log,jdbcType=VARCHAR},'%')
+		</if>
+		<if test='condition.logType!=null and condition.logType!=""'>
+			and logs.logType =#{logs.logType,jdbcType=VARCHAR}
+		</if>
+
+		<if test='condition.startDate!=null and condition.startDate!=""'>
+			<![CDATA[
+			and logs.create_time>=#{condition.startDate}
+			]]>
+		</if>
+		<if test='condition.endDate!=null and condition.endDate!=""'>
+			 <![CDATA[
+				and logs.create_time<=#{condition.endDate}  
+				]]>
+		</if>
+	</sql>
+	<select id="findCount" resultType="int">
+		SELECT COUNT(*)
+		<include refid="whereCondition" />
+	</select>
+	<select id="findList" resultMap="logs">
+		select
+		ID, LOG, USER_ID,
+		USER_NAME, CREATE_TIME, OBJECT_VALUE,
+		OLD, NEWS,
+		NAME,IP,LOG_TYPE
+		<include refid="whereCondition" />
+		<choose>
+			<when test='orderBy!=null and orderBy!=""'>
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY CREATE_TIME desc
+			</otherwise>
+		</choose>
+		limit #{start},#{limit}
+	</select>
+</mapper>

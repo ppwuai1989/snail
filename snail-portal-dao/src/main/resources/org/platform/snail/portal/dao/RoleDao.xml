@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.platform.snail.portal.dao.RoleDao">
+	<resultMap id="role" type="org.platform.snail.model.Role">
+		<id column="ROLE_ID" jdbcType="INTEGER" property="roleId" />
+		<result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="CREATE_USER_ID" jdbcType="INTEGER" property="createUserId" />
+		<result column="REMARK" jdbcType="VARCHAR" property="remark" />
+	</resultMap>
+	<resultMap id="roleVo" extends="role"
+		type="org.platform.snail.portal.vo.RoleVo">
+		<result column="name" jdbcType="VARCHAR" property="operater" />
+	</resultMap>
+	<select id="init" resultType="int">
+		select 1 from dual
+	</select>
+	<insert id="insertRole" parameterType="org.platform.snail.model.Role">
+		insert into ROLE (ROLE_ID,
+		ROLE_NAME, CREATE_TIME,
+		CREATE_USER_ID,
+		REMARK)
+		values (0,
+		#{role.roleName,jdbcType=VARCHAR}, now(),
+		#{role.createUserId,jdbcType=INTEGER},
+		#{role.remark,jdbcType=VARCHAR})
+	</insert>
+	<update id="updateRoleByPrimaryKey" parameterType="org.platform.snail.model.Role">
+		update ROLE
+		set ROLE_NAME = #{role.roleName,jdbcType=VARCHAR},
+		REMARK =
+		#{role.remark,jdbcType=VARCHAR}
+		where ROLE_ID =
+		#{role.roleId,jdbcType=INTEGER}
+	</update>
+
+	<sql id="rolePagingWhereCondition">
+		from Role,USERS where Role.CREATE_USER_ID=USERS.USER_ID
+
+		<if test='condition.roleName!=null and condition.roleName!=""'>
+			and Role.role_name like
+			concat(#{condition.roleName,jdbcType=VARCHAR},'%')
+		</if>
+	</sql>
+	<select id="findRoleCount" resultType="int">
+		SELECT COUNT(*)
+		<include refid="rolePagingWhereCondition" />
+	</select>
+	<select id="findRoleList" resultMap="roleVo">
+		select Role.role_id, Role.role_name, Role.create_time,
+		Role.create_user_id, Role.remark ,
+		users.name
+		<include refid="rolePagingWhereCondition" />
+		<choose>
+			<when test='orderBy!=null and orderBy!=""'>
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY Role.role_id
+			</otherwise>
+		</choose>
+		limit #{start},#{limit}
+	</select>
+	<select id="selectRoleVoByPrimaryKey" resultMap="roleVo"
+		parameterType="java.lang.String">
+		select Role.role_id, Role.role_name, Role.create_time,
+		Role.create_user_id, Role.remark ,
+		users.name
+		from Role,USERS where
+		Role.CREATE_USER_ID=USERS.USER_ID
+		and Role.role_id =
+		#{roleId,jdbcType=INTEGER}
+	</select>
+	<select id="selectRoleResourceTreeList" resultType="map">
+		select
+		ID,PID, TEXT, CHILD_COUNT, ICON, CHECKED
+		from (select t.resources_id
+		id,
+		t.parent_resources_id pid,
+		t.resources_name text,
+		t.resources_icon
+		icon,
+		if(s.resources_id, 'true', 'false') checked,
+		(select
+		count(*)
+		from
+		resources
+		where resources.parent_resources_id =
+		t.resources_id)
+		child_count
+		from resources t left join
+		(select rs.resources_id from
+		role_resources rs
+		where rs.role_id=${roleId}) s
+		on t.resources_id =
+		s.resources_id
+		where
+		t.status='1'
+		order
+		by t.resources_id) r
+	</select>
+	<insert id="insertRoleResources">
+
+		update role_resources set resources_id='0' where 0=1;
+		<if test="roleId!=null and roleId!=''">
+			delete from role_resources where role_id=#{roleId};
+			<if test="resourcesId!=null">
+				<foreach item="item" index="index" collection="resourcesId"
+					open="" separator="" close="">
+					insert into role_resources
+					(role_id,
+					resources_id, create_time)
+					values
+					(#{roleId,jdbcType=INTEGER},
+					#{item,jdbcType=VARCHAR}, now());
+				</foreach>
+			</if>
+		</if>
+
+	</insert>
+	<delete id="deleteRoleByRoleId">
+
+		delete from role where role_id=#{roleId};
+		delete
+		from
+		role_resources where
+		role_id=#{roleId};
+		delete from users_role
+		where
+		role_id=#{roleId};
+
+	</delete>
+	<select id="isExitRoleByRoleName" resultType="int">
+		select count(*)
+		from role where role_name=#{roleName}
+	</select>
+	<select id="isExitRoleUsedByRoleId" resultType="int">
+		select count(*)
+		from users_role ur,users us where ur.user_id=us.user_id and
+		role_id=#{roleId} and us.status='1'
+	</select>
+</mapper>

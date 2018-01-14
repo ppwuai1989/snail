@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.platform.snail.portal.dao.UsersDao">
+	<resultMap id="users" type="org.platform.snail.model.Users">
+		<id column="USER_ID" property="userId" jdbcType="INTEGER" />
+		<result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+		<result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+		<result column="SEX" property="sex" jdbcType="CHAR" />
+		<result column="ID_CARD" property="idCard" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="DEPARTMENT_ID" property="departmentId"
+			jdbcType="INTEGER" />
+		<result column="AREA_CODE" property="areaCode" jdbcType="VARCHAR" />
+		<result column="BIRTHDAY" property="birthday" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="CHAR" />
+		<result column="LAST_LOGIN_TIME" property="lastLoginTime"
+			jdbcType="TIMESTAMP" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="SEAT" property="seat" jdbcType="VARCHAR" />
+		<result column="USER_LEVEL" property="userLevel" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap id="usersVo" extends="users"
+		type="org.platform.snail.portal.vo.UsersVo">
+	</resultMap>
+	<resultMap id="role" type="org.platform.snail.model.Role">
+		<id column="ROLE_ID" jdbcType="INTEGER" property="roleId" />
+		<result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="CREATE_USER_ID" jdbcType="VARCHAR" property="createUserId" />
+		<result column="REMARK" jdbcType="VARCHAR" property="remark" />
+	</resultMap>
+	<select id="selectByUserId" resultMap="usersVo" parameterType="java.lang.String">
+		select * from users
+		where users.user_id=#{userId,jdbcType=INTEGER}
+	</select>
+	<select id="init" resultType="int">
+		select 1 from dual
+	</select>
+	<sql id="usersSearchPagingWhereCondition">
+		from USERS where USERS.STATUS='1'
+		<if test='condition.name!=null and condition.name!=""'>
+			and USERS.name like
+			concat(#{condition.name,jdbcType=VARCHAR},'%')
+		</if>
+	</sql>
+	<select id="findUsersSearchCount" resultType="int">
+		SELECT COUNT(*)
+		<include refid="usersSearchPagingWhereCondition" />
+	</select>
+	<select id="findUsersSearchList" resultType="map">
+		select
+		USERS.user_id code,
+		USERS.name name
+		<include refid="usersSearchPagingWhereCondition" />
+		<choose>
+			<when test='orderBy!=null and orderBy!=""'>
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY USERS.user_id
+			</otherwise>
+		</choose>
+		limit #{start},#{limit}
+	</select>
+	<insert id="insertUsers" parameterType="org.platform.snail.model.Users">
+		insert into USERS
+		(USER_ID, ACCOUNT, PASSWORD,
+		SEX, ID_CARD, NAME,
+		DEPARTMENT_ID,
+		AREA_CODE, BIRTHDAY, STATUS,
+		LAST_LOGIN_TIME, MOBILE,
+		EMAIL,
+		SEAT,
+		USER_LEVEL, CREATE_TIME
+		)
+		values (0,
+		#{users.account,jdbcType=VARCHAR},
+		substr(#{users.mobile,jdbcType=VARCHAR}, -6),
+		#{users.sex,jdbcType=CHAR},
+		#{users.idCard,jdbcType=VARCHAR},
+		#{users.name,jdbcType=VARCHAR},
+		#{users.departmentId,jdbcType=INTEGER},
+		#{users.areaCode,jdbcType=VARCHAR},
+		#{users.birthday,jdbcType=TIMESTAMP},
+		#{users.status,jdbcType=CHAR},
+		now(),
+		#{users.mobile,jdbcType=VARCHAR},
+		#{users.email,jdbcType=VARCHAR},
+		#{users.seat,jdbcType=VARCHAR},
+		#{users.userLevel,jdbcType=VARCHAR},now()
+		)
+	</insert>
+	<update id="updateUsersByPrimaryKey" parameterType="org.platform.snail.model.Users">
+		update USERS
+		set
+		SEX = #{users.sex,jdbcType=CHAR},
+		account=#{users.account,jdbcType=VARCHAR},
+		<!--password=#{users.password,jdbcType=VARCHAR},  -->
+		ID_CARD =
+		#{users.idCard,jdbcType=VARCHAR},
+		NAME =
+		#{users.name,jdbcType=VARCHAR},
+		DEPARTMENT_ID =
+		#{users.departmentId,jdbcType=INTEGER},
+		AREA_CODE =
+		#{users.areaCode,jdbcType=CHAR},
+		BIRTHDAY =
+		#{users.birthday,jdbcType=TIMESTAMP},
+		MOBILE =
+		#{users.mobile,jdbcType=VARCHAR},
+		EMAIL =
+		#{users.email,jdbcType=VARCHAR},
+		SEAT = #{users.seat,jdbcType=VARCHAR},
+		USER_LEVEL = #{users.userLevel,jdbcType=DECIMAL},
+		status=#{users.status,jdbcType=CHAR}
+		where USER_ID =
+		#{users.userId,jdbcType=INTEGER}
+	</update>
+	<update id="updateUsersStatusByPrimaryKey">
+		update USERS
+		set STATUS = #{status,jdbcType=CHAR}
+		where USER_ID = #{userId,jdbcType=INTEGER}
+	</update>
+	<update id="updateUsersForInitPassword">
+		update USERS
+		set password = #{password,jdbcType=CHAR}
+		where USER_ID = #{userId,jdbcType=INTEGER}
+	</update>
+	<sql id="usersPagingWhereCondition">
+		from USERS where 1=1
+		<if test='condition.name!=null and condition.name!=""'>
+			and USERS.name like
+			concat(#{condition.name,jdbcType=VARCHAR},'%')
+		</if>
+		<if test='condition.departmentId!=null and condition.departmentId!=""'>
+			and USERS.department_Id
+			=#{condition.departmentId,jdbcType=INTEGER}
+		</if>
+		<if test='condition.idCard!=null and condition.idCard!=""'>
+			and USERS.id_Card =#{condition.idCard,jdbcType=VARCHAR}
+		</if>
+		<if test='condition.mobile!=null and condition.mobile!=""'>
+			and USERS.mobile =#{condition.mobile,jdbcType=VARCHAR}
+		</if>
+		<if test='condition.areaCode!=null and condition.areaCode!=""'>
+			and s.area_code like
+			concat(#{condition.areaCode,jdbcType=VARCHAR},'%')
+		</if>
+		<if test='condition.account!=null and condition.account!=""'>
+			and USERS.account like
+			concat(#{condition.account,jdbcType=VARCHAR},'%')
+		</if>
+	</sql>
+	<select id="findUsersCount" resultType="int">
+		SELECT COUNT(*)
+		<include refid="usersPagingWhereCondition" />
+	</select>
+	<select id="findUsersList" resultMap="usersVo">
+		select USERS.user_id,
+		USERS.account,
+		USERS.password,
+		USERS.sex,
+		USERS.id_card,
+		USERS.name,
+		USERS.department_id,
+		USERS.area_code,
+		USERS.birthday,
+		USERS.status,
+		USERS.last_login_time,
+		USERS.mobile,
+		USERS.email,
+		USERS.seat,
+		USERS.user_level,
+		USERS.create_time
+		<include refid="usersPagingWhereCondition" />
+		<choose>
+			<when test='orderBy!=null and orderBy!=""'>
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY USERS.user_id
+			</otherwise>
+		</choose>
+		limit #{start},#{limit}
+	</select>
+	<select id="selectUsersVoByPrimaryKey" resultMap="usersVo"
+		parameterType="java.lang.String">
+		select t.user_id,
+		t.account,
+		t.password,
+		t.sex,
+		t.id_card,
+		t.name,
+		t.department_id,
+		t.area_code,
+		t.birthday,
+		t.status,
+		t.last_login_time,
+		t.mobile,
+		t.email,
+		t.seat,
+		t.user_level,
+		t.create_time
+		from users t
+		where 1=1
+		and t.user_id = #{userId,jdbcType=INTEGER}
+	</select>
+	<select id="isExitUsersAccount" resultType="int">
+		select count(*) from
+		users where account=#{account}
+	</select>
+	<insert id="insertUsersRole">
+
+		update USERS_ROLE set role_id='0' where 0=1;
+		<if test="userId!=null and userId!=''">
+			delete from users_role where user_id=#{userId};
+		</if>
+		<if test='roleId!=null and userId!=null and userId!="" and roleId!=""'>
+			<foreach item="item" index="index" collection="roleId" open=""
+				separator="" close="">
+				insert into users_role
+				(user_id, role_id,
+				create_time)
+				values
+				(#{userId,jdbcType=INTEGER},
+				#{item,jdbcType=VARCHAR}, now());
+			</foreach>
+		</if>
+	
+	</insert>
+	<select id="selectRoleList" resultMap="role">
+		select * from ROLE t
+	</select>
+	<select id="selectRoleListByUserId" resultMap="role">
+		select *
+		from ROLE
+		t
+		where t.role_id in
+		(select a.role_id from users_role a where a.user_id
+		= #{userId})
+	</select>
+	<select id="isExitUsersByEmail" resultType="int">
+		select count(*) from
+		users where email=#{email}
+	</select>
+</mapper>

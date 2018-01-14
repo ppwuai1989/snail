@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.platform.snail.dao.SystemDao">
+	<select id="init" resultType="int">
+		select 1 from dual
+	</select>
+	<resultMap id="users" type="org.platform.snail.model.Users">
+		<id column="USER_ID" property="userId" jdbcType="INTEGER" />
+		<result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+		<result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+		<result column="SEX" property="sex" jdbcType="CHAR" />
+		<result column="ID_CARD" property="idCard" jdbcType="VARCHAR" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="DEPARTMENT_ID" property="departmentId"
+			jdbcType="VARCHAR" />
+		<result column="AREA_CODE" property="areaCode" jdbcType="VARCHAR" />
+		<result column="BIRTHDAY" property="birthday" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="LAST_LOGIN_TIME" property="lastLoginTime"
+			jdbcType="TIMESTAMP" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="SEAT" property="seat" jdbcType="VARCHAR" />
+		<result column="USER_LEVEL" property="userLevel" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap id="department" type="org.platform.snail.model.Department">
+		<id column="DEPARTMENT_ID" property="departmentId" jdbcType="VARCHAR" />
+		<result column="PARENT_DEPARTMENT_ID" property="parentDepartmentId"
+			jdbcType="VARCHAR" />
+		<result column="DEPARTMENT_NAME" property="departmentName"
+			jdbcType="VARCHAR" />
+		<result column="DEPARTMENT_LEVEL" property="departmentLevel"
+			jdbcType="DECIMAL" />
+		<result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_USER_ID" property="createUserId"
+			jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<result column="AREA_CODE" property="areaCode" jdbcType="VARCHAR" />
+		<result column="AREA_NAME" property="areaName" jdbcType="VARCHAR" />
+		<result column="P_CODE" property="pCode" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="resources" type="org.platform.snail.model.Resources">
+		<id column="RESOURCES_ID" jdbcType="INTEGER" property="resourcesId" />
+		<result column="PARENT_RESOURCES_ID" jdbcType="INTEGER"
+			property="parentResourcesId" />
+		<result column="RESOURCES_NAME" jdbcType="VARCHAR" property="resourcesName" />
+		<result column="RESOURCES_URL" jdbcType="VARCHAR" property="resourcesUrl" />
+		<result column="RESOURCES_PATH" jdbcType="VARCHAR" property="resourcesPath" />
+		<result column="RESOURCES_ICON" jdbcType="VARCHAR" property="resourcesIcon" />
+		<result column="RESOURCES_TYPE" jdbcType="CHAR" property="resourcesType" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="CREATE_USER_ID" jdbcType="VARCHAR" property="createUserId" />
+		<result column="REMARK" jdbcType="VARCHAR" property="remark" />
+		<result column="CHILD_COUNT" jdbcType="VARCHAR" property="childCount" />
+
+	</resultMap>
+	<select id="selectUsersByUserId" resultMap="users">
+		select user_id,
+		account,
+		password,
+		sex,
+		id_card,
+		name,
+		department_id,
+		area_code,
+		birthday,
+		status,
+		last_login_time,
+		mobile,
+		email,
+		seat,
+		user_level,
+		create_time
+		from
+		users where user_id=#{userId}
+	</select>
+
+	<select id="selectUsersByAccount" resultMap="users">
+		select user_id,
+		account,
+		password,
+		sex,
+		id_card,
+		name,
+		department_id,
+		area_code,
+		birthday,
+		status,
+		last_login_time,
+		mobile,
+		email,
+		seat,
+		user_level,
+		create_time
+		from
+		users where account=#{account}
+	</select>
+
+	<select id="selectDepartmentByDepartmentId" resultMap="department">
+		select
+		department_id,
+		parent_department_id,
+		department_name,
+		department_level,
+		user_id,
+		create_time,
+		create_user_id,
+		status,
+		area_code,
+		province.name
+		area_name
+		from department left join province on
+		department.area_code=province.code
+
+		where department_id=#{departmentId}
+	</select>
+	<select id="selectResourcesByUserId" resultMap="resources">
+		select t.resources_id,
+		t.parent_resources_id,
+		t.resources_name,
+		if(t.resources_type='2',concat(t.resources_url,'?id=',t.resources_id),t.resources_url)
+		resources_url,
+		t.resources_path,
+		<if test='portal="ace"'>
+			ifnull(t.remark,'fa fa-cog') resources_icon,
+		</if>
+		<if test='portal="ext"'>
+			t.resources_icon,
+		</if>
+		t.resources_type,
+		t.create_time,
+		t.create_user_id,
+		t.remark,
+		(select
+		count(*) from resources where
+		parent_resources_id=t.resources_id)
+		child_count
+		from resources t
+		where
+		t.resources_id in
+		(select
+		t.resources_id
+		from role_resources t
+		where
+		t.role_id in
+		(select t.role_id
+		from users_role t where t.user_id =#{userId}))
+		order by t.resources_id
+	</select>
+	<select id="selectProvinceTreeList" resultType="map">
+		select
+		id,pid,text,src,href,child_count,if(child_count='0','/erp/content/image/application/Text.gif','')
+		icon from (
+		select t.code id,
+		t.parent_code pid,
+		t.name text,
+		'' src,
+		''
+		HREF,
+		(select count(*)
+		from province
+		where province.parent_code
+		= t.code)
+		child_count
+		from province t order by t.code) r
+	</select>
+	<insert id="insertFiles" parameterType="org.platform.snail.model.Files">
+		insert into files
+		(file_id, file_name, file_ext_name, file_content, create_time,
+		operater
+		)
+		values (0,
+		#{files.fileName,jdbcType=VARCHAR},
+		#{files.fileExtName,jdbcType=VARCHAR},
+		#{files.fileContent,jdbcType=BLOB},now(),
+		#{files.operater,jdbcType=INTEGER}
+		)
+	</insert>
+	<update id="updatePassword">
+		update USERS
+		set password =
+		#{password,jdbcType=VARCHAR}
+		where USER_ID = #{userId,jdbcType=INTEGER}
+	</update>
+	<select id="selectProvinceTreeListByPid" resultType="map">
+	 	<![CDATA[
+  select id,pid,text,src,STATE,href,child_count,if(child_count='0','Text.gif','Floder.gif') icon from (
+  select t.code id,
+       t.parent_code pid,
+       t.name text,
+       	'closed' STATE,
+       '' src,
+       '' HREF,
+       '' icon,
+       (select count(*)
+          from province
+         where province.parent_code = t.code) child_count
+  from province t where  (t.parent_code = #{pid} or t.code=#{pid}) order by t.code)
+	
+  
+  
+  ]]>
+		<if test='length==6'>
+			union all
+			select
+			id,pid,text,src,STATE,href,child_count,if(child_count='0','Text.gif','Floder.gif')
+			icon from (
+			select t.code id,
+			t.parent_code pid,
+			t.name text,
+			'closed'
+			STATE,
+			'' src,
+			'' HREF,
+			'' icon,
+			(select count(*)
+			from province
+			where
+			province.parent_code = t.code) child_count
+			from province t where
+			(t.code=#{value} or t.parent_code =
+			substr(#{value},1,length(#{value})-2))
+			)
+		</if>
+		<if test='length==8'>
+			union all
+			select
+			id,pid,text,src,STATE,href,child_count,if(child_count='0','Text.gif','Floder.gif')
+			icon from (
+			select t.code id,
+			t.parent_code pid,
+			t.name text,
+			'closed'
+			STATE,
+			'' src,
+			'' HREF,
+			'' icon,
+			(select to_char(count(*))
+			from province
+			where province.parent_code = t.code) child_count
+			from province t where
+			(t.code=#{value} or t.parent_code =
+			substr(#{value},1,length(#{value})-2))
+			)
+		</if>
+
+		<if test='length==10'>
+			union all
+			select
+			id,pid,text,src,STATE,href,child_count,if(child_count='0','Text.gif','Floder.gif')
+			icon from (
+			select t.code id,
+			t.parent_code pid,
+			t.name text,
+			'closed'
+			STATE,
+			'' src,
+			'' HREF,
+			'' icon,
+			(select count(*)
+			from province
+			where
+			province.parent_code = t.code) child_count
+			from province t where
+			(t.code=#{value} or t.parent_code =
+			substr(#{value},1,length(#{value})-2))
+			)
+			union all
+			select
+			id,pid,text,src,STATE,href,child_count,if(child_count='0','Text.gif','Floder.gif')
+			icon from (
+			select t.code id,
+			t.parent_code pid,
+			t.name text,
+			'closed'
+			STATE,
+			'' src,
+			'' HREF,
+			'' icon,
+			(select count(*)
+			from province
+			where
+			province.parent_code = t.code) child_count
+			from province t where
+			(t.parent_code =
+			substr(#{value},1,length(#{value})-4))
+			)
+		</if>
+		<if test='length==12'>
+			union all
+			select
+			id,pid,text,src,STATE,href,child_count,if(child_count='0','Text.gif','Floder.gif')
+			icon from (
+			select t.code id,
+			t.parent_code pid,
+			t.name text,
+			'closed'
+			STATE,
+			'' src,
+			'' HREF,
+			'' icon,
+			(select count(*)
+			from province
+			where
+			province.parent_code = t.code) child_count
+			from province t where
+			(t.code=#{value} or t.parent_code =
+			substr(#{value},1,length(#{value})-2))
+			)
+			union all
+			select
+			id,pid,text,src,STATE,href,child_count,if(child_count='0','Text.gif','Floder.gif')
+			icon from (
+			select t.code id,
+			t.parent_code pid,
+			t.name text,
+			'closed'
+			STATE,
+			'' src,
+			'' HREF,
+			'' icon,
+			(select count(*)
+			from province
+			where
+			province.parent_code = t.code) child_count
+			from province t where
+			(
+			t.parent_code =
+			substr(#{value},1,length(#{value})-4))
+			)
+			union all
+			select
+			id,pid,text,src,STATE,href,child_count,if(child_count='0','Text.gif','Floder.gif')
+			icon from (
+			select t.code id,
+			t.parent_code pid,
+			t.name text,
+			'closed'
+			STATE,
+			'' src,
+			'' HREF,
+			'' icon,
+			(select count(*)
+			from province
+			where
+			province.parent_code = t.code) child_count
+			from province t where
+			t.parent_code =
+			substr(#{value},1,length(#{value})-6)
+			)
+		</if>
+
+	</select>
+	<select id="loadResourceDefine" resultType="map">
+		select
+		m.resources_url resources, group_concat(m.role_id) roles
+		from (select
+		a.resources_url, concat('ROLE_', ifnull(t.role_id ,'0')) role_id
+		from
+		resources a,ROLE_RESOURCES t
+		where a.resources_id=t.resources_id
+		) m
+		where m.resources_url is not null
+		and m.role_id is not null
+		group
+		by
+		m.resources_url
+	</select>
+	<select id="selectRoleListByUserId" resultType="map">
+		select
+		concat('ROLE_',t.role_id) role from users_role t where t.user_id =
+		#{userId}
+	</select>
+
+	<select id="selectDepartment" resultType="map">
+		select t.department_id code,
+		t.department_name name,
+		a.name areaName,
+		dict.name levels
+		from DEPARTMENT t, province a,(select * from dict d
+		where
+		d.category_id='23') dict
+		where substr(t.AREA_CODE,0,8) = a.code
+		and t.DEPARTMENT_LEVEL=dict.code
+		<if test='params.q !=null and params.q!=""'>
+			and (t.department_id like #{params.q} or t.department_name
+			like
+			concat('%',#{params.q},'%') or t.p_code like
+			upper(concat(#{params.q},'%')))
+		</if>
+		<if test='params.arecode !=null and params.arecode!=""'>
+			and t.area_code like concat(#{params.arecode},'%')
+		</if>
+		order by t.department_name
+		limit 1,50
+	</select>
+	<select id="selectUsers" resultType="map">
+		select t.user_id,
+		t.name,
+		t.sex,
+		t.id_card
+		from users t
+		where 1=1
+		<if test='params.departmentId !=null and params.departmentId!=""'>
+			and t.department_id=#{params.departmentId}
+		</if>
+
+		order by t.create_time
+	</select>
+
+	<select id="selectUsersByEmail" resultMap="users">
+		select user_id,
+		account,
+		password,
+		sex,
+		id_card,
+		name,
+		department_id,
+		area_code,
+		birthday,
+		status,
+		last_login_time,
+		mobile,
+		email,
+		seat,
+		user_level,
+		create_time
+		from
+		users where email=#{email}
+		limit 0,1
+	</select>
+	<select id="findAllSystemResources" resultMap="resources">
+		select
+		t.resources_id,t.resources_type,t.resources_url
+		from resources t
+		where
+		t.resources_type!=1
+		and !isnull(t.resources_url)
+	</select>
+</mapper>
