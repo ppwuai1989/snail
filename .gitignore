@@ -9,3 +9,4 @@
 *.componet
 .properties
 snail-portal-ace-web/src/main/resources/properties.properties
+*.properties
