@@ -18,7 +18,7 @@
 		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
 	</resultMap>
 	<resultMap id="agentVo" extends="agent"
-		type="org.platform.snail.portal.vo.MemberVo">
+		type="org.platform.snail.portal.vo.AgentVo">
 	</resultMap>
 	<select id="init" resultType="int">
 		select 1 from dual
