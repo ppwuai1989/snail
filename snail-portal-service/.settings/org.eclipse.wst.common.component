@@ -4,7 +4,7 @@
     <wb-module deploy-name="snail-portal-service">
                 
         <wb-resource deploy-path="/" source-path="/src/main/resources"/>
-        <wb-resource deploy-path="/" source-path="/"/>
+        <wb-resource deploy-path="/" source-path="/src/main/java"/>
                     
     
     </wb-module>
