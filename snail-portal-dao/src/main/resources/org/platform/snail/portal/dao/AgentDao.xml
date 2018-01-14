@@ -55,7 +55,7 @@
 		SELECT COUNT(*)
 		<include refid="findListWhereCondition" />
 	</select>
-	<select id="findAgentList" resultMap="AgentVo">
+	<select id="findAgentList" resultMap="agentVo">
 		select *
 		<include refid="findListWhereCondition" />
 		<choose>
