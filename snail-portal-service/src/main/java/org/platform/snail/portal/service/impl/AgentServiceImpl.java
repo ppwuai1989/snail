@@ -47,9 +47,20 @@ public class AgentServiceImpl implements AgentService {
 		if (SnailUtils.isBlankString(agent.getSex())) {
 			return new DataResponse(false, "性别不能为空!");
 		}
-		if (agent.getAgentLevel().equals("3")) {
-			// 升级为高级代理将移除其上级代理
-			agent.setParentAgentId(null);
+		String oldLevel = systemUser.getAgent().getAgentLevel();
+		// 当该代理为 非级别代理时可用
+		if (SnailUtils.isBlankString(oldLevel) && SnailUtils.isNotBlankString(agent.getAgentLevel())) {
+			return new DataResponse(false, "该代理非级别型代理!");
+		}
+		if (SnailUtils.isNotBlankString(oldLevel) && SnailUtils.isBlankString(agent.getAgentLevel())) {
+			return new DataResponse(false, "该代理级别不可为空!");
+		}
+		if (oldLevel.equals(CommonKeys.senior) || oldLevel.equals(CommonKeys.medium)
+				|| oldLevel.equals(CommonKeys.junior)) {
+			if (agent.getAgentLevel().equals("3")) {
+				// 升级为高级代理将移除其上级代理
+				agent.setParentAgentId(null);
+			}
 		}
 		AgentVo o = this.agentDao.findAgentList(agent, 1, 1, "").get(0);
 		int update = this.agentDao.updateAgentByAgentId(agent);
