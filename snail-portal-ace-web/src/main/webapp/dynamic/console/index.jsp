@@ -657,7 +657,8 @@ body {
 
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/content/jquery-easyui-1.3.6/gz/jquery.easyui.min.js"></script>
-
+	<script
+		src="${pageContext.request.contextPath}/content/js/common/errorAccess.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/content/js/console/main/portal.js"></script>
 	<script
@@ -693,7 +694,8 @@ body {
 			var bt1 = "<%=url_Btn1%>";		
 			var bt2 = "<%=url_Btn2%>";	
 			var bt3 = "<%=url_Btn3%>";	
-			var bt4 = "<%=url_Btn4%>";
+			var bt4 = "<%=url_Btn4%>
+		";
 			makeBtn("btn1", bt1);
 			makeBtn("btn2", bt2);
 			makeBtn("btn3", bt3);
