@@ -25,15 +25,19 @@ public class DataBaseLogServiceImpl implements DataBaseLogService {
 	private static final long serialVersionUID = 1L;
 
 	public void log(String log, String name, String old, String news, String objectValue, SystemUser systemUser) {
-		logger.info(systemUser.getUsers().getName() + " " + log + " " + objectValue);
+
 		Logs logs = new Logs();
 		logs.setLog(log);
 		logs.setName(name);
 		logs.setNews(news);
 		logs.setOld(old);
 		logs.setObjectValue(objectValue);
-		logs.setUserId(systemUser.getUsers().getUserId());
-		logs.setUserName(systemUser.getUsers().getName());
+		if (systemUser != null) {
+			logger.info(systemUser.getUsers().getName() + " " + log + " " + objectValue);
+			logs.setUserId(systemUser.getUsers().getUserId());
+			logs.setUserName(systemUser.getUsers().getName());
+		}
+
 		logs.setLogType("");
 		this.dataBaseLogDao.insert(logs);
 	}

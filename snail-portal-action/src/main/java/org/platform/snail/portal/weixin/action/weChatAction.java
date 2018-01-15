@@ -1,5 +1,6 @@
 package org.platform.snail.portal.weixin.action;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -23,9 +24,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import net.sf.json.JSONObject;
+
 @Controller
 @RequestMapping(value = "/weChat")
-public class weChatAction {
+public class weChatAction  {
 
 	@Autowired
 	private MemberService memberService;
@@ -39,7 +42,7 @@ public class weChatAction {
 		while (e.hasMoreElements()) {
 			String key = e.nextElement();
 			String value = request.getParameter(key);
-			System.out.println("获取参数key:[" + key + "]" + ",value:[" + value + "]");
+			//System.out.println("获取参数key:[" + key + "]" + ",value:[" + value + "]");
 			condition.put(key, value);
 		}
 		if (condition.containsKey("code")) {
@@ -53,44 +56,32 @@ public class weChatAction {
 			wcr.setCode(condition.get("code"));
 			wcr.setGrantType("authorization_code");
 			String oAuthUrl = wcr.getOAuthInfo();
-			String rstOAuth = HttpClientUtils.doGet(oAuthUrl);
+			JSONObject oAuthJson = HttpClientUtils.doGet(oAuthUrl);
 			// System.out.println(result);
 			try {
 				OAuthInfo oAuthInfo = new OAuthInfo();
-				SnailBeanUtils.copyProperties(oAuthInfo, rstOAuth);
+				SnailBeanUtils.copyProperties(oAuthInfo, oAuthJson);
 				if (oAuthInfo.getErrcode() == null) {
 					wcr.setUserInfoUrl("https://api.weixin.qq.com/sns/userinfo");
 					String userUrl = wcr.getUserInfoUrl();
 					List<NameValuePair> params = wcr.getParamsForUser(oAuthInfo);
-					String rstUser = HttpClientUtils.doPost(userUrl, params);
+					JSONObject userJson = HttpClientUtils.doPost(userUrl, params);
 					UserInfo userInfo = new UserInfo();
-					SnailBeanUtils.copyProperties(userInfo, rstUser);
+					SnailBeanUtils.copyProperties(userInfo, userJson);
 					if (userInfo.getErrcode() == null) {
-						// 说明获取用户信息成功，可以保存入库，并返回用户信息给客户端最后登录成功跳转
-						// "openid": "oLVPpjqs9BhvzwPj5A-vTYAX3GLc",
-						// "nickname": "刺猬宝宝",
-						// "sex": 1,
-						// "language": "简体中文",
-						// "city": "深圳",
-						// "province": "广东",
-						// "country": "中国",
-						// "headimgurl":
-						// "http://wx.qlogo.cn/mmopen/utpKYf69VAbCRDRlbUsPsdQN38DoibCkrU6SAMCSNx558eTaLVM8PyM6jlEGzOrH67hyZibIZPXu4BK1XNWzSXB3Cs4qpBBg18/0",
-						// "privilege": []					
-						dr = this.memberService.userLoginOrRegister(userInfo, oAuthInfo);
+						// 没有错误码说明获取用户信息成功，可以登录或者注册
+						dr = this.memberService.userLoginOrRegister(userInfo);						
 					} else {
 						dr.setState(false);
-						dr.setErrorMessage("出错啦！errMsg:" + userInfo.getErrmsg());
-					}
-					dr.setState(true);
-					dr.setErrorMessage("获取成功UserInfo" + userInfo);
+						dr.setErrorMessage("出错啦！errCode:" + userInfo.getErrcode() + " errMsg:" + userInfo.getErrmsg());
+					}					
 				} else {
 					dr.setState(false);
-					dr.setErrorMessage("出错啦！errMsg:" + oAuthInfo.getErrmsg());
+					dr.setErrorMessage("出错啦！errCode:" + oAuthInfo.getErrcode() + "errMsg:" + oAuthInfo.getErrmsg());
 				}
 			} catch (Exception e1) {
 				dr.setState(false);
-				dr.setErrorMessage("oAuthInfo转换失败" + e1.getMessage());
+				dr.setErrorMessage("错误--" + e1.getMessage());
 				return dr;
 			}
 		} else

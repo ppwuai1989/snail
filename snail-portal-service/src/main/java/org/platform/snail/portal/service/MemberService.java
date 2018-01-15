@@ -27,5 +27,5 @@ public interface MemberService {
 
 	public abstract DataResponse findMemberAccountInfo(String agentId) throws Exception;
 
-	public abstract DataResponse userLoginOrRegister(UserInfo userInfo,OAuthInfo oAuthInfo) throws Exception;
+	public abstract DataResponse userLoginOrRegister(UserInfo userInfo) throws Exception;
 }

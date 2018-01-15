@@ -169,37 +169,47 @@ public class MemberServiceImpl implements MemberService {
 	 * JSONObject, org.platform.snail.beans.SystemUser)
 	 */
 	@Override
-	public DataResponse userLoginOrRegister(UserInfo userInfo, OAuthInfo oAuthInfo) throws Exception {
+	public DataResponse userLoginOrRegister(UserInfo userInfo) throws Exception {
 		DataResponse rst = new DataResponse();
-		int isExit = this.memberDao.isExitUsersUnionId(oAuthInfo.getUnionid());
+		int isExit = this.memberDao.isExitUsersUnionId(userInfo.getUnionid());
 		MemberVo memberVo = new MemberVo();
 		if (isExit > 0) {
-			memberVo = this.memberDao.selectMemberByUnionId(oAuthInfo.getUnionid());
+			memberVo = this.memberDao.selectMemberByUnionId(userInfo.getUnionid());
+			// 更新用户登录时间
+			int update = this.memberDao.updateMemberLastLoginTimeByUserId(memberVo.getUserId());
 			rst.setState(true);
 			rst.setErrorMessage("用户登录成功！");
 			rst.setResponse(memberVo);
 		} else {
 			Member member = new Member();
-			member.setAccount(oAuthInfo.getUnionid());
+			// 暂时将unionid存入account
+			//初始化账户信息
+			member.setLevel("0");
+			member.setExperience("0");
+			member.setCoins("0");
+			member.setGems("0");
+			member.setPkCard("0");
+			member.setIsAgent("0");
+			member.setAccount(userInfo.getUnionid());
 			member.setWeChatId(userInfo.getOpenid());
-			member.setName(userInfo.getNickname());
-			member.setSex(userInfo.getNickname());
+			member.setName(userInfo.getNickname());			
+			member.setSex(userInfo.getSex());
 			member.setCity(userInfo.getCity());
 			member.setLanguage(userInfo.getLanguage());
 			member.setProvince(userInfo.getProvince());
 			member.setCountry(userInfo.getCountry());
 			member.setHeadImg(userInfo.getHeadimgurl());
 			member.setPrivilege(userInfo.getPrivilege());
-			member.setWeChatId(oAuthInfo.getUnionid());
+			member.setUnionId(userInfo.getUnionid());
+			
 			int insert = this.memberDao.insertUsers(member);
-			if (insert > 0) {
-				memberVo = this.memberDao.selectMemberByUnionId(member.getUnionId());
-				rst.setResponse(memberVo);
+			if (insert > 0) {				
+				rst.setResponse(member);
 				rst.setErrorMessage("注册成功！");
 				rst.setState(true);
 				this.dataBaseLogService.log(
-						"unionId为[" + memberVo.getUnionId() + "]的用户[" + memberVo.getName() + "]\r\n注册了游戏！", "注册", "",
-						memberVo.toString(), "游戏管理-会员管理", null);
+						"unionId为[" + member.getUnionId() + "]的用户[" + member.getName() + "]\r\n注册了游戏！", "注册", "",
+						member.toString(), "游戏管理-会员管理", null);
 			} else {
 				rst.setErrorMessage("未注册成功！");
 				rst.setState(false);

@@ -34,7 +34,9 @@ public class UserInfo implements Serializable {
 
 	private String headimgurl;
 
-	private String privilege;	
+	private String privilege;
+	
+	private String unionid;
 
 	private Long errcode;
 
@@ -141,6 +143,22 @@ public class UserInfo implements Serializable {
 
 	public void setErrmsg(String errmsg) {
 		this.errmsg = errmsg;
+	}
+
+	public String getUnionid() {
+		return unionid;
+	}
+
+	public void setUnionid(String unionid) {
+		this.unionid = unionid;
+	}
+
+	@Override
+	public String toString() {
+		return "UserInfo [openid=" + openid + ", nickname=" + nickname + ", sex=" + sex + ", language=" + language
+				+ ", city=" + city + ", province=" + province + ", country=" + country + ", headimgurl=" + headimgurl
+				+ ", privilege=" + privilege + ", unionid=" + unionid + ", errcode=" + errcode + ", errmsg=" + errmsg
+				+ "]";
 	}
 
 }

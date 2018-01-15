@@ -83,14 +83,16 @@
 	</select>
 	<insert id="insertUsers" parameterType="org.platform.snail.portal.model.Member">
 		insert into t_users
-		(USERID, ACCOUNT,NAME
+		(ACCOUNT,NAME,
 		SEX, HEADIMG, LV,EXP,
 		COINS,GEMS,PK_CARD,
 		WECHAT_ID,MOBILE,
 		IS_AGENT,AGENT_ID,
-		LAST_LOGIN_TIME,CREATE_TIME,STATUS
+		LAST_LOGIN_TIME,CREATE_TIME,STATUS,
+		province,language,city,country,
+		union_id,privilege
 		)
-		values (0,
+		values (
 		#{member.account,jdbcType=VARCHAR},
 		#{member.name,jdbcType=VARCHAR},
 		#{member.sex,jdbcType=CHAR},
@@ -104,7 +106,13 @@
 		#{member.mobile,jdbcType=VARCHAR},
 		#{member.isAgent,jdbcType=VARCHAR},
 		#{member.agentId,jdbcType=VARCHAR},
-		now(),now(),1
+		now(),now(),1,
+		#{member.province,jdbcType=VARCHAR},
+		#{member.language,jdbcType=VARCHAR},
+		#{member.city,jdbcType=VARCHAR},
+		#{member.country,jdbcType=VARCHAR},
+		#{member.unionId,jdbcType=VARCHAR},
+		#{member.privilege,jdbcType=VARCHAR}
 		)
 	</insert>
 	<update id="updateUsersByPrimaryKey" parameterType="org.platform.snail.portal.model.Member">
@@ -214,4 +222,10 @@
 		and t.union_id =
 		#{unionId,jdbcType=VARCHAR}
 	</select>
+	<update id="updateMemberLastLoginTimeByUserId">
+		update t_users t
+		set t.last_login_time=now()
+		where
+		t.userid=#{userId,jdbcType=INTEGER}
+	</update>
 </mapper>

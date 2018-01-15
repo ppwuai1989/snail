@@ -17,27 +17,29 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import net.sf.json.JSONObject;
+
 public class HttpClientUtils {
 
-	public static String doGet(String url) {
+	public static JSONObject doGet(String url) {
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 		HttpGet httpGet = new HttpGet(url);
-		String result = "";
+		JSONObject result = null;
 		CloseableHttpResponse response = null;
 		try {
 			response = httpClient.execute(httpGet);
-			
+
 			HttpEntity entity = response.getEntity();
-			
+
 			if (entity != null) {
-				result = EntityUtils.toString(entity);
+				result = JSONObject.fromObject(EntityUtils.toString(entity));
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-		
+
 			try {
 				response.close();
 				httpClient.close();
@@ -48,21 +50,21 @@ public class HttpClientUtils {
 		return result;
 	}
 
-	public static String doPost(String url, List<NameValuePair> params) {
+	public static JSONObject doPost(String url, List<NameValuePair> params) {
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 		HttpPost post = new HttpPost(url);
-		String result = "";
+		JSONObject result = null;
 		try {
 			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params);
 			post.setEntity(entity);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-		}	
+		}
 		try {
 			CloseableHttpResponse response = httpClient.execute(post);
 			HttpEntity entity = response.getEntity();
 			if (entity != null) {
-				result = EntityUtils.toString(entity);
+				result = JSONObject.fromObject(EntityUtils.toString(entity));
 			}
 			response.close();
 		} catch (ClientProtocolException e) {
@@ -70,7 +72,7 @@ public class HttpClientUtils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			
+
 			try {
 				httpClient.close();
 			} catch (IOException e) {
