@@ -85,17 +85,17 @@ function addPanel(title, src, closable) {
 	var iframe = '<iframe name="mainFrame" id="ifr" src="' + src
 			+ '" width="100%" height="' + screenHeight
 			+ 'px" frameborder="0"  scrolling="auto"></iframe>';
-	var isExit = $('#tt').tabs('exists',title);
-	if(!isExit){
+	var isExit = $('#tt').tabs('exists', title);
+	if (!isExit) {
 		$('#tt').tabs('add', {
 			title : title,
 			content : iframe,
 			closable : closable
 		});
-	}else{
-		$('#tt').tabs('select',title);
+	} else {
+		$('#tt').tabs('select', title);
 	}
-	
+
 }
 function removePanel() {
 	var tab = $('#tt').tabs('getSelected');
@@ -107,69 +107,68 @@ function removePanel() {
 function reloadGrid() {
 	var tab = $('#tt').tabs('getSelected');
 	var index = $('#tt').tabs('getTabIndex', tab);
-	var ifr = frames[index-1];
+	var ifr = frames[index - 1];
 	var win = ifr.window || ifr.contentWindow;
 	win.reloadGrid();
 }
 jQuery(function($) {
-	//initWorkflowList();
-	/*$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
-		_title : function(title) {
-			var $title = this.options.title || '&nbsp;'
-			if (("title_html" in this.options)
-					&& this.options.title_html == true)
-				title.html($title);
-			else
-				title.text($title);
-		}
-	}));*/
+	// initWorkflowList();
+	/*
+	 * $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, { _title :
+	 * function(title) { var $title = this.options.title || '&nbsp;' if
+	 * (("title_html" in this.options) && this.options.title_html == true)
+	 * title.html($title); else title.text($title); } }));
+	 */
 });
 function initWorkflowList() {
-	$
-			.ajax({
-				type : "post",
-				url : "/workflow/workflow/findPersonalTask.do",
-				data : {},
-				beforeSend : function(XMLHttpRequest) {
-				},
-				success : function(rst, textStatus) {
+	$.ajax({
+		type : "post",
+		url : "/workflow/workflow/findPersonalTask.do",
+		data : {},
+		beforeSend : function(XMLHttpRequest) {
+		},
+		success : function(rst, textStatus) {
 
-					if (rst) {
-						var html = new Array();
-						html.push('<li class="dropdown-header">');
-						html.push('<i class="ace-icon fa fa-check"></i>');
-						html.push(rst.allRows);
-						html.push(' 任务待完成');
-						html.push('</li>');
-						for ( var i in rst.list) {
-							var o = rst.list[i];
+			if (rst) {
+				var html = new Array();
+				html.push('<li class="dropdown-header">');
+				html.push('<i class="ace-icon fa fa-check"></i>');
+				html.push(rst.allRows);
+				html.push(' 任务待完成');
+				html.push('</li>');
+				for ( var i in rst.list) {
+					var o = rst.list[i];
 
-							html.push('<li>');
-							html.push('<a href="javascript:addPanel(\''+o.name+'\',\''+o.formResourceName+'?taskId='+o.id+'&instanceId='+o.executionId+'\',true)">');
-							html.push('<div class="clearfix">');
-							html.push('<span class="pull-left">'+o.name+'</span>');
-							html.push('<span class="pull-right">'+o.createTime+'</span>');
-							html.push('</div>');
-							//html.push('<div class="progress progress-mini">');
-							//html.push('<div style="width:65%" class="progress-bar"></div>');
-							//html.push('</div>');
-							html.push('</a>');
-							html.push('</li>');
+					html.push('<li>');
+					html.push('<a href="javascript:addPanel(\'' + o.name
+							+ '\',\'' + o.formResourceName + '?taskId=' + o.id
+							+ '&instanceId=' + o.executionId + '\',true)">');
+					html.push('<div class="clearfix">');
+					html.push('<span class="pull-left">' + o.name + '</span>');
+					html.push('<span class="pull-right">' + o.createTime
+							+ '</span>');
+					html.push('</div>');
+					// html.push('<div class="progress progress-mini">');
+					// html.push('<div style="width:65%"
+					// class="progress-bar"></div>');
+					// html.push('</div>');
+					html.push('</a>');
+					html.push('</li>');
 
-							console.log(rst.list[i]);
-						}
-						 $('#workflow-task-list').html(html.join(''));
-						 $('#workflow-task-list-point').html(rst.allRows);
-						 
-					}
-				},
-				complete : function(XMLHttpRequest, textStatus) {
-
-				},
-				error : function() {
-
+					console.log(rst.list[i]);
 				}
-			});
+				$('#workflow-task-list').html(html.join(''));
+				$('#workflow-task-list-point').html(rst.allRows);
+
+			}
+		},
+		complete : function(XMLHttpRequest, textStatus) {
+
+		},
+		error : function() {
+
+		}
+	});
 }
 function addWorkflow(key, name) {
 	$("#dialog-confirm")
@@ -246,60 +245,59 @@ function addWorkflow(key, name) {
 					});
 
 }
-function modifyPasswd(){
+function modifyPasswd() {
 	$("#password").val('');
 	$("#repassword").val('');
-	var dialog=$( "#dialog-message" ).removeClass('hide').dialog({
-		resizable: false,
-		modal: false,
-		title: "密码修改",
-		buttons: [
-			{
-				html: "<i class='ace-icon fa fa-check bigger-110'></i>&nbsp; 确定",
-				"class" : "btn btn-info btn-xs",
-				click: function() {
-					if($('#password').val()==''){
-						alert("请输入密码！");
-						return;
-					}
-					if($('#password').val()!=$('#repassword').val()){
-						alert("两次输入的密码不一致！");
-						return;
-					}
-					if(confirm("确定要修改吗？")){
+	var dialog = $("#dialog-message").removeClass('hide').dialog({
+		resizable : false,
+		modal : false,
+		title : "密码修改",
+		buttons : [ {
+			html : "<i class='ace-icon fa fa-check bigger-110'></i>&nbsp; 确定",
+			"class" : "btn btn-info btn-xs",
+			click : function() {
+				if ($('#password').val() == '') {
+					alert("请输入密码！");
+					return;
+				}
+				if ($('#password').val() != $('#repassword').val()) {
+					alert("两次输入的密码不一致！");
+					return;
+				}
+				if (confirm("确定要修改吗？")) {
 					$.ajax({
 						type : "post",
 						url : contextPath + "/system/updatePassword.do",
-						data:{password:$('#password').val(),repassword:$('#repassword').val()},
+						data : {
+							password : $('#password').val(),
+							repassword : $('#repassword').val()
+						},
 						beforeSend : function(XMLHttpRequest) {
-							
+
 						},
 						success : function(rst, textStatus) {
 							if (rst.state) {
 								alert(rst.errorMessage);
-								dialog.dialog( "close" ); 
-							}else{
+								dialog.dialog("close");
+							} else {
 								alert(rst.errorMessage);
 							}
 						},
 						complete : function(XMLHttpRequest, textStatus) {
-							
+							forbidenToAccess(XMLHttpRequest);
 						},
 						error : function() {
-							
+
 						}
 					});
-					}
 				}
 			}
-			,
-			{
-				html: "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; 取消",
-				"class" : "btn btn-xs",
-				click: function() {
-					$( this ).dialog( "close" );
-				}
+		}, {
+			html : "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; 取消",
+			"class" : "btn btn-xs",
+			click : function() {
+				$(this).dialog("close");
 			}
-		]
+		} ]
 	});
 }

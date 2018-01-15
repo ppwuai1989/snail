@@ -3,67 +3,67 @@ var modifyPassWordForm;
 function createModifyPassWordWindow() {
 	if (!modifyPassWordWindow) {
 		modifyPassWordForm = new Ext.form.FormPanel({
-					labelWidth : 65,
-					baseCls : 'x-plain',
-					snail : false,
-					layout : {
-						type : 'form',
-						align : 'stretch'
-					},
-					defaultType : 'textfield',
-					defaults : {
-						width : 150
-					},
-					width : 150,
-					autoHeight : true,
-					items : [{
-								fieldLabel : "密码",
-								inputType : 'password',
-								name : "password"
-							}, {
-								fieldLabel : "确认密码",
-								inputType : 'password',
-								name : "repassword"
-							}]
+			labelWidth : 65,
+			baseCls : 'x-plain',
+			snail : false,
+			layout : {
+				type : 'form',
+				align : 'stretch'
+			},
+			defaultType : 'textfield',
+			defaults : {
+				width : 150
+			},
+			width : 150,
+			autoHeight : true,
+			items : [ {
+				fieldLabel : "密码",
+				inputType : 'password',
+				name : "password"
+			}, {
+				fieldLabel : "确认密码",
+				inputType : 'password',
+				name : "repassword"
+			} ]
 
-				});
+		});
 		modifyPassWordWindow = new Ext.Window({
-					title : '修改密码',
-					layout : 'fit',
-					bodyStyle : 'padding:5px;',
-					width : 350,
-					height : 150,
-					autoHeight : false,
-					closeAction : 'hide',
-					plain : true,
-					collapsible : true,
-					maximizable : true,
-					buttonAlign : 'center',
-					items : modifyPassWordForm,
-					buttons : [{
-								text : '保存',
-								type : 'submit',
-								disabled : false,
-								iconCls : 'Save',
-								id : "t_modifyPassWord_save",
-								handler : function() {
-									t_save();
-								}
-							}, {
-								text : '清除',
-								iconCls : 'Refresh',
-								handler : function() {
-									var form = modifyPassWordForm.getForm();
-									form.reset();
-								}
-							}, {
-								text : '关闭',
-								iconCls : 'Erase',
-								handler : function() {
-									modifyPassWordWindow.hide();
-								}
-							}]
-				});
+			title : '修改密码',
+			layout : 'fit',
+			bodyStyle : 'padding:5px;',
+			width : 350,
+			height : 150,
+			autoHeight : false,
+			closeAction : 'hide',
+			plain : true,
+			collapsible : true,
+			maximizable : true,
+			buttonAlign : 'center',
+			items : modifyPassWordForm,
+			buttons : [ {
+				text : '保存',
+				type : 'submit',
+				disabled : false,
+				iconCls : 'Save',
+				id : "t_modifyPassWord_save",
+				handler : function() {
+					t_save();
+				}
+			}, {
+				text : '清除',
+				iconCls : 'Refresh',
+				handler : function() {
+					var form = modifyPassWordForm.getForm();
+					form.reset();
+				}
+			}, {
+				text : '关闭',
+				iconCls : 'Erase',
+				handler : function() {
+					modifyPassWordWindow.hide();
+				}
+			} ]
+		});
 
 	}
 
@@ -88,7 +88,7 @@ function t_save() {
 				minWidth : 300,
 				buttons : Ext.Msg.OK
 			});
-			
+
 		},
 		failure : function(response, opts) {
 			t_enableModifyPassWordSave();
@@ -99,10 +99,12 @@ function t_save() {
 				minWidth : 300,
 				buttons : Ext.Msg.OK
 			});
+		},
+		complete : function(XMLHttpRequest, textStatus) {
+			forbidenToAccess(XMLHttpRequest);
 		}
 	})
 }
-
 
 function t_disableModifyPassWordSave() {
 	Ext.getCmp('t_modifyPassWord_save').disable();

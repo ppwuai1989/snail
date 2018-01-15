@@ -99,12 +99,23 @@ public class SystemUserFilter implements Filter {
 							res.setStatus(HttpServletResponse.SC_FORBIDDEN);
 							return;
 						} else {
-							res.sendRedirect("/portal/dynamic/common/kicked.jsp");							
+							res.sendRedirect("/portal/dynamic/common/kicked.jsp");	
+							return;
 						}
 					}
 				}
 			} else {
-				res.sendRedirect("/portal/dynamic/view");
+				String type = req.getHeader("X-Requested-With") == null ? ""
+						: req.getHeader("X-Requested-With");
+				if (StringUtils.equals(type, "XMLHttpRequest")) {
+					res.setHeader("UNLOGIN", "UNLOGIN");
+					res.setHeader("UNLOGINPATH", "/portal/dynamic/common/unLogin.jsp");
+					res.setStatus(HttpServletResponse.SC_FOUND);
+					return;
+				} else {
+					res.sendRedirect("/portal/dynamic/common/unLogin.jsp");		
+					return;
+				}				
 			}
 		} catch (Exception e) {
 			System.out.println(this.getClass().getName() + "出错啦" + e.getMessage());
