@@ -43,11 +43,30 @@ public class Member implements Serializable {
 
 	private String weChatId;
 
+	private String province;
+
+	private String language;
+
+	private String city;
+
+	private String country;
+
+	private String unionId;
+
+	private String privilege;
+
+	private String introducer;
+
 	private String mobile;
 
 	private String isAgent;
 
 	private String agentId;
+
+	private String agentLevel;
+
+	private String parent_agent_id;
+
 	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date lastLoginTime;
 
@@ -55,6 +74,58 @@ public class Member implements Serializable {
 	private Date createTime;
 
 	private String status;
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getUnionId() {
+		return unionId;
+	}
+
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
+	}
+
+	public String getPrivilege() {
+		return privilege;
+	}
+
+	public void setPrivilege(String privilege) {
+		this.privilege = privilege;
+	}
+
+	public String getIntroducer() {
+		return introducer;
+	}
+
+	public void setIntroducer(String introducer) {
+		this.introducer = introducer;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
 	public String getUserId() {
 		return userId;
@@ -231,14 +302,40 @@ public class Member implements Serializable {
 		this.lastLoginTime = lastLoginTime;
 	}
 
+	public String getAgentLevel() {
+		return agentLevel;
+	}
+
+	public void setAgentLevel(String agentLevel) {
+		this.agentLevel = agentLevel;
+	}
+
+	public String getParent_agent_id() {
+		return parent_agent_id;
+	}
+
+	public void setParent_agent_id(String parent_agent_id) {
+		this.parent_agent_id = parent_agent_id;
+	}
+
 	@Override
 	public String toString() {
 		return "Member [userId=" + userId + ", account=" + account + ", password=" + password + ", name=" + name
 				+ ", sex=" + sex + ", headImg=" + headImg + ", level=" + level + ", experience=" + experience
 				+ ", coins=" + coins + ", gems=" + gems + ", pkCard=" + pkCard + ", roomId=" + roomId + ", gameType="
-				+ gameType + ", history=" + history + ", weChatId=" + weChatId + ", mobile=" + mobile + ", isAgent="
-				+ isAgent + ", agentId=" + agentId + ", lastLoginTime=" + lastLoginTime + ", createTime=" + createTime
-				+ ", status=" + status + "]";
+				+ gameType + ", history=" + history + ", weChatId=" + weChatId + ", province=" + province + ", city="
+				+ city + ", country=" + country + ", unionId=" + unionId + ", privilege=" + privilege + ", introducer="
+				+ introducer + ", mobile=" + mobile + ", isAgent=" + isAgent + ", agentId=" + agentId + ", agentLevel="
+				+ agentLevel + ", parent_agent_id=" + parent_agent_id + ", lastLoginTime=" + lastLoginTime
+				+ ", createTime=" + createTime + ", status=" + status + "]";
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 }

@@ -3,6 +3,9 @@ package org.platform.snail.portal.service;
 import org.platform.snail.beans.DataResponse;
 import org.platform.snail.beans.SystemUser;
 import org.platform.snail.portal.model.Member;
+import org.platform.snail.portal.vo.MemberVo;
+import org.platform.snail.weixin.model.OAuthInfo;
+import org.platform.snail.weixin.model.UserInfo;
 
 import net.sf.json.JSONObject;
 
@@ -21,7 +24,8 @@ public interface MemberService {
 			throws Exception;
 
 	public abstract DataResponse selectUsersByPrimaryKey(String usersId) throws Exception;
-	
-	
+
 	public abstract DataResponse findMemberAccountInfo(String agentId) throws Exception;
+
+	public abstract DataResponse userLoginOrRegister(UserInfo userInfo,OAuthInfo oAuthInfo) throws Exception;
 }

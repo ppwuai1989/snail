@@ -21,9 +21,15 @@
 		<result column="HISTORY" property="history" jdbcType="VARCHAR" />
 		<result column="WECHAT_ID" property="weChatId" jdbcType="VARCHAR" />
 		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="Language" property="language" jdbcType="VARCHAR" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="COUNTRY" property="country" jdbcType="VARCHAR" />
+		<result column="UNION_ID" property="unionId" jdbcType="VARCHAR" />
+		<result column="PRIVILEGE" property="privilege" jdbcType="VARCHAR" />
+		<result column="INTRODUCER" property="introducer" jdbcType="INTEGER" />
 		<result column="IS_AGENT" property="isAgent" jdbcType="VARCHAR" />
 		<result column="AGENTID" property="agentId" jdbcType="INTEGER" />
-		<result column="IS_AGENT" property="isAgent" jdbcType="VARCHAR" />
 		<result column="STATUS" property="status" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="memberVo" extends="member"
@@ -195,5 +201,17 @@
 		from t_users t
 		where 1=1
 		and t.agent_id=#{agentId}
+	</select>
+	<select id="isExitUsersUnionId" resultType="int">
+		select count(*) from
+		t_users where union_id=#{unionId}
+	</select>
+	<select id="selectMemberByUnionId" resultMap="memberVo"
+		parameterType="java.lang.String">
+		select *
+		from t_users t
+		where 1=1
+		and t.union_id =
+		#{unionId,jdbcType=VARCHAR}
 	</select>
 </mapper>

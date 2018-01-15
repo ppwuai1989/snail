@@ -14,6 +14,8 @@ import org.platform.snail.service.DataBaseLogService;
 import org.platform.snail.utils.CommonKeys;
 import org.platform.snail.utils.SnailBeanUtils;
 import org.platform.snail.utils.SnailUtils;
+import org.platform.snail.weixin.model.OAuthInfo;
+import org.platform.snail.weixin.model.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,18 +55,18 @@ public class MemberServiceImpl implements MemberService {
 	public DataResponse insertUsers(JSONObject josnObject, SystemUser systemUser) throws Exception {
 		Member member = new Member();
 		SnailBeanUtils.copyProperties(member, josnObject);
-		if (SnailUtils.isBlankString(member.getAccount())) {
-			return new DataResponse(false, "账户不能为空!");
-		}
-		if (this.memberDao.isExitUsersAccount(member.getAccount()) > 0) {
-			return new DataResponse(false, "账户已存在!");
-		}
-		if (SnailUtils.isBlankString(member.getWeChatId())) {
-			return new DataResponse(false, "微信号不能为空!");
-		}
-		if (this.memberDao.isExitUsersAccount(member.getWeChatId()) > 0) {
-			return new DataResponse(false, "微信号已存在!");
-		}
+		// if (SnailUtils.isBlankString(member.getAccount())) {
+		// return new DataResponse(false, "账户不能为空!");
+		// }
+		// if (this.memberDao.isExitUsersAccount(member.getAccount()) > 0) {
+		// return new DataResponse(false, "账户已存在!");
+		// }
+		// if (SnailUtils.isBlankString(member.getWeChatId())) {
+		// return new DataResponse(false, "微信号不能为空!");
+		// }
+		// if (this.memberDao.isExitUsersWeChatId(member.getWeChatId()) > 0) {
+		// return new DataResponse(false, "微信号已存在!");
+		// }
 		if (SnailUtils.isBlankString(member.getMobile())) {
 			return new DataResponse(false, "手机号不能为空!");
 		}
@@ -74,8 +76,11 @@ public class MemberServiceImpl implements MemberService {
 		if (SnailUtils.isBlankString(member.getPassword())) {
 			member.setPassword(SnailUtils.getMd5(member.getPassword()));
 		}
-		this.memberDao.insertUsers(member);
-		this.dataBaseLogService.log(CommonKeys.logCreate, "添加", "", member.toString(), "游戏管理-会员管理", systemUser, "26");
+		int insert = this.memberDao.insertUsers(member);
+		if (insert > 0) {
+			this.dataBaseLogService.log(CommonKeys.logCreate, "添加", "", member.toString(), "游戏管理-会员管理", systemUser,
+					"26");
+		}
 		return new DataResponse(true, "添加新会员成功！");
 	}
 
@@ -83,9 +88,9 @@ public class MemberServiceImpl implements MemberService {
 	public DataResponse updateUsers(JSONObject josnObject, SystemUser systemUser) throws Exception {
 		Member member = new Member();
 		SnailBeanUtils.copyProperties(member, josnObject);
-		if (SnailUtils.isBlankString(member.getAccount())) {
-			return new DataResponse(false, "账户不能为空!");
-		}
+		// if (SnailUtils.isBlankString(member.getAccount())) {
+		// return new DataResponse(false, "账户不能为空!");
+		// }
 		if (SnailUtils.isBlankString(member.getWeChatId())) {
 			return new DataResponse(false, "微信号不能为空!");
 		}
@@ -149,10 +154,56 @@ public class MemberServiceImpl implements MemberService {
 			map.put("pkCard", member.getPkCard());
 			rst.setResponse(map);
 			rst.setState(true);
-		}
-		else{
+		} else {
 			rst.setState(false);
 			rst.setErrorMessage("该用户不是代理！");
+		}
+		return rst;
+	}
+
+	/*
+	 * (non-Javadoc) 通过微信注册添加用户
+	 * 
+	 * @see
+	 * org.platform.snail.portal.service.MemberService#insertUsers(net.sf.json.
+	 * JSONObject, org.platform.snail.beans.SystemUser)
+	 */
+	@Override
+	public DataResponse userLoginOrRegister(UserInfo userInfo, OAuthInfo oAuthInfo) throws Exception {
+		DataResponse rst = new DataResponse();
+		int isExit = this.memberDao.isExitUsersUnionId(oAuthInfo.getUnionid());
+		MemberVo memberVo = new MemberVo();
+		if (isExit > 0) {
+			memberVo = this.memberDao.selectMemberByUnionId(oAuthInfo.getUnionid());
+			rst.setState(true);
+			rst.setErrorMessage("用户登录成功！");
+			rst.setResponse(memberVo);
+		} else {
+			Member member = new Member();
+			member.setAccount(oAuthInfo.getUnionid());
+			member.setWeChatId(userInfo.getOpenid());
+			member.setName(userInfo.getNickname());
+			member.setSex(userInfo.getNickname());
+			member.setCity(userInfo.getCity());
+			member.setLanguage(userInfo.getLanguage());
+			member.setProvince(userInfo.getProvince());
+			member.setCountry(userInfo.getCountry());
+			member.setHeadImg(userInfo.getHeadimgurl());
+			member.setPrivilege(userInfo.getPrivilege());
+			member.setWeChatId(oAuthInfo.getUnionid());
+			int insert = this.memberDao.insertUsers(member);
+			if (insert > 0) {
+				memberVo = this.memberDao.selectMemberByUnionId(member.getUnionId());
+				rst.setResponse(memberVo);
+				rst.setErrorMessage("注册成功！");
+				rst.setState(true);
+				this.dataBaseLogService.log(
+						"unionId为[" + memberVo.getUnionId() + "]的用户[" + memberVo.getName() + "]\r\n注册了游戏！", "注册", "",
+						memberVo.toString(), "游戏管理-会员管理", null);
+			} else {
+				rst.setErrorMessage("未注册成功！");
+				rst.setState(false);
+			}
 		}
 		return rst;
 	}

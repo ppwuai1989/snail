@@ -1,6 +1,11 @@
 package org.platform.snail.weixin.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 public class WeChatRequest implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -9,17 +14,25 @@ public class WeChatRequest implements Serializable {
 			+ "&redirect_uri=http://paopao.viphk.ngrok.org/portal/weChat/weChatLogin.do" + "&response_type=code"
 			+ "&scope=snsapi_userinfo" + "&state=123" + "#wechat_redirect";
 
-	public String getOAuthInfo() {		
-		String url = loginDomain + "?appid=" + appId + "&secret=" + appSecret + "&code=" + code + "&grant_type="
+	public String getOAuthInfo() {
+		String url = accessTokenUrl + "?appid=" + appId + "&secret=" + appSecret + "&code=" + code + "&grant_type="
 				+ grantType;
+		url = url.trim();
 		return url;
 	}
 
-	private String getUserInfo = "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID";
+	// "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID";
 
-	private String loginDomain;
+	public List<NameValuePair> getParamsForUser(OAuthInfo oAuthInfo) {
+		List<NameValuePair> list = new ArrayList();
+		list.add(new BasicNameValuePair("access_token", oAuthInfo.getAccess_token()));
+		list.add(new BasicNameValuePair("openid", oAuthInfo.getOpenid()));
+		return list;
+	}
 
-	private String apiDomain;
+	private String accessTokenUrl;
+
+	private String userInfoUrl;
 
 	private String code;
 
@@ -87,14 +100,6 @@ public class WeChatRequest implements Serializable {
 		this.weChatRedirect = weChatRedirect;
 	}
 
-	public String getLoginDomain() {
-		return loginDomain;
-	}
-
-	public void setLoginDomain(String loginDomain) {
-		this.loginDomain = loginDomain;
-	}
-
 	public String getCode() {
 		return code;
 	}
@@ -111,20 +116,28 @@ public class WeChatRequest implements Serializable {
 		this.grantType = grantType;
 	}
 
-	public String getApiDomain() {
-		return apiDomain;
-	}
-
-	public void setApiDomain(String apiDomain) {
-		this.apiDomain = apiDomain;
-	}
-
 	public String getAppSecret() {
 		return appSecret;
 	}
 
 	public void setAppSecret(String appSecret) {
 		this.appSecret = appSecret;
+	}
+
+	public String getAccessTokenUrl() {
+		return accessTokenUrl;
+	}
+
+	public void setAccessTokenUrl(String accessTokenUrl) {
+		this.accessTokenUrl = accessTokenUrl;
+	}
+
+	public String getUserInfoUrl() {
+		return userInfoUrl;
+	}
+
+	public void setUserInfoUrl(String userInfoUrl) {
+		this.userInfoUrl = userInfoUrl;
 	}
 
 }

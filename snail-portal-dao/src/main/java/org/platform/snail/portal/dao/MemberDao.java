@@ -37,4 +37,8 @@ public interface MemberDao {
 
 	// 查询代理账户信息
 	public abstract MemberVo findMemberAccountInfo(@Param("agentId") String agentId);
+	
+	public abstract int isExitUsersUnionId(@Param("unionId") String unionId);
+	
+	public abstract MemberVo selectMemberByUnionId(@Param("unionId") String unionId);
 }
