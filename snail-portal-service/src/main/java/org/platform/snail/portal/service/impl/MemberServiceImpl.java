@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.SqlSession;
 import org.platform.snail.beans.DataResponse;
 import org.platform.snail.beans.SystemUser;
 import org.platform.snail.portal.dao.MemberDao;
@@ -12,6 +13,7 @@ import org.platform.snail.portal.service.MemberService;
 import org.platform.snail.portal.vo.MemberVo;
 import org.platform.snail.service.DataBaseLogService;
 import org.platform.snail.utils.CommonKeys;
+import org.platform.snail.utils.MybatisUtils;
 import org.platform.snail.utils.SnailBeanUtils;
 import org.platform.snail.utils.SnailUtils;
 import org.platform.snail.weixin.model.OAuthInfo;
@@ -183,7 +185,7 @@ public class MemberServiceImpl implements MemberService {
 		} else {
 			Member member = new Member();
 			// 暂时将unionid存入account
-			//初始化账户信息
+			// 初始化账户信息
 			member.setLevel("0");
 			member.setExperience("0");
 			member.setCoins("0");
@@ -192,7 +194,7 @@ public class MemberServiceImpl implements MemberService {
 			member.setIsAgent("0");
 			member.setAccount(userInfo.getUnionid());
 			member.setWeChatId(userInfo.getOpenid());
-			member.setName(userInfo.getNickname());			
+			member.setName(userInfo.getNickname());
 			member.setSex(userInfo.getSex());
 			member.setCity(userInfo.getCity());
 			member.setLanguage(userInfo.getLanguage());
@@ -201,15 +203,13 @@ public class MemberServiceImpl implements MemberService {
 			member.setHeadImg(userInfo.getHeadimgurl());
 			member.setPrivilege(userInfo.getPrivilege());
 			member.setUnionId(userInfo.getUnionid());
-			
-			int insert = this.memberDao.insertUsers(member);
-			if (insert > 0) {				
+			int insert = this.memberDao.registerMemberByWeChat(member);
+			if (insert > 0) {
 				rst.setResponse(member);
 				rst.setErrorMessage("注册成功！");
 				rst.setState(true);
-				this.dataBaseLogService.log(
-						"unionId为[" + member.getUnionId() + "]的用户[" + member.getName() + "]\r\n注册了游戏！", "注册", "",
-						member.toString(), "游戏管理-会员管理", null);
+				this.dataBaseLogService.log("Id为[" + member.getUserId() + "]的用户[" + member.getName() + "]\r\n注册了游戏！",
+						"注册", "", member.toString(), "游戏管理-会员管理", null);
 			} else {
 				rst.setErrorMessage("未注册成功！");
 				rst.setState(false);

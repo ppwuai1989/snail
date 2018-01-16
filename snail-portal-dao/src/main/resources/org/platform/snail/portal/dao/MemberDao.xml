@@ -228,4 +228,42 @@
 		where
 		t.userid=#{userId,jdbcType=INTEGER}
 	</update>
+	<insert id="registerMemberByWeChat"  parameterType="org.platform.snail.portal.model.Member">
+		<selectKey resultType="java.lang.String" order="AFTER"
+			keyProperty="member.userId">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into t_users
+		(ACCOUNT,NAME,
+		SEX, HEADIMG, LV,EXP,
+		COINS,GEMS,PK_CARD,
+		WECHAT_ID,MOBILE,
+		IS_AGENT,AGENT_ID,
+		LAST_LOGIN_TIME,CREATE_TIME,STATUS,
+		province,language,city,country,
+		union_id,privilege
+		)
+		values (
+		#{member.account,jdbcType=VARCHAR},
+		#{member.name,jdbcType=VARCHAR},
+		#{member.sex,jdbcType=CHAR},
+		#{member.headImg,jdbcType=VARCHAR},
+		#{member.level,jdbcType=VARCHAR},
+		#{member.experience,jdbcType=VARCHAR},
+		#{member.coins,jdbcType=VARCHAR},
+		#{member.gems,jdbcType=VARCHAR},
+		#{member.pkCard,jdbcType=VARCHAR},
+		#{member.weChatId,jdbcType=VARCHAR},
+		#{member.mobile,jdbcType=VARCHAR},
+		#{member.isAgent,jdbcType=VARCHAR},
+		#{member.agentId,jdbcType=VARCHAR},
+		now(),now(),1,
+		#{member.province,jdbcType=VARCHAR},
+		#{member.language,jdbcType=VARCHAR},
+		#{member.city,jdbcType=VARCHAR},
+		#{member.country,jdbcType=VARCHAR},
+		#{member.unionId,jdbcType=VARCHAR},
+		#{member.privilege,jdbcType=VARCHAR}
+		)
+	</insert>
 </mapper>

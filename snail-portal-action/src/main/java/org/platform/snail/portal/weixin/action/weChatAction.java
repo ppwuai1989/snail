@@ -11,11 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.NameValuePair;
 import org.platform.snail.beans.DataResponse;
-import org.platform.snail.portal.model.Member;
 import org.platform.snail.portal.service.MemberService;
 import org.platform.snail.utils.HttpClientUtils;
 import org.platform.snail.utils.SnailBeanUtils;
-import org.platform.snail.web.action.BaseController;
+import org.platform.snail.utils.SnailUtils;
 import org.platform.snail.weixin.model.OAuthInfo;
 import org.platform.snail.weixin.model.UserInfo;
 import org.platform.snail.weixin.model.WeChatRequest;
@@ -28,7 +27,7 @@ import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = "/weChat")
-public class weChatAction  {
+public class weChatAction implements Serializable {
 
 	@Autowired
 	private MemberService memberService;
@@ -42,9 +41,10 @@ public class weChatAction  {
 		while (e.hasMoreElements()) {
 			String key = e.nextElement();
 			String value = request.getParameter(key);
-			//System.out.println("获取参数key:[" + key + "]" + ",value:[" + value + "]");
+			// System.out.println("获取参数key:[" + key + "]" + ",value:[" + value +
+			// "]");
 			condition.put(key, value);
-		}
+		}	
 		if (condition.containsKey("code")) {
 			// 初始化请求参数
 			// String url =
@@ -70,11 +70,11 @@ public class weChatAction  {
 					SnailBeanUtils.copyProperties(userInfo, userJson);
 					if (userInfo.getErrcode() == null) {
 						// 没有错误码说明获取用户信息成功，可以登录或者注册
-						dr = this.memberService.userLoginOrRegister(userInfo);						
+						dr = this.memberService.userLoginOrRegister(userInfo);
 					} else {
 						dr.setState(false);
 						dr.setErrorMessage("出错啦！errCode:" + userInfo.getErrcode() + " errMsg:" + userInfo.getErrmsg());
-					}					
+					}
 				} else {
 					dr.setState(false);
 					dr.setErrorMessage("出错啦！errCode:" + oAuthInfo.getErrcode() + "errMsg:" + oAuthInfo.getErrmsg());

@@ -32,7 +32,7 @@ public class HttpClientUtils {
 			HttpEntity entity = response.getEntity();
 
 			if (entity != null) {
-				result = JSONObject.fromObject(EntityUtils.toString(entity));
+				result = JSONObject.fromObject(EntityUtils.toString(entity, "utf-8"));
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -64,7 +64,7 @@ public class HttpClientUtils {
 			CloseableHttpResponse response = httpClient.execute(post);
 			HttpEntity entity = response.getEntity();
 			if (entity != null) {
-				result = JSONObject.fromObject(EntityUtils.toString(entity));
+				result = JSONObject.fromObject(EntityUtils.toString(entity, "utf-8"));
 			}
 			response.close();
 		} catch (ClientProtocolException e) {

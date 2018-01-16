@@ -53,12 +53,15 @@
 							<i
 								class="ace-icon glyphicon  glyphicon-cog  align-top bigger-125 icon-on-right"></i>
 						</button>
-						<button class="btn btn-warning" id="btn-view-del" 
+						<button class="btn btn-warning" id="btn-view-del"
 							authority="${pageContext.request.contextPath}/users/updateUsersStatusByPrimaryKey.do">
 							<i
 								class="ace-icon glyphicon  glyphicon-remove  align-top bigger-125 icon-on-right"></i>
 						</button>
-
+						<button class="btn btn-warning" id="paopao-btn">
+							<i
+								class="ace-icon glyphicon  glyphicon-remove  align-top bigger-125 icon-on-right"></i>
+						</button>
 					</div>
 				</div>
 			</div>
@@ -142,6 +145,19 @@
 	<jsp:include page="../../common/footer-2.jsp" />
 
 	<script type="text/javascript">
+	jQuery(function($) {
+		$("#paopao-btn").attr("disabled",false);
+		$("#paopao-btn").on('click', function() {
+			$.ajax({
+				url : '${pageContext.request.contextPath}/weChat/weChatLogin.do',
+				type : 'get',
+				success : function(data) {
+					console.log("weChat/weChatLogin.do");
+				}
+			})
+		});
+		})
+
 		window.onresize = function() {
 			//console.log('autoWidthJqgrid');
 			$(cfg.grid_selector).jqGrid('setGridWidth',

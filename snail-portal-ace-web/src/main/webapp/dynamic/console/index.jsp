@@ -694,8 +694,7 @@ body {
 			var bt1 = "<%=url_Btn1%>";		
 			var bt2 = "<%=url_Btn2%>";	
 			var bt3 = "<%=url_Btn3%>";	
-			var bt4 = "<%=url_Btn4%>
-		";
+			var bt4 = "<%=url_Btn4%>";
 			makeBtn("btn1", bt1);
 			makeBtn("btn2", bt2);
 			makeBtn("btn3", bt3);

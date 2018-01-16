@@ -13,59 +13,32 @@ public class Member implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String userId;
-
 	private String account;
-
-	/** 保留字段 */
 	private String password;
-
 	private String name;
-
 	private String sex;
-
 	private String headImg;
-
 	private String level;
-
 	private String experience;
-
-	private String coins;
-	/** 房卡 */
+	private String coins;	
 	private String gems;
-
 	private String pkCard;
-
 	private String roomId;
-
 	private String gameType;
-
 	private String history;
-
 	private String weChatId;
-
 	private String province;
-
 	private String language;
-
 	private String city;
-
 	private String country;
-
 	private String unionId;
-
 	private String privilege;
-
 	private String introducer;
-
 	private String mobile;
-
 	private String isAgent;
-
 	private String agentId;
-
 	private String agentLevel;
-
-	private String parent_agent_id;
+	private String parentAgentId;
 
 	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date lastLoginTime;
@@ -310,12 +283,13 @@ public class Member implements Serializable {
 		this.agentLevel = agentLevel;
 	}
 
-	public String getParent_agent_id() {
-		return parent_agent_id;
+
+	public String getParentAgentId() {
+		return parentAgentId;
 	}
 
-	public void setParent_agent_id(String parent_agent_id) {
-		this.parent_agent_id = parent_agent_id;
+	public void setParentAgentId(String parentAgentId) {
+		this.parentAgentId = parentAgentId;
 	}
 
 	@Override
@@ -326,7 +300,7 @@ public class Member implements Serializable {
 				+ gameType + ", history=" + history + ", weChatId=" + weChatId + ", province=" + province + ", city="
 				+ city + ", country=" + country + ", unionId=" + unionId + ", privilege=" + privilege + ", introducer="
 				+ introducer + ", mobile=" + mobile + ", isAgent=" + isAgent + ", agentId=" + agentId + ", agentLevel="
-				+ agentLevel + ", parent_agent_id=" + parent_agent_id + ", lastLoginTime=" + lastLoginTime
+				+ agentLevel + ", parent_agent_id=" + parentAgentId + ", lastLoginTime=" + lastLoginTime
 				+ ", createTime=" + createTime + ", status=" + status + "]";
 	}
 
