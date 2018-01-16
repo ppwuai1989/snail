@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="http://libs.baidu.com/jquery/2.1.1/jquery.min.js"
+	type="text/javascript"></script>
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="button" style="width: 150px;" id="login">登录
+	</input>
+</body>
+<script type="text/javascript">
+	/* $(document).ready(function() {
+		var code = getQueryString("code");
+		alert(code);
+	}) */
+	var oBtn = document.getElementById('login');
+	oBtn
+			.addEventListener(
+					'click',
+					function() {
+						window.location.href = "http://paopao.viphk.ngrok.org/portal/dynamic/view/aaa.html?state=1";
+					}, false);
+	function getCode() {
+		var code = getQueryString("code");
+		var state = getQueryString("state");
+		//alert(code);
+		if (state == 1) {
+			if (code != null) {
+				alert(code);
+				var url = "http://paopao.viphk.ngrok.org/portal/weChat/weChatLogin.do?code="
+						+ code;
+				Ajax.get(url, function(rst) {
+					if (rst.state == true) {
+						alert("登录成功：用户id为" + rst.response.userId);
+					} else {
+						alert("false");
+					}
+				})
+
+			} else {
+				var url = "https://open.weixin.qq.com/connect/oauth2/authorize?"
+						+ "appid=wxe96bbd4187ab4e71&redirect_uri=http://paopao.viphk.ngrok.org/portal/dynamic/view/aaa.html"
+						+ "&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect";
+				window.location.href = url;
+			}
+		}
+	}
+	function callback(a, b) {
+		console.log(a);
+		console.log(b);
+	}
+	var Ajax = {
+		get : function(url, fn) {
+			var obj = new XMLHttpRequest(); // XMLHttpRequest对象用于在后台与服务器交换数据          
+			obj.open('GET', url, true);
+			obj.onreadystatechange = function() {
+				if (obj.readyState == 4 && obj.status == 200
+						|| obj.status == 304) { // readyState == 4说明请求已完成
+					fn.call(this, JSON.parse(obj.responseText)); //从服务器获得数据
+				}
+			};
+			obj.send();
+		},
+		post : function(url, data, fn) { // datat应为'a=a1&b=b1'这种字符串格式，在jq里如果data为对象会自动将对象转成这种字符串格式
+			var obj = new XMLHttpRequest();
+			obj.open("POST", url, true);
+			obj.setRequestHeader("Content-type",
+					"application/x-www-form-urlencoded"); // 添加http头，发送信息至服务器时内容编码类型
+			obj.onreadystatechange = function() {
+				if (obj.readyState == 4
+						&& (obj.status == 200 || obj.status == 304)) { // 304未修改
+					fn.call(this, JSON.parse(obj.responseText));
+				}
+			};
+			obj.send(data);
+		}
+	}
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null)
+			return unescape(r[2]);
+		return null;
+	}
+
+	window.onload = getCode;
+</script>
+</html>

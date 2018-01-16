@@ -65,8 +65,8 @@
 											<label class="block clearfix"> <span
 												class="block input-icon input-icon-right"> <input
 													id="account" type="text" class="form-control"
-													name="account" placeholder="用户名或手机号" value="${account}" /> <i
-													class="ace-icon fa fa-user"></i>
+													name="account" placeholder="用户名或手机号" value="${account}" />
+													<i class="ace-icon fa fa-user"></i>
 											</span>
 											</label> <label class="block clearfix"> <span
 												class="block input-icon input-icon-right"> <input
@@ -92,7 +92,8 @@
 													class="width-35 pull-right btn btn-sm btn-primary">
 													<i class="ace-icon fa fa-key"></i> <span class="bigger-110">登录</span>
 												</button>
-												<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxe96bbd4187ab4e71&redirect_uri=http://paopao.viphk.ngrok.org/portal/weChat/weChatLogin.do&response_type=code&scope=snsapi_userinfo#wechat_redirect">微信登录</a>
+												<a
+													href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxe96bbd4187ab4e71&redirect_uri=http://paopao.viphk.ngrok.org/portal/weChat/weChatLogin.do&response_type=code&scope=snsapi_userinfo#wechat_redirect">微信登录</a>
 											</div>
 
 											<div class="space-4"></div>
@@ -474,6 +475,7 @@
 						});
 		//e.preventDefault();
 	});
+
 	function style_ajax_button(btnId, status) {
 		console.log(status);
 		var btn = $('#' + btnId);

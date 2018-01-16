@@ -44,7 +44,7 @@ public class weChatAction implements Serializable {
 			// System.out.println("获取参数key:[" + key + "]" + ",value:[" + value +
 			// "]");
 			condition.put(key, value);
-		}	
+		}
 		if (condition.containsKey("code")) {
 			// 初始化请求参数
 			// String url =
@@ -84,9 +84,7 @@ public class weChatAction implements Serializable {
 				dr.setErrorMessage("错误--" + e1.getMessage());
 				return dr;
 			}
-		} else
-
-		{
+		} else {
 			dr.setState(false);
 			dr.setErrorMessage("code不存在!");
 		}

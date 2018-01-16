@@ -12,7 +12,8 @@
 </head>
 <body>
 	<h3>
-		警告！非法操作，您已经被系统踢出，请重新登录。<span id="num">3</span>秒后跳转到主页...<a href="/portal/dynamic/view">跳过等待！</a>
+		警告！非法操作，您已经被系统踢出，请重新登录。<span id="num">3</span>秒后跳转到主页...<a
+			href="/portal/dynamic/view">跳过等待！</a>
 	</h3>
 </body>
 <script type="text/javascript">
