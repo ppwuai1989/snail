@@ -1,20 +1,16 @@
 package org.platform.snail.portal.weixin.action;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.http.NameValuePair;
 import org.platform.snail.beans.DataResponse;
 import org.platform.snail.portal.service.MemberService;
 import org.platform.snail.utils.HttpClientUtils;
 import org.platform.snail.utils.SnailBeanUtils;
-import org.platform.snail.utils.SnailUtils;
 import org.platform.snail.weixin.model.OAuthInfo;
 import org.platform.snail.weixin.model.UserInfo;
 import org.platform.snail.weixin.model.WeChatRequest;
