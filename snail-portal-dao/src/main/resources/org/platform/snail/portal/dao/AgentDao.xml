@@ -12,10 +12,10 @@
 		<result column="pk_card" jdbcType="VARCHAR" property="pkCard" />
 		<result column="wechat_id" jdbcType="VARCHAR" property="weChatId" />
 		<result column="mobile" jdbcType="VARCHAR" property="mobile" />
-		<result column="account" jdbcType="VARCHAR" property="account" />
-		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="account" jdbcType="VARCHAR" property="account" />		
 		<result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
 		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
 	</resultMap>
 	<resultMap id="agentVo" extends="agent"
 		type="org.platform.snail.portal.vo.AgentVo">
@@ -25,6 +25,7 @@
 	</select>
 	<sql id="findListWhereCondition">
 		FROM t_users t, users u
+		where t.agent_id=u.user_id
 		<if test='condition.status!=null and condition.status!=""'>
 			and t_users.status =#{condition.status,jdbcType=VARCHAR}
 		</if>
@@ -63,7 +64,7 @@
 				ORDER BY ${orderBy}
 			</when>
 			<otherwise>
-				ORDER BY t_users.agent_id
+				ORDER BY t.agent_id
 			</otherwise>
 		</choose>
 		limit #{start},#{limit}

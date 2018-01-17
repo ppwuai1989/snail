@@ -36,6 +36,16 @@ public class Agent implements java.io.Serializable {
 
 	private String unionId;
 
+	private String mobile;
+
+	private String account;
+
+	private String status;
+	@JsonSerialize(using = CustomDateSerializer.class)
+	private Date lastLoginTime;
+	@JsonSerialize(using = CustomDateSerializer.class)
+	private Date createTime;
+
 	public String getProvince() {
 		return province;
 	}
@@ -67,16 +77,6 @@ public class Agent implements java.io.Serializable {
 	public void setUnionId(String unionId) {
 		this.unionId = unionId;
 	}
-
-	private String mobile;
-
-	private String account;
-
-	private String status;
-	@JsonSerialize(using = CustomDateSerializer.class)
-	private Date lastLoginTime;
-	@JsonSerialize(using = CustomDateSerializer.class)
-	private Date createTime;
 
 	public String getAgentId() {
 		return agentId;

@@ -21,32 +21,38 @@
 
 			<div class="widget-body">
 				<div class="widget-main padding-6">
-					<form action="#" id="fm-search">
-						微信号： <input name="weChatId" type="text" style="width: 200px;"
-							placeholder="微信号" /> 用户名称： <input name="name" type="text"
-							style="width: 200px;" placeholder="用户名称" /> 手机号： <input
-							name="mobile" type="text" style="width: 200px;" placeholder="手机号" />
+					<form action="#" id="fm-search">						
+						代理编号： <input name="agentId" type="text" style="width: 100px;"
+							placeholder="代理编号" /> 上级编号： <input name="parentAgentId"
+							type="text" style="width: 100px;" placeholder="上级编号" />代理等级：<input
+							class="easyui-combobox" id="agentLevel"
+							style="width: 50px; height: 30px; line-height: 30px;"
+							name="agentLevel"
+							data-options="
+                    panelHeight:'auto'
+            ">
+						昵称： <input name="name" type="text" style="width: 100px;"
+							placeholder="昵称" /> 手机号： <input name="mobile" type="text"
+							style="width: 100px;" placeholder="手机号" />
 						<button class="btn btn-info" id="btn-search"
-							authority="${pageContext.request.contextPath}/agent/findMemberList.do">
+							authority="${pageContext.request.contextPath}/agent/findAgentList.do">
 							<i
 								class="ace-icon fa fa-search  align-top bigger-125 icon-on-right"></i>
 						</button>
-						
 					</form>
 					<div id="toolbar" class="toolbar">
-
 						<button class="btn btn-info" id="btn-view-add"
-							authority="${pageContext.request.contextPath}/agent/insertMember.do">
+							authority="${pageContext.request.contextPath}/agent/insertAgent.do">
 							<i
 								class="ace-icon fa fa-plus-square  align-top bigger-125 icon-on-right"></i>
 						</button>
 						<button class="btn btn-info" id="btn-view-edit"
-							authority="${pageContext.request.contextPath}/agent/updateMember.do">
+							authority="${pageContext.request.contextPath}/agent/updateAgent.do">
 							<i
 								class="ace-icon fa fa-edit  align-top bigger-125 icon-on-right"></i>
 						</button>
 						<button class="btn btn-warning" id="btn-view-del"
-							authority="${pageContext.request.contextPath}/agent/updateMemberStatusByPrimaryKey.do">
+							authority="${pageContext.request.contextPath}/agent/updateAgentStatusByPrimaryKey.do">
 							<i
 								class="ace-icon glyphicon  glyphicon-remove  align-top bigger-125 icon-on-right"></i>
 						</button>
@@ -70,34 +76,35 @@
 	<jsp:include page="../../common/footer-2.jsp" />
 
 	<script type="text/javascript">
-	//加载账户信息
-	$(document).ready(
-				function(){
-					$
-					.ajax({
-						url : '${pageContext.request.contextPath}/agent/findMemberAccountInfo.do',
-						type : 'get',
-						success : function(data) {
-							if (data.state) {
+		//给复选框赋值
+		$(document).ready(function(){			//1:XX;2:XX;
 							
-							}
-						}
-					})
-				}
-			);
-	function convertZero(value) {
-		if (value == null || value == "") {
-			value = 0;
+		var data = odparse("STATIC_DATA_06").split(';');
+			var themecombo2 = [ {
+				'text' : '全部',
+				'value' : ''
+			} ];
+			for (var i = 0; i < data.length; i++) {
+				themecombo2.push({
+					"text" : data[i].split(':')[1],
+					"value" : data[i].split(':')[0]
+				});
+			}
+			$("#agentLevel").combobox("loadData", themecombo2);
+		})
+		function convertZero(value) {
+			if (value == null || value == "") {
+				value = 0;
+			}
+			return value;
 		}
-		return value;
-	}
-			window.onresize = function() {
-				//console.log('autoWidthJqgrid');
-				$(cfg.grid_selector).jqGrid('setGridWidth',
-						$(".page-content").width());
-				$(cfg.grid_selector).jqGrid('setGridHeight',
-						window.innerHeight - 320);
-			} 
+		window.onresize = function() {
+			//console.log('autoWidthJqgrid');
+			$(cfg.grid_selector).jqGrid('setGridWidth',
+					$(".page-content").width());
+			$(cfg.grid_selector).jqGrid('setGridHeight',
+					window.innerHeight - 320);
+		}
 	</script>
 </body>
 </html>
