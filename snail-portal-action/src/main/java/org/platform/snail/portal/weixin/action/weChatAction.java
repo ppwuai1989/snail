@@ -47,8 +47,8 @@ public class weChatAction implements Serializable {
 			// "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
 			WeChatRequest wcr = new WeChatRequest();
 			wcr.setAccessTokenUrl("https://api.weixin.qq.com/sns/oauth2/access_token");
-			wcr.setAppId("wxe96bbd4187ab4e71");
-			wcr.setAppSecret("562a2bf5af2dcadc1c21a8f58ef0f347");
+			wcr.setAppId("wxa3f5e1cddb861157");			
+			wcr.setAppSecret("7fc77acee7d1497fcdc9be90d554181a");
 			wcr.setCode(condition.get("code"));
 			wcr.setGrantType("authorization_code");
 			String oAuthUrl = wcr.getOAuthInfo();

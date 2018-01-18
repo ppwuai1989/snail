@@ -1,5 +1,5 @@
 var _colNames = [ '用户编号', '账户', '用户名', '头像', '性别', '金币数', '房卡数', '比武卡', '注册日期',
-		'状态', '最后登录时间', '手机号', '微信号', '代理标识' ];
+		'状态', '最后登录时间', '手机号', '微信号', '代理标识','推荐人编号' ];
 var _colModel = function() {
 	return [
 			{
@@ -15,6 +15,7 @@ var _colModel = function() {
 				name : 'account',
 				width : 100,
 				editable : true,
+				hidden : true,
 				editoptions : {
 					size : "20",
 					maxlength : "30",
@@ -156,7 +157,7 @@ var _colModel = function() {
 				name : 'weChatId',
 				width : 80,
 				editable : true,
-				//hidden : true,
+				hidden : true,
 				editoptions : {
 					size : "20",
 					maxlength : "11",
@@ -184,6 +185,16 @@ var _colModel = function() {
 						rst = "N/A";
 					}
 					return rst;
+				}
+			}, {
+				name : 'introducer',
+				width : 80,
+				editable : true,
+				hidden : true,
+				editoptions : {
+					size : "20",
+					maxlength : "11",
+					readonly : true
 				}
 			} ];
 }

@@ -30,6 +30,9 @@ public class MemberAction extends BaseController {
 	@ResponseBody
 	public DataResponse findUsersList(MemberVo condition, Page page) {
 		try {
+			//20180118判断当前用户是否为代理，并查询相应权限的页面
+			SystemUser systemUser = this.getSessionSystemUser();
+			
 			DataResponse rst = this.memberService.findUsersList(condition, page.getStart(), page.getLimit(),
 					page.getOrderBy());
 			if (rst.getAllRows() == null) {

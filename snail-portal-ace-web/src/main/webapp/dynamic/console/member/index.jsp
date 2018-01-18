@@ -22,10 +22,10 @@
 			<div class="widget-body">
 				<div class="widget-main padding-6">
 					<form action="#" id="fm-search">
-						微信号： <input name="weChatId" type="text" style="width: 200px;"
-							placeholder="微信号" /> 用户名称： <input name="name" type="text"
-							style="width: 200px;" placeholder="用户名称" /> 手机号： <input
-							name="mobile" type="text" style="width: 200px;" placeholder="手机号" />
+						会员编号： <input name="userId" type="text" style="width: 100px;"
+							placeholder="会员编号" /> 用户名称： <input name="name" type="text"
+							style="width: 150px;" placeholder="用户名称" /> 手机号： <input
+							name="mobile" type="text" style="width: 100px;" placeholder="手机号" />
 						<button class="btn btn-info" id="btn-search"
 							authority="${pageContext.request.contextPath}/member/findMemberList.do">
 							<i

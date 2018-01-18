@@ -38,49 +38,40 @@
 	<select id="init" resultType="int">
 		select 1 from dual
 	</select>
-	<sql id="usersSearchPagingWhereCondition">
-		from t_users where 1=1
+	<sql id="usersPagingWhereCondition">
+		from T_USERS where 1=1
 		<if test='condition.status!=null and condition.status!=""'>
 			and t_users.status =#{condition.status,jdbcType=VARCHAR}
 		</if>
 		<if test='condition.name!=null and condition.name!=""'>
 			and t_users.name like
 			concat(#{condition.name,jdbcType=VARCHAR},'%')
-		</if>
-		<if test='condition.account!=null and condition.account!=""'>
-			and t_users.name like
-			concat(#{condition.account,jdbcType=VARCHAR},'%')
-		</if>
+		</if>	
 		<if test='condition.roomId!=null and condition.roomId!=""'>
 			and t_users.roomId =#{condition.roomId,jdbcType=VARCHAR}
-		</if>
-		<if test='condition.weChatId!=null and condition.weChatId!=""'>
-			and
-			t_users.weChat_Id=#{condition.weChatId,jdbcType=VARCHAR}
-		</if>
+		</if>		
 		<if test='condition.mobile!=null and condition.mobile!=""'>
 			and t_users.mobile=#{condition.mobile,jdbcType=VARCHAR}
 		</if>
 	</sql>
-	<select id="findUsersSearchCount" resultType="int">
+	<select id="findUsersCount" resultType="int">
 		SELECT COUNT(*)
-		<include refid="usersSearchPagingWhereCondition" />
+		<include refid="usersPagingWhereCondition" />
 	</select>
-	<select id="findUsersSearchList" resultType="map">
-		select
-		t_users.user_id code,
-		t_users.name name
-		<include refid="usersSearchPagingWhereCondition" />
+	<select id="findUsersList" resultMap="memberVo">
+		select *
+		<include refid="usersPagingWhereCondition" />
 		<choose>
 			<when test='orderBy!=null and orderBy!=""'>
 				ORDER BY ${orderBy}
 			</when>
 			<otherwise>
-				ORDER BY t_users.user_id
+				ORDER BY t_users.userid
 			</otherwise>
 		</choose>
 		limit #{start},#{limit}
 	</select>
+	
 	<insert id="insertUsers" parameterType="org.platform.snail.portal.model.Member">
 		insert into t_users
 		(ACCOUNT,NAME,
@@ -142,47 +133,7 @@
 		set STATUS = #{status,jdbcType=CHAR}
 		where userid = #{userId,jdbcType=INTEGER}
 	</update>
-	<sql id="usersPagingWhereCondition">
-		from T_USERS where 1=1
-		<if test='condition.status!=null and condition.status!=""'>
-			and t_users.status =#{condition.status,jdbcType=VARCHAR}
-		</if>
-		<if test='condition.name!=null and condition.name!=""'>
-			and t_users.name like
-			concat(#{condition.name,jdbcType=VARCHAR},'%')
-		</if>
-		<if test='condition.account!=null and condition.account!=""'>
-			and t_users.name like
-			concat(#{condition.account,jdbcType=VARCHAR},'%')
-		</if>
-		<if test='condition.roomId!=null and condition.roomId!=""'>
-			and t_users.roomId =#{condition.roomId,jdbcType=VARCHAR}
-		</if>
-		<if test='condition.weChatId!=null and condition.weChatId!=""'>
-			and
-			t_users.weChat_Id=#{condition.weChatId,jdbcType=VARCHAR}
-		</if>
-		<if test='condition.mobile!=null and condition.mobile!=""'>
-			and t_users.mobile=#{condition.mobile,jdbcType=VARCHAR}
-		</if>
-	</sql>
-	<select id="findUsersCount" resultType="int">
-		SELECT COUNT(*)
-		<include refid="usersPagingWhereCondition" />
-	</select>
-	<select id="findUsersList" resultMap="memberVo">
-		select *
-		<include refid="usersPagingWhereCondition" />
-		<choose>
-			<when test='orderBy!=null and orderBy!=""'>
-				ORDER BY ${orderBy}
-			</when>
-			<otherwise>
-				ORDER BY t_users.userid
-			</otherwise>
-		</choose>
-		limit #{start},#{limit}
-	</select>
+	
 	<select id="selectUsersVoByPrimaryKey" resultMap="memberVo"
 		parameterType="java.lang.String">
 		select *
