@@ -23,9 +23,11 @@ public interface MemberDao {
 	public abstract int updateUsersStatusByPrimaryKey(@Param("userId") String userId, @Param("status") String status);
 
 	public abstract List<MemberVo> findUsersList(@Param("condition") Member condition, @Param("start") int start,
-			@Param("limit") int limit, @Param("orderBy") String orderBy);
+			@Param("limit") int limit, @Param("orderBy") String orderBy, @Param("agentSearch") String agentSearch,
+			@Param("agentSearchId") String agentSearchId);
 
-	public abstract int findUsersCount(@Param("condition") Member condition);
+	public abstract int findUsersCount(@Param("condition") Member condition, @Param("agentSearch") String agentSearch,
+			@Param("agentSearchId") String agentSearchId);
 
 	public abstract MemberVo selectUsersVoByPrimaryKey(@Param("userId") String userId);
 
@@ -43,6 +45,6 @@ public interface MemberDao {
 	public abstract MemberVo selectMemberByUnionId(@Param("unionId") String unionId);
 
 	public abstract int updateMemberLastLoginTimeByUserId(@Param("userId") String userId);
-	
+
 	public abstract int registerMemberByWeChat(@Param("member") Member member);
 }

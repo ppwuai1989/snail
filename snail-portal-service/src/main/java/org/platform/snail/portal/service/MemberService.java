@@ -14,7 +14,7 @@ public interface MemberService {
 	public abstract DataResponse findUsersSearchList(Member condition, int start, int limit, String orderBy)
 			throws Exception;
 
-	public abstract DataResponse findUsersList(Member condition, int start, int limit, String orderBy) throws Exception;
+	public abstract DataResponse findUsersList(Member condition, int start, int limit, String orderBy,SystemUser systemUser) throws Exception;
 
 	public abstract DataResponse insertUsers(JSONObject josnObject, SystemUser systemUser) throws Exception;
 

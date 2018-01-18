@@ -27,6 +27,7 @@ public class WeChatRequest implements Serializable {
 		List<NameValuePair> list = new ArrayList();
 		list.add(new BasicNameValuePair("access_token", oAuthInfo.getAccess_token()));
 		list.add(new BasicNameValuePair("openid", oAuthInfo.getOpenid()));
+		list.add(new BasicNameValuePair("lang", "zh_CN"));
 		return list;
 	}
 

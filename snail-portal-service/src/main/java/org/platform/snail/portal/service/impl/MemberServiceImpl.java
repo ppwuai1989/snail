@@ -42,12 +42,22 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public DataResponse findUsersList(Member condition, int start, int limit, String orderBy) throws Exception {
+	public DataResponse findUsersList(Member condition, int start, int limit, String orderBy, SystemUser systemUser)
+			throws Exception {
 		DataResponse rst = new DataResponse();
-		List<MemberVo> list = this.memberDao.findUsersList(condition, start, start + limit, orderBy);
+		// 20180118判断当前用户是否为代理，并查询相应权限的页面
+		String isSearch = "";
+		String agentId = "";
+		if (systemUser.getAgent() != null) {
+			agentId = systemUser.getAgent().getAgentId();
+			if (SnailUtils.isNotBlankString(agentId)) {
+				isSearch = "1";
+			}
+		}
+		List<MemberVo> list = this.memberDao.findUsersList(condition, start, start + limit, orderBy, isSearch, agentId);
 		rst.setList(list);
 		if (start <= 1) {
-			int allRows = this.memberDao.findUsersCount(condition);
+			int allRows = this.memberDao.findUsersCount(condition, isSearch, agentId);
 			rst.setAllRows(allRows);
 		}
 		return rst;

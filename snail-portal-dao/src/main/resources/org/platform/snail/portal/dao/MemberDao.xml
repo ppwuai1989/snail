@@ -39,19 +39,48 @@
 		select 1 from dual
 	</select>
 	<sql id="usersPagingWhereCondition">
-		from T_USERS where 1=1
+		from T_USERS t where 1=1
 		<if test='condition.status!=null and condition.status!=""'>
-			and t_users.status =#{condition.status,jdbcType=VARCHAR}
+			and t.status =#{condition.status,jdbcType=VARCHAR}
 		</if>
 		<if test='condition.name!=null and condition.name!=""'>
-			and t_users.name like
+			and t.name like
 			concat(#{condition.name,jdbcType=VARCHAR},'%')
-		</if>	
+		</if>
 		<if test='condition.roomId!=null and condition.roomId!=""'>
-			and t_users.roomId =#{condition.roomId,jdbcType=VARCHAR}
-		</if>		
+			and t.roomId =#{condition.roomId,jdbcType=VARCHAR}
+		</if>
 		<if test='condition.mobile!=null and condition.mobile!=""'>
-			and t_users.mobile=#{condition.mobile,jdbcType=VARCHAR}
+			and t.mobile=#{condition.mobile,jdbcType=VARCHAR}
+		</if>
+		<!-- agentSearch为1代表是 代理在使用 找到他的所有附属 -->
+		<if test='agentSearch=="1" and agentSearchId!=null and agentSearchId!=""'>
+			and EXISTS(
+			SELECT *
+			FROM
+			(
+			SELECT a.userid
+			FROM t_users a
+			WHERE a.parent_agent_id=${agentSearchId} UNION
+			SELECT b.userid
+			FROM t_users b
+			WHERE
+			EXISTS(
+			SELECT *
+			FROM t_users c
+			WHERE c.parent_agent_id=${agentSearchId} AND
+			c.agent_id=b.parent_agent_id) UNION
+			SELECT d.userid
+			FROM t_users d
+			WHERE EXISTS(
+			SELECT *
+			FROM t_users b
+			WHERE EXISTS(
+			SELECT *
+			FROM t_users
+			c
+			WHERE c.parent_agent_id=${agentSearchId} AND c.agent_id=b.parent_agent_id) AND
+			b.agent_id=d.parent_agent_id)) r where r.userid=t.userid )
 		</if>
 	</sql>
 	<select id="findUsersCount" resultType="int">
@@ -66,12 +95,12 @@
 				ORDER BY ${orderBy}
 			</when>
 			<otherwise>
-				ORDER BY t_users.userid
+				ORDER BY t.userid
 			</otherwise>
 		</choose>
 		limit #{start},#{limit}
 	</select>
-	
+
 	<insert id="insertUsers" parameterType="org.platform.snail.portal.model.Member">
 		insert into t_users
 		(ACCOUNT,NAME,
@@ -133,7 +162,7 @@
 		set STATUS = #{status,jdbcType=CHAR}
 		where userid = #{userId,jdbcType=INTEGER}
 	</update>
-	
+
 	<select id="selectUsersVoByPrimaryKey" resultMap="memberVo"
 		parameterType="java.lang.String">
 		select *
@@ -179,7 +208,7 @@
 		where
 		t.userid=#{userId,jdbcType=INTEGER}
 	</update>
-	<insert id="registerMemberByWeChat"  parameterType="org.platform.snail.portal.model.Member">
+	<insert id="registerMemberByWeChat" parameterType="org.platform.snail.portal.model.Member">
 		<selectKey resultType="java.lang.String" order="AFTER"
 			keyProperty="member.userId">
 			SELECT LAST_INSERT_ID()
