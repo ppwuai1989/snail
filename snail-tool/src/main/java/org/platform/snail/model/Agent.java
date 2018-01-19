@@ -83,7 +83,7 @@ public class Agent implements java.io.Serializable {
 	}
 
 	public void setAgentId(String agentId) {
-		this.agentId = agentId;
+		this.agentId = agentId == "" ? null : agentId;
 	}
 
 	public String getName() {
@@ -107,7 +107,7 @@ public class Agent implements java.io.Serializable {
 	}
 
 	public void setCoins(String coins) {
-		this.coins = coins;
+		this.coins = coins == "" ? null : coins;
 	}
 
 	public String getGems() {
@@ -115,7 +115,7 @@ public class Agent implements java.io.Serializable {
 	}
 
 	public void setGems(String gems) {
-		this.gems = gems;
+		this.gems = gems == "" ? null : gems;
 	}
 
 	public String getPkCard() {
@@ -123,7 +123,7 @@ public class Agent implements java.io.Serializable {
 	}
 
 	public void setPkCard(String pkCard) {
-		this.pkCard = pkCard;
+		this.pkCard = pkCard == "" ? null : pkCard;
 	}
 
 	public String getWeChatId() {
@@ -179,7 +179,7 @@ public class Agent implements java.io.Serializable {
 	}
 
 	public void setParentAgentId(String parentAgentId) {
-		this.parentAgentId = parentAgentId;
+		this.parentAgentId = parentAgentId == "" ? null : parentAgentId;
 	}
 
 	public String getAgentLevel() {

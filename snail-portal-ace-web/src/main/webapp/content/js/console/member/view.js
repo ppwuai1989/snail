@@ -79,7 +79,7 @@ jQuery(function($) {
 
 						editurl : cfg.grid_edit_data_url,// nothing is saved
 						addurl : cfg.grid_add_data_url,
-						deleteurl : cfg.grid_delete_data_url,
+						deleteurl : cfg.grid_delete_data_url,						
 						caption : cfg.caption
 
 					// ,autowidth: true,

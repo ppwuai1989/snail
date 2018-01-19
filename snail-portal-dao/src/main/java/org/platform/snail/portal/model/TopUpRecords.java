@@ -25,7 +25,12 @@ public class TopUpRecords implements Serializable {
 
 	private String userId;
 
+	private String userName;
+
 	private String agentId;
+
+	private String agentName;
+
 	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date createTime;
 
@@ -69,8 +74,6 @@ public class TopUpRecords implements Serializable {
 		this.gems = gems;
 	}
 
-	
-
 	public String getPkCard() {
 		return pkCard;
 	}
@@ -95,7 +98,6 @@ public class TopUpRecords implements Serializable {
 		this.agentId = agentId;
 	}
 
-
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -104,11 +106,29 @@ public class TopUpRecords implements Serializable {
 		this.createTime = createTime;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getAgentName() {
+		return agentName;
+	}
+
+	public void setAgentName(String agentName) {
+		this.agentName = agentName;
+	}
+
 	@Override
 	public String toString() {
 		return "TopUpRecords [id=" + id + ", way=" + way + ", cost=" + cost + ", coins=" + coins + ", gems=" + gems
-				+ ", pkCard=" + pkCard + ", userId=" + userId + ", agentId=" + agentId + ", createTime="
-				+ createTime + "]";
+				+ ", pkCard=" + pkCard + ", userId=" + userId + ", userName=" + userName + ", agentId=" + agentId
+				+ ", agentName=" + agentName + ", createTime=" + createTime + "]";
 	}
+
+	
 
 }

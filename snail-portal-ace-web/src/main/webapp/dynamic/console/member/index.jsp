@@ -65,8 +65,14 @@
 							<i
 								class="ace-icon glyphicon  glyphicon-remove  align-top bigger-125 icon-on-right"></i>
 						</button>
+						<button class="btn btn-info" id="btn-view-topUp"
+							authority="${pageContext.request.contextPath}/member/topUpMember.do">
+							<i
+								class="ace-icon fa fa-cny  align-top bigger-125 icon-on-right"></i>
+						</button>
 
 					</div>
+					
 				</div>
 			</div>
 		</div>

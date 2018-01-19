@@ -20,7 +20,7 @@ public class Member implements Serializable {
 	private String headImg;
 	private String level;
 	private String experience;
-	private String coins;	
+	private String coins;
 	private String gems;
 	private String pkCard;
 	private String roomId;
@@ -168,7 +168,7 @@ public class Member implements Serializable {
 	}
 
 	public void setExperience(String experience) {
-		this.experience = experience;
+		this.experience = experience == "" ? null : experience;
 	}
 
 	public String getCoins() {
@@ -176,7 +176,7 @@ public class Member implements Serializable {
 	}
 
 	public void setCoins(String coins) {
-		this.coins = coins;
+		this.coins = coins == "" ? null : coins;
 	}
 
 	public String getGems() {
@@ -184,7 +184,7 @@ public class Member implements Serializable {
 	}
 
 	public void setGems(String gems) {
-		this.gems = gems;
+		this.gems = gems == "" ? null : gems;
 	}
 
 	public String getPkCard() {
@@ -192,7 +192,7 @@ public class Member implements Serializable {
 	}
 
 	public void setPkCard(String pkCard) {
-		this.pkCard = pkCard;
+		this.pkCard = pkCard == "" ? null : pkCard;
 	}
 
 	public String getRoomId() {
@@ -248,7 +248,7 @@ public class Member implements Serializable {
 	}
 
 	public void setAgentId(String agentId) {
-		this.agentId = agentId;
+		this.agentId = agentId == "" ? null : agentId;
 	}
 
 	public Date getCreateTime() {
@@ -283,13 +283,12 @@ public class Member implements Serializable {
 		this.agentLevel = agentLevel;
 	}
 
-
 	public String getParentAgentId() {
 		return parentAgentId;
 	}
 
 	public void setParentAgentId(String parentAgentId) {
-		this.parentAgentId = parentAgentId;
+		this.parentAgentId = parentAgentId == "" ? null : parentAgentId;
 	}
 
 	@Override

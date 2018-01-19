@@ -36,7 +36,7 @@ jQuery(function($) {
 										'<div class="widget-header" />')
 								style_edit_form(form);
 							},
-							errorTextFormat : function(request,editType) {
+							errorTextFormat : function(request, editType) {
 								forbidenToAccess(request)
 							}
 						})
@@ -64,12 +64,66 @@ jQuery(function($) {
 										'<div class="widget-header" />')
 								style_edit_form(form);
 							},
-							errorTextFormat : function(request,editType) {
+							errorTextFormat : function(request, editType) {
 								forbidenToAccess(request)
 							}
 						})
 			});
-	
+	$('#btn-view-topUp').on(
+			'click',
+			function() {
+				var gr = jQuery(cfg.grid_selector).jqGrid('getGridParam',
+						'selrow');
+				if (!gr) {
+					$.jgrid.info_dialog($.jgrid.nav.alertcap,
+							$.jgrid.nav.alerttext)
+				}
+				jQuery(cfg.grid_selector).jqGrid(
+						'editGridRow',
+						gr,
+						{
+							url : cfg.grid_topup_data_url,
+							closeAfterAdd : true,
+							recreateForm : true,
+							viewPagerButtons : true,
+							beforeShowForm : function(e) {
+								var form = $(e[0]);
+								var col = form[0];
+								for (var i = 0; i < col.length; i++) {
+									if (col[i].id != "coins"
+											&& col[i].id != "gems"
+											&& col[i].id != "pkCard") {
+										col[i].disabled = true;
+									} else {
+										col[i].disabled = false;
+										col[i].value = 0;
+									}
+								}
+								form.closest('.ui-jqdialog').find(
+										'.ui-jqdialog-titlebar').wrapInner(
+										'<div class="widget-header" />')
+								style_edit_form(form);
+							},
+							errorTextFormat : function(request, editType) {
+								forbidenToAccess(request)
+							},
+							afterComplete : function(res, postdata, formid) {
+								var coins = $("#agent-account-coins").text();
+								var gems = $("#agent-account-gems").text();
+								var pkCard = $("#agent-account-pkCard").text();
+								if (coins != null && coins != "") {
+									$("#agent-account-coins").text(coins-postdata.coins);
+								}
+								if (gems != null && gems != "") {
+									$("#agent-account-gems").text(gems-postdata.gems);
+								}
+								if (pkCard != null && pkCard != "") {
+									$("#agent-account-pkCard").text(pkCard-postdata.pkCard);
+								}
+							}
+						})
+			});
+
 	$('#btn-view-del').on(
 			'click',
 			function() {
@@ -92,7 +146,7 @@ jQuery(function($) {
 										'<div class="widget-header" />')
 								style_edit_form(form);
 							},
-							errorTextFormat : function(request,editType) {
+							errorTextFormat : function(request, editType) {
 								forbidenToAccess(request)
 							}
 						})

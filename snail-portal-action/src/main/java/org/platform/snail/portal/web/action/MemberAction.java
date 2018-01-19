@@ -115,5 +115,19 @@ public class MemberAction extends BaseController {
 			return new DataResponse(false, e.getMessage());
 		}
 	}
+	
+	@RequestMapping(value = "/topUpMember.do")
+	@ResponseBody
+	public DataResponse topUpMember(String jsons) {
+
+		try {
+			SystemUser systemUser = this.getSessionSystemUser();
+			JSONObject json = JSONObject.fromObject(jsons);
+			return this.memberService.topUpMember(json, systemUser);
+		} catch (Exception e) {
+			this.logger.error(e);
+			return new DataResponse(false, e.getMessage());
+		}
+	}
 
 }

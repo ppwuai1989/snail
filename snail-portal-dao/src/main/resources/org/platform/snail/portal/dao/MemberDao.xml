@@ -30,7 +30,8 @@
 		<result column="INTRODUCER" property="introducer" jdbcType="INTEGER" />
 		<result column="IS_AGENT" property="isAgent" jdbcType="VARCHAR" />
 		<result column="AGENT_ID" property="agentId" jdbcType="INTEGER" />
-		<result column="PARENT_AGENT_ID" property="parentAgentId" jdbcType="INTEGER" />
+		<result column="PARENT_AGENT_ID" property="parentAgentId"
+			jdbcType="INTEGER" />
 		<result column="STATUS" property="status" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="memberVo" extends="member"
@@ -40,7 +41,7 @@
 		select 1 from dual
 	</select>
 	<sql id="usersPagingWhereCondition">
-		from T_USERS t where 1=1 
+		from T_USERS t where 1=1
 		<if test='condition.status!=null and condition.status!=""'>
 			and t.status =#{condition.status,jdbcType=VARCHAR}
 		</if>
@@ -144,27 +145,50 @@
 	<update id="updateUsersByPrimaryKey" parameterType="org.platform.snail.portal.model.Member">
 		update
 		t_users
-		set
-		NAME =
-		#{member.name,jdbcType=VARCHAR},
-		SEX =
-		#{member.sex,jdbcType=CHAR},
-		HEADIMG=
-		#{member.headImg,jdbcType=VARCHAR},
-		coins=
-		#{member.coins,jdbcType=VARCHAR},
-		GEMS=
-		#{member.gems,jdbcType=VARCHAR},
-		PK_CARD =
-		#{member.pkCard,jdbcType=VARCHAR},
-		IS_AGENT=
-		#{member.isAgent,jdbcType=VARCHAR},
-		AGENT_ID=
-		#{member.agentId,jdbcType=INTEGER},
-		LAST_LOGIN_TIME=
-		#{member.lastLoginTime,jdbcType=TIMESTAMP},
-		STATUS=
-		#{member.status,jdbcType=VARCHAR},
+		<set>
+			<if test="member.name != null and member.name!=''">
+				NAME = #{member.name,jdbcType=VARCHAR},
+			</if>
+			<if test="member.sex != null and member.sex!=''">
+				SEX = #{member.sex,jdbcType=CHAR},
+			</if>
+			<if test="member.mobile != null and member.mobile!=''">
+				mobile=
+				#{member.mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="member.headImg != null and member.headImg!=''">
+				HEADIMG=
+				#{member.headImg,jdbcType=VARCHAR},
+			</if>
+			<if test="member.coins != null and member.coins!=''">
+				coins=
+				#{member.coins,jdbcType=VARCHAR},
+			</if>
+			<if test="member.gems != null and member.gems!=''">
+				GEMS=
+				#{member.gems,jdbcType=VARCHAR},
+			</if>
+			<if test="member.pkCard != null and member.pkCard !=''">
+				PK_CARD =
+				#{member.pkCard,jdbcType=VARCHAR},
+			</if>
+			<if test="member.isAgent != null and member.isAgent !=''">
+				IS_AGENT=
+				#{member.isAgent,jdbcType=VARCHAR},
+			</if>
+			<if test="member.agentId != null and member.agentId !=''">
+				AGENT_ID=
+				#{member.agentId,jdbcType=INTEGER},
+			</if>
+			<if test="member.lastLoginTime != null and member.lastLoginTime !=''">
+				LAST_LOGIN_TIME=
+				#{member.lastLoginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="member.status != null and member.status !=''">
+				STATUS=
+				#{member.status,jdbcType=VARCHAR},
+			</if>
+		</set>
 		where USERID =
 		#{member.userId,jdbcType=INTEGER}
 	</update>
@@ -174,13 +198,22 @@
 		where userid = #{userId,jdbcType=INTEGER}
 	</update>
 
-	<select id="selectUsersVoByPrimaryKey" resultMap="memberVo"
+	<select id="selectMemberVoByPrimaryKey" resultMap="memberVo"
 		parameterType="java.lang.String">
 		select *
 		from t_users t
 		where 1=1
 		and t.userid =
 		#{userId,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectMemberVoByAgentId" resultMap="memberVo"
+		parameterType="java.lang.String">
+		select *
+		from t_users t
+		where 1=1
+		and t.agent_id =
+		#{agentId,jdbcType=INTEGER}
 	</select>
 	<select id="isExitUsersAccount" resultType="int">
 		select count(*) from
@@ -214,7 +247,8 @@
 		#{unionId,jdbcType=VARCHAR}
 	</select>
 	<update id="updateMemberUserInfoByUserId" parameterType="org.platform.snail.portal.model.Member">
-		update t_users t
+		update
+		t_users t
 		set
 		t.wechat_id=#{member.weChatId,jdbcType=VARCHAR},
 		t.name=#{member.name,jdbcType=VARCHAR},
@@ -267,4 +301,5 @@
 		#{member.privilege,jdbcType=VARCHAR}
 		)
 	</insert>
+	
 </mapper>

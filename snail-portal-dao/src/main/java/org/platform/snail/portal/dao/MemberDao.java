@@ -29,7 +29,9 @@ public interface MemberDao {
 	public abstract int findUsersCount(@Param("condition") Member condition, @Param("agentSearch") String agentSearch,
 			@Param("agentSearchId") String agentSearchId);
 
-	public abstract MemberVo selectUsersVoByPrimaryKey(@Param("userId") String userId);
+	public abstract MemberVo selectMemberVoByPrimaryKey(@Param("userId") String userId);
+	
+	public abstract MemberVo selectMemberVoByAgentId(@Param("agentId") String agentId);
 
 	public abstract int isExitUsersAccount(@Param("account") String account);
 

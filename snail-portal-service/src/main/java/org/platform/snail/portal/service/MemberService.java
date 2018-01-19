@@ -14,7 +14,8 @@ public interface MemberService {
 	public abstract DataResponse findUsersSearchList(Member condition, int start, int limit, String orderBy)
 			throws Exception;
 
-	public abstract DataResponse findUsersList(Member condition, int start, int limit, String orderBy,SystemUser systemUser) throws Exception;
+	public abstract DataResponse findUsersList(Member condition, int start, int limit, String orderBy,
+			SystemUser systemUser) throws Exception;
 
 	public abstract DataResponse insertUsers(JSONObject josnObject, SystemUser systemUser) throws Exception;
 
@@ -27,5 +28,9 @@ public interface MemberService {
 
 	public abstract DataResponse findMemberAccountInfo(String agentId) throws Exception;
 
+	// 微信登录、注册
 	public abstract DataResponse userLoginOrRegister(UserInfo userInfo) throws Exception;
+
+	// 用户充值
+	public abstract DataResponse topUpMember(JSONObject jsonObject,SystemUser systemUser) throws Exception;
 }

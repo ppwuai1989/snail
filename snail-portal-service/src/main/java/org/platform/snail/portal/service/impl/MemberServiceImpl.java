@@ -6,9 +6,13 @@ import java.util.Map;
 
 import org.platform.snail.beans.DataResponse;
 import org.platform.snail.beans.SystemUser;
+import org.platform.snail.portal.dao.AgentDao;
 import org.platform.snail.portal.dao.MemberDao;
 import org.platform.snail.portal.model.Member;
+import org.platform.snail.portal.model.TopUpRecords;
 import org.platform.snail.portal.service.MemberService;
+import org.platform.snail.portal.service.TopUpRecordsService;
+import org.platform.snail.portal.vo.AgentVo;
 import org.platform.snail.portal.vo.MemberVo;
 import org.platform.snail.service.DataBaseLogService;
 import org.platform.snail.utils.CommonKeys;
@@ -25,6 +29,13 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private MemberDao memberDao;
+
+	@Autowired
+	private AgentDao agentDao;
+
+	@Autowired
+	private TopUpRecordsService topUpRecordsService;
+
 	@Autowired
 	private DataBaseLogService dataBaseLogService;
 
@@ -100,16 +111,16 @@ public class MemberServiceImpl implements MemberService {
 		// if (SnailUtils.isBlankString(member.getAccount())) {
 		// return new DataResponse(false, "账户不能为空!");
 		// }
-		if (SnailUtils.isBlankString(member.getWeChatId())) {
-			return new DataResponse(false, "微信号不能为空!");
-		}
-		if (SnailUtils.isBlankString(member.getMobile())) {
-			return new DataResponse(false, "手机号不能为空!");
-		}
+		// if (SnailUtils.isBlankString(member.getWeChatId())) {
+		// return new DataResponse(false, "微信号不能为空!");
+		// }
+		// if (SnailUtils.isBlankString(member.getMobile())) {
+		// return new DataResponse(false, "手机号不能为空!");
+		// }
 		if (!SnailUtils.isBlankString(member.getPassword())) {
 			member.setPassword(SnailUtils.getMd5(member.getPassword()));
 		}
-		MemberVo o = this.memberDao.selectUsersVoByPrimaryKey(member.getUserId());
+		MemberVo o = this.memberDao.selectMemberVoByPrimaryKey(member.getUserId());
 		int i = this.memberDao.updateUsersByPrimaryKey(member);
 		if (i > 0) {
 			this.dataBaseLogService.log(CommonKeys.logUpdate, "更新", o.toString(), member.toString(), "游戏管理-会员管理",
@@ -118,13 +129,6 @@ public class MemberServiceImpl implements MemberService {
 		return new DataResponse(true, "会员信息变更成功！");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.platform.snail.portal.service.TUsersService#
-	 * updateUsersStatusByPrimaryKey(java.lang.String, java.lang.String,
-	 * org.platform.snail.beans.SystemUser) 删除操作 作为更新用户状态0--禁用 1--启用
-	 */
 	@Override
 	public DataResponse updateUsersStatusByPrimaryKey(String userId, String status, SystemUser systemUser)
 			throws Exception {
@@ -135,7 +139,7 @@ public class MemberServiceImpl implements MemberService {
 		if (SnailUtils.isBlankString(status)) {
 			return new DataResponse(false, "会员状态不能为空！");
 		}
-		MemberVo o = this.memberDao.selectUsersVoByPrimaryKey(userId);
+		MemberVo o = this.memberDao.selectMemberVoByPrimaryKey(userId);
 		int i = this.memberDao.updateUsersStatusByPrimaryKey(userId, status);
 		if (i > 0) {
 			this.dataBaseLogService.log(CommonKeys.logUpdate, "更新", "status[" + o.getStatus() + "]",
@@ -147,7 +151,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public DataResponse selectUsersByPrimaryKey(String userId) throws Exception {
 		DataResponse rst = new DataResponse();
-		Member member = this.memberDao.selectUsersVoByPrimaryKey(userId);
+		Member member = this.memberDao.selectMemberVoByPrimaryKey(userId);
 		rst.setResponse(member);
 		return rst;
 	}
@@ -171,11 +175,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	/*
-	 * (non-Javadoc) 通过微信注册添加用户
-	 * 
-	 * @see
-	 * org.platform.snail.portal.service.MemberService#insertUsers(net.sf.json.
-	 * JSONObject, org.platform.snail.beans.SystemUser)
+	 * 通过微信注册添加用户
 	 */
 	@Override
 	public DataResponse userLoginOrRegister(UserInfo userInfo) throws Exception {
@@ -234,4 +234,187 @@ public class MemberServiceImpl implements MemberService {
 		return rst;
 	}
 
+	/*
+	 * 通过平台给玩家充值
+	 */
+	@Override
+	public DataResponse topUpMember(JSONObject jsonObject, SystemUser systemUser) throws Exception {
+		// 判断是否为代理
+		Member topUpInfo = new Member();
+		SnailBeanUtils.copyProperties(topUpInfo, jsonObject);
+		if (topUpInfo.getCoins().equals("0") && topUpInfo.getGems().equals("0") && topUpInfo.getPkCard().equals("0")) {
+			return new DataResponse(false, "请至少选择一项进行充值！");
+		}
+		if (systemUser.getAgent() != null) {
+			MemberVo agentSearchVo = new MemberVo();
+			MemberVo agentUpdateVo = new MemberVo();
+			MemberVo memberSearchVo = new MemberVo();
+			MemberVo memberUpdateVo = new MemberVo();
+			agentSearchVo.setAgentId(systemUser.getAgent().getAgentId());
+			agentSearchVo = this.memberDao.selectMemberVoByAgentId(agentSearchVo.getAgentId());
+			memberSearchVo.setUserId(topUpInfo.getUserId());
+			memberSearchVo = this.memberDao.selectMemberVoByPrimaryKey(memberSearchVo.getUserId());
+			String agentCoins = agentSearchVo.getCoins();
+			String agentGems = agentSearchVo.getGems();
+			String agentPkCard = agentSearchVo.getPkCard();
+			String topUpCoins = topUpInfo.getCoins();
+			String topUpGems = topUpInfo.getGems();
+			String topUpPkCard = topUpInfo.getPkCard();
+			String memberCoins = memberSearchVo.getCoins();
+			String memberGems = memberSearchVo.getGems();
+			String memeberPkCard = memberSearchVo.getPkCard();
+			// 计算代理和玩家充值结果
+			calculateResult rst = new calculateResult();
+			rst = calculate(agentCoins, topUpCoins, memberCoins);
+			if (!rst.isSuccess()) {
+				return new DataResponse(false, "您的金币余额不足！");
+			}
+			agentUpdateVo.setCoins(rst.getAgentNum());
+			memberUpdateVo.setCoins(rst.getMemberNum());
+			rst = calculate(agentGems, topUpGems, memberGems);
+			if (!rst.isSuccess()) {
+				return new DataResponse(false, "您的房卡余额不足！");
+			}
+			agentUpdateVo.setGems(rst.getAgentNum());
+			memberUpdateVo.setGems(rst.getMemberNum());
+			rst = calculate(agentPkCard, topUpPkCard, memeberPkCard);
+			if (!rst.isSuccess()) {
+				return new DataResponse(false, "您的比武卡余额不足！");
+			}
+			agentUpdateVo.setPkCard(rst.getAgentNum());
+			memberUpdateVo.setPkCard(rst.getMemberNum());
+			// 更新代理和玩家充值结果
+			agentUpdateVo.setUserId(agentSearchVo.getUserId());
+			this.memberDao.updateUsersByPrimaryKey(agentUpdateVo);
+			memberUpdateVo.setUserId(memberSearchVo.getUserId());
+			this.memberDao.updateUsersByPrimaryKey(memberUpdateVo);
+			// 插入充值记录表
+			TopUpRecords records = new TopUpRecords();
+			records.setCoins(topUpCoins);
+			records.setGems(topUpGems);
+			records.setPkCard(topUpPkCard);
+			records.setUserId(memberSearchVo.getUserId());
+			records.setUserName(memberSearchVo.getName());
+			records.setAgentId(agentSearchVo.getAgentId());
+			records.setAgentName(agentSearchVo.getName());
+			records.setWay(CommonKeys.wayOfAgent);
+			this.topUpRecordsService.insertRecords(records);
+			return new DataResponse(true, "恭喜您，充值成功！");
+		} else {
+			MemberVo memberSearchVo = new MemberVo();
+			MemberVo memberUpdateVo = new MemberVo();
+			memberSearchVo.setUserId(topUpInfo.getUserId());
+			memberSearchVo = this.memberDao.selectMemberVoByPrimaryKey(memberSearchVo.getUserId());
+			String memberCoins = memberSearchVo.getCoins();
+			String memberGems = memberSearchVo.getGems();
+			String memeberPkCard = memberSearchVo.getPkCard();
+			String topUpCoins = topUpInfo.getCoins();
+			String topUpGems = topUpInfo.getGems();
+			String topUpPkCard = topUpInfo.getPkCard();
+			calculateResult rst = new calculateResult();
+			rst = calculate(topUpCoins, memberCoins);
+			memberUpdateVo.setCoins(rst.getMemberNum());
+			rst = calculate(topUpGems, memberGems);
+			memberUpdateVo.setGems(rst.getMemberNum());
+			rst = calculate(topUpPkCard, memeberPkCard);
+			memberUpdateVo.setPkCard(rst.getMemberNum());
+			memberUpdateVo.setUserId(memberSearchVo.getUserId());
+			this.memberDao.updateUsersByPrimaryKey(memberUpdateVo);
+			// 插入充值记录表
+			TopUpRecords records = new TopUpRecords();
+			records.setCoins(topUpCoins);
+			records.setGems(topUpGems);
+			records.setPkCard(topUpPkCard);
+			records.setUserId(memberSearchVo.getUserId());
+			records.setUserName(memberSearchVo.getName());
+			records.setAgentId(systemUser.getUsers().getUserId());
+			records.setAgentName(systemUser.getUsers().getName());
+			records.setWay(CommonKeys.wayOfSystemUser);
+			this.topUpRecordsService.insertRecords(records);
+			return new DataResponse(true, "恭喜您，充值成功！");
+		}
+	}
+
+	private calculateResult calculate(String agent, String topUp, String member) {
+		calculateResult rst = new calculateResult();
+		int a = Integer.valueOf(agent);
+		int t = Integer.valueOf(topUp);
+		int m = Integer.valueOf(member);
+		if (a < t) {
+			return new calculateResult(false, "余额不足！");
+		} else {
+			rst.setAgentNum(a - t);
+			rst.setMemberNum(m + t);
+		}
+		return rst;
+	}
+
+	private calculateResult calculate(String topUp, String member) {
+		calculateResult rst = new calculateResult();
+		int t = Integer.valueOf(topUp);
+		int m = Integer.valueOf(member);
+		rst.setMemberNum(m + t);
+		return rst;
+	}
+
+	private class calculateResult {
+
+		private boolean success;
+		private String agentNum;
+		private String memberNum;
+		private String errorMessage;
+
+		public calculateResult() {
+			this.success = true;
+			this.agentNum = "0";
+			this.memberNum = "0";
+			this.errorMessage = "";
+		}
+
+		public calculateResult(boolean success, String msg) {
+			this.success = success;
+			this.errorMessage = msg;
+		}
+
+		public boolean isSuccess() {
+			return success;
+		}
+
+		public void setSuccess(boolean success) {
+			this.success = success;
+		}
+
+		public String getAgentNum() {
+			return agentNum;
+		}
+
+		public void setAgentNum(String agentNum) {
+			this.agentNum = agentNum;
+		}
+
+		public void setAgentNum(int agentNum) {
+			this.agentNum = String.valueOf(agentNum);
+		}
+
+		public String getMemberNum() {
+			return memberNum;
+		}
+
+		public void setMemberNum(String memberNum) {
+			this.memberNum = memberNum;
+		}
+
+		public void setMemberNum(int memberNum) {
+			this.memberNum = String.valueOf(memberNum);
+		}
+
+		public String getErrorMessage() {
+			return errorMessage;
+		}
+
+		public void setErrorMessage(String errorMessage) {
+			this.errorMessage = errorMessage;
+		}
+
+	}
 }

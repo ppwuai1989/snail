@@ -9,7 +9,9 @@
 		<result column="gems" property="gems" jdbcType="VARCHAR" />
 		<result column="pk_card" property="pkCard" jdbcType="VARCHAR" />
 		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
 		<result column="agent_id" property="agentId" jdbcType="INTEGER" />
+		<result column="agent_name" property="agentName" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 	</resultMap>
 	<resultMap id="recordsVo" extends="records"
@@ -28,9 +30,6 @@
 		</if>
 		<if test='condition.agentId!=null and condition.agentId!=""'>
 			and t.agent_id =#{condition.agentId,jdbcType=VARCHAR}
-		</if>
-		<if test='condition.mobile!=null and condition.mobile!=""'>
-			and t.mobile=#{condition.mobile,jdbcType=VARCHAR}
 		</if>
 		<!-- agentSearch为1代表是 代理在使用 找到他的所有附属 -->
 		<if test='agentSearch=="1" and agentSearchId!=null and agentSearchId!=""'>
@@ -64,14 +63,14 @@
 			WHERE
 			c.parent_agent_id=${agentSearchId} AND c.agent_id=b.parent_agent_id)
 			AND
-			b.agent_id=d.parent_agent_id)) r where r.userid=t.userid )
+			b.agent_id=d.parent_agent_id)) r where r.userid=t.user_id )
 		</if>
 	</sql>
-	<select id="findUsersCount" resultType="int">
+	<select id="findRecordsListCount" resultType="int">
 		SELECT COUNT(*)
 		<include refid="recordsPagingWhereCondition" />
 	</select>
-	<select id="findUsersList" resultMap="memberVo">
+	<select id="findRecordsList" resultMap="recordsVo">
 		select *
 		<include refid="recordsPagingWhereCondition" />
 		<choose>
@@ -79,45 +78,39 @@
 				ORDER BY ${orderBy}
 			</when>
 			<otherwise>
-				ORDER BY t.userid
+				ORDER BY t.create_time desc
 			</otherwise>
 		</choose>
 		limit #{start},#{limit}
 	</select>
 
-	<insert id="insertUsers" parameterType="org.platform.snail.portal.model.Member">
-		insert into t_users
-		(ACCOUNT,NAME,
-		SEX, HEADIMG, LV,EXP,
-		COINS,GEMS,PK_CARD,
-		WECHAT_ID,MOBILE,
-		IS_AGENT,AGENT_ID,
-		LAST_LOGIN_TIME,CREATE_TIME,STATUS,
-		province,language,city,country,
-		union_id,privilege
+	<insert id="insertRecords" parameterType="org.platform.snail.portal.model.TopUpRecords">
+		insert into top_up_records
+		(
+		uuid,
+		way,
+		cost,
+		coins,
+		gems,
+		pk_card,
+		user_id,
+		user_name,
+		agent_id,
+		agent_name,
+		create_time
 		)
 		values (
-		#{member.account,jdbcType=VARCHAR},
-		#{member.name,jdbcType=VARCHAR},
-		#{member.sex,jdbcType=CHAR},
-		#{member.headImg,jdbcType=VARCHAR},
-		#{member.level,jdbcType=VARCHAR},
-		#{member.experience,jdbcType=VARCHAR},
-		#{member.coins,jdbcType=VARCHAR},
-		#{member.gems,jdbcType=VARCHAR},
-		#{member.pkCard,jdbcType=VARCHAR},
-		#{member.weChatId,jdbcType=VARCHAR},
-		#{member.mobile,jdbcType=VARCHAR},
-		#{member.isAgent,jdbcType=VARCHAR},
-		#{member.agentId,jdbcType=VARCHAR},
-		now(),now(),1,
-		#{member.province,jdbcType=VARCHAR},
-		#{member.language,jdbcType=VARCHAR},
-		#{member.city,jdbcType=VARCHAR},
-		#{member.country,jdbcType=VARCHAR},
-		#{member.unionId,jdbcType=VARCHAR},
-		#{member.privilege,jdbcType=VARCHAR}
+		uuid(),
+		#{records.way,jdbcType=CHAR},
+		#{records.cost,jdbcType=VARCHAR},
+		#{records.coins,jdbcType=VARCHAR},
+		#{records.gems,jdbcType=VARCHAR},
+		#{records.pkCard,jdbcType=VARCHAR},
+		#{records.userId,jdbcType=INTEGER},
+		#{records.userName,jdbcType=VARCHAR},
+		#{records.agentId,jdbcType=INTEGER},
+		#{records.agentName,jdbcType=VARCHAR},
+		now()
 		)
 	</insert>
-	
 </mapper>

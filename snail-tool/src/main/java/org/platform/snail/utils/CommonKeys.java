@@ -20,4 +20,8 @@ public interface CommonKeys {
 	String senior = "3";
 	String medium = "2";
 	String junior = "1";
+	// 对应充值方式 1--游戏内，2--代理代充，3--管理员充值
+	String wayOfInGame = "1";
+	String wayOfAgent = "2";
+	String wayOfSystemUser = "3";
 }
