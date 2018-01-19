@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.platform.snail.portal.dao.TopUpRecordsDao">
+	<resultMap id="records" type="org.platform.snail.portal.model.TopUpRecords">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="way" property="way" jdbcType="CHAR" />
+		<result column="cost" property="cost" jdbcType="VARCHAR" />
+		<result column="coins" property="coins" jdbcType="VARCHAR" />
+		<result column="gems" property="gems" jdbcType="VARCHAR" />
+		<result column="pk_card" property="pkCard" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="agent_id" property="agentId" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap id="recordsVo" extends="records"
+		type="org.platform.snail.portal.vo.TopUpRecordsVo">
+	</resultMap>
+	<select id="init" resultType="int">
+		select 1 from dual
+	</select>
+	<sql id="recordsPagingWhereCondition">
+		from top_up_records t where 1=1
+		<if test='condition.way!=null and condition.way!=""'>
+			and t.way =#{condition.way,jdbcType=VARCHAR}
+		</if>
+		<if test='condition.userId!=null and condition.userId!=""'>
+			and t.user_id =#{condition.userId,jdbcType=VARCHAR}
+		</if>
+		<if test='condition.agentId!=null and condition.agentId!=""'>
+			and t.agent_id =#{condition.agentId,jdbcType=VARCHAR}
+		</if>
+		<if test='condition.mobile!=null and condition.mobile!=""'>
+			and t.mobile=#{condition.mobile,jdbcType=VARCHAR}
+		</if>
+		<!-- agentSearch为1代表是 代理在使用 找到他的所有附属 -->
+		<if test='agentSearch=="1" and agentSearchId!=null and agentSearchId!=""'>
+			and EXISTS(
+			SELECT *
+			FROM
+			(
+			SELECT a.userid
+			FROM t_users a
+			WHERE a.parent_agent_id=${agentSearchId} UNION
+			SELECT b.userid
+			FROM
+			t_users b
+			WHERE
+			EXISTS(
+			SELECT *
+			FROM t_users c
+			WHERE
+			c.parent_agent_id=${agentSearchId} AND
+			c.agent_id=b.parent_agent_id)
+			UNION
+			SELECT d.userid
+			FROM t_users d
+			WHERE EXISTS(
+			SELECT *
+			FROM t_users b
+			WHERE EXISTS(
+			SELECT *
+			FROM t_users
+			c
+			WHERE
+			c.parent_agent_id=${agentSearchId} AND c.agent_id=b.parent_agent_id)
+			AND
+			b.agent_id=d.parent_agent_id)) r where r.userid=t.userid )
+		</if>
+	</sql>
+	<select id="findUsersCount" resultType="int">
+		SELECT COUNT(*)
+		<include refid="recordsPagingWhereCondition" />
+	</select>
+	<select id="findUsersList" resultMap="memberVo">
+		select *
+		<include refid="recordsPagingWhereCondition" />
+		<choose>
+			<when test='orderBy!=null and orderBy!=""'>
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY t.userid
+			</otherwise>
+		</choose>
+		limit #{start},#{limit}
+	</select>
+
+	<insert id="insertUsers" parameterType="org.platform.snail.portal.model.Member">
+		insert into t_users
+		(ACCOUNT,NAME,
+		SEX, HEADIMG, LV,EXP,
+		COINS,GEMS,PK_CARD,
+		WECHAT_ID,MOBILE,
+		IS_AGENT,AGENT_ID,
+		LAST_LOGIN_TIME,CREATE_TIME,STATUS,
+		province,language,city,country,
+		union_id,privilege
+		)
+		values (
+		#{member.account,jdbcType=VARCHAR},
+		#{member.name,jdbcType=VARCHAR},
+		#{member.sex,jdbcType=CHAR},
+		#{member.headImg,jdbcType=VARCHAR},
+		#{member.level,jdbcType=VARCHAR},
+		#{member.experience,jdbcType=VARCHAR},
+		#{member.coins,jdbcType=VARCHAR},
+		#{member.gems,jdbcType=VARCHAR},
+		#{member.pkCard,jdbcType=VARCHAR},
+		#{member.weChatId,jdbcType=VARCHAR},
+		#{member.mobile,jdbcType=VARCHAR},
+		#{member.isAgent,jdbcType=VARCHAR},
+		#{member.agentId,jdbcType=VARCHAR},
+		now(),now(),1,
+		#{member.province,jdbcType=VARCHAR},
+		#{member.language,jdbcType=VARCHAR},
+		#{member.city,jdbcType=VARCHAR},
+		#{member.country,jdbcType=VARCHAR},
+		#{member.unionId,jdbcType=VARCHAR},
+		#{member.privilege,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+</mapper>

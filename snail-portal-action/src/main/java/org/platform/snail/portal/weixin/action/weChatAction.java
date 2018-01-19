@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.http.NameValuePair;
 import org.platform.snail.beans.DataResponse;
 import org.platform.snail.portal.service.MemberService;
+import org.platform.snail.utils.Config;
 import org.platform.snail.utils.HttpClientUtils;
 import org.platform.snail.utils.SnailBeanUtils;
 import org.platform.snail.weixin.model.OAuthInfo;
@@ -47,8 +48,8 @@ public class weChatAction implements Serializable {
 			// "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
 			WeChatRequest wcr = new WeChatRequest();
 			wcr.setAccessTokenUrl("https://api.weixin.qq.com/sns/oauth2/access_token");
-			wcr.setAppId("wxa3f5e1cddb861157");			
-			wcr.setAppSecret("7fc77acee7d1497fcdc9be90d554181a");
+			wcr.setAppId(Config.getProperty("wx.appId"));
+			wcr.setAppSecret(Config.getProperty("wx.appSecret"));
 			wcr.setCode(condition.get("code"));
 			wcr.setGrantType("authorization_code");
 			String oAuthUrl = wcr.getOAuthInfo();
@@ -66,7 +67,12 @@ public class weChatAction implements Serializable {
 					SnailBeanUtils.copyProperties(userInfo, userJson);
 					if (userInfo.getErrcode() == null) {
 						// 没有错误码说明获取用户信息成功，可以登录或者注册
-						dr = this.memberService.userLoginOrRegister(userInfo);
+						try {
+							dr = this.memberService.userLoginOrRegister(userInfo);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+							return new DataResponse(false, "注册失败！" + e1.getMessage());
+						}
 					} else {
 						dr.setState(false);
 						dr.setErrorMessage("出错啦！errCode:" + userInfo.getErrcode() + " errMsg:" + userInfo.getErrmsg());

@@ -29,7 +29,8 @@
 		<result column="PRIVILEGE" property="privilege" jdbcType="VARCHAR" />
 		<result column="INTRODUCER" property="introducer" jdbcType="INTEGER" />
 		<result column="IS_AGENT" property="isAgent" jdbcType="VARCHAR" />
-		<result column="AGENTID" property="agentId" jdbcType="INTEGER" />
+		<result column="AGENT_ID" property="agentId" jdbcType="INTEGER" />
+		<result column="PARENT_AGENT_ID" property="parentAgentId" jdbcType="INTEGER" />
 		<result column="STATUS" property="status" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="memberVo" extends="member"
@@ -39,7 +40,7 @@
 		select 1 from dual
 	</select>
 	<sql id="usersPagingWhereCondition">
-		from T_USERS t where 1=1
+		from T_USERS t where 1=1 
 		<if test='condition.status!=null and condition.status!=""'>
 			and t.status =#{condition.status,jdbcType=VARCHAR}
 		</if>
@@ -63,13 +64,16 @@
 			FROM t_users a
 			WHERE a.parent_agent_id=${agentSearchId} UNION
 			SELECT b.userid
-			FROM t_users b
+			FROM
+			t_users b
 			WHERE
 			EXISTS(
 			SELECT *
 			FROM t_users c
-			WHERE c.parent_agent_id=${agentSearchId} AND
-			c.agent_id=b.parent_agent_id) UNION
+			WHERE
+			c.parent_agent_id=${agentSearchId} AND
+			c.agent_id=b.parent_agent_id)
+			UNION
 			SELECT d.userid
 			FROM t_users d
 			WHERE EXISTS(
@@ -79,7 +83,9 @@
 			SELECT *
 			FROM t_users
 			c
-			WHERE c.parent_agent_id=${agentSearchId} AND c.agent_id=b.parent_agent_id) AND
+			WHERE
+			c.parent_agent_id=${agentSearchId} AND c.agent_id=b.parent_agent_id)
+			AND
 			b.agent_id=d.parent_agent_id)) r where r.userid=t.userid )
 		</if>
 	</sql>
@@ -145,15 +151,20 @@
 		#{member.sex,jdbcType=CHAR},
 		HEADIMG=
 		#{member.headImg,jdbcType=VARCHAR},
+		coins=
+		#{member.coins,jdbcType=VARCHAR},
 		GEMS=
 		#{member.gems,jdbcType=VARCHAR},
 		PK_CARD =
 		#{member.pkCard,jdbcType=VARCHAR},
 		IS_AGENT=
 		#{member.isAgent,jdbcType=VARCHAR},
-		AGENT_ID=#{member.agentId,jdbcType=INTEGER},
-		LAST_LOGIN_TIME=#{member.lastLoginTime,jdbcType=TIMESTAMP},
-		STATUS=#{member.status,jdbcType=VARCHAR}
+		AGENT_ID=
+		#{member.agentId,jdbcType=INTEGER},
+		LAST_LOGIN_TIME=
+		#{member.lastLoginTime,jdbcType=TIMESTAMP},
+		STATUS=
+		#{member.status,jdbcType=VARCHAR},
 		where USERID =
 		#{member.userId,jdbcType=INTEGER}
 	</update>
@@ -202,11 +213,21 @@
 		and t.union_id =
 		#{unionId,jdbcType=VARCHAR}
 	</select>
-	<update id="updateMemberLastLoginTimeByUserId">
+	<update id="updateMemberUserInfoByUserId" parameterType="org.platform.snail.portal.model.Member">
 		update t_users t
-		set t.last_login_time=now()
+		set
+		t.wechat_id=#{member.weChatId,jdbcType=VARCHAR},
+		t.name=#{member.name,jdbcType=VARCHAR},
+		t.sex=#{member.sex,jdbcType=VARCHAR},
+		t.city=#{member.city,jdbcType=VARCHAR},
+		t.language=#{member.language,jdbcType=VARCHAR},
+		t.province=#{member.province,jdbcType=VARCHAR},
+		t.country=#{member.country,jdbcType=VARCHAR},
+		t.headimg=#{member.headImg,jdbcType=VARCHAR},
+		t.privilege=#{member.privilege,jdbcType=VARCHAR},
+		t.last_login_time=now()
 		where
-		t.userid=#{userId,jdbcType=INTEGER}
+		t.userid=#{member.userId,jdbcType=INTEGER}
 	</update>
 	<insert id="registerMemberByWeChat" parameterType="org.platform.snail.portal.model.Member">
 		<selectKey resultType="java.lang.String" order="AFTER"

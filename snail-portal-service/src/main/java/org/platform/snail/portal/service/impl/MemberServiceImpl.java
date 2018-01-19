@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.session.SqlSession;
 import org.platform.snail.beans.DataResponse;
 import org.platform.snail.beans.SystemUser;
 import org.platform.snail.portal.dao.MemberDao;
@@ -13,10 +12,8 @@ import org.platform.snail.portal.service.MemberService;
 import org.platform.snail.portal.vo.MemberVo;
 import org.platform.snail.service.DataBaseLogService;
 import org.platform.snail.utils.CommonKeys;
-import org.platform.snail.utils.MybatisUtils;
 import org.platform.snail.utils.SnailBeanUtils;
 import org.platform.snail.utils.SnailUtils;
-import org.platform.snail.weixin.model.OAuthInfo;
 import org.platform.snail.weixin.model.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -187,8 +184,17 @@ public class MemberServiceImpl implements MemberService {
 		MemberVo memberVo = new MemberVo();
 		if (isExit > 0) {
 			memberVo = this.memberDao.selectMemberByUnionId(userInfo.getUnionid());
-			// 更新用户登录时间
-			int update = this.memberDao.updateMemberLastLoginTimeByUserId(memberVo.getUserId());
+			// 更新用户微信的信息和登录时间
+			memberVo.setWeChatId(userInfo.getOpenid());
+			memberVo.setName(userInfo.getNickname());
+			memberVo.setSex(userInfo.getSex());
+			memberVo.setCity(userInfo.getCity());
+			memberVo.setLanguage(userInfo.getLanguage());
+			memberVo.setProvince(userInfo.getProvince());
+			memberVo.setCountry(userInfo.getCountry());
+			memberVo.setHeadImg(userInfo.getHeadimgurl());
+			memberVo.setPrivilege(userInfo.getPrivilege());
+			int update = this.memberDao.updateMemberUserInfoByUserId(memberVo);
 			rst.setState(true);
 			rst.setErrorMessage("用户登录成功！");
 			rst.setResponse(memberVo);

@@ -44,7 +44,7 @@ public interface MemberDao {
 
 	public abstract MemberVo selectMemberByUnionId(@Param("unionId") String unionId);
 
-	public abstract int updateMemberLastLoginTimeByUserId(@Param("userId") String userId);
+	public abstract int updateMemberUserInfoByUserId(@Param("member") Member member);
 
 	public abstract int registerMemberByWeChat(@Param("member") Member member);
 }

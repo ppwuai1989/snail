@@ -1,19 +1,59 @@
-var _colNames = [ '用户编号', '账户', '用户名', '头像', '性别', '金币数', '房卡数', '比武卡', '注册日期',
-		'状态', '最后登录时间', '手机号', '微信号', '代理标识','推荐人编号' ];
+var _colNames = [ '用户编号', '代理标识','代理编号','上级编号', '账户', '用户名', '手机号', '头像', '性别', '金币数', '房卡数', '比武卡',
+		'状态', '最后登录时间', '微信号', '注册日期' ];
 var _colModel = function() {
 	return [
 			{
 				name : 'userId',
-				width : 80,
+				width : 40,
 				sorttype : "int",
 				editable : true,
 				editoptions : {
 					readonly : true
 				}
+			}, {
+				name : 'isAgent',
+				width : 40,
+				editable : true,
+				editoptions : {
+					size : "20",
+					maxlength : "11",
+					readonly : true
+				},
+				renderer : function(value) {
+					var rst = "";
+					switch (value) {
+					case '1':
+						rst = "是";
+						break;
+					case '0':
+						rst = "否";
+						break;
+					default:
+						rst = "N/A";
+					}
+					return rst;
+				}
+			}, {
+				name : 'agentId',
+				width : 40,
+				editable : true,				
+				editoptions : {
+					size : "20",
+					maxlength : "11",
+					readonly : true
+				}
+			} , {
+				name : 'parentAgentId',
+				width : 40,
+				editable : true,				
+				editoptions : {
+					size : "20",
+					maxlength : "11"					
+				}
 			},
 			{
 				name : 'account',
-				width : 100,
+				width : 60,
 				editable : true,
 				hidden : true,
 				editoptions : {
@@ -24,11 +64,20 @@ var _colModel = function() {
 			},
 			{
 				name : 'name',
-				width : 100,
+				width : 60,
 				editable : true,
 				editoptions : {
 					size : "20",
 					maxlength : "25",
+					readonly : true
+				}
+			}, {
+				name : 'mobile',
+				width : 60,
+				editable : true,
+				editoptions : {
+					size : "20",
+					maxlength : "11",
 					readonly : true
 				}
 			},
@@ -69,7 +118,7 @@ var _colModel = function() {
 			},
 			{
 				name : 'coins',
-				width : 80,
+				width : 60,
 				editable : true,
 				editoptions : {
 					size : "20",
@@ -95,20 +144,6 @@ var _colModel = function() {
 					size : "20",
 					maxlength : "25",
 					readonly : true
-				}
-			},
-			{
-				name : 'createTime',
-				width : 80,
-				editable : true,
-				edittype : "datebox",
-				editoptions : {
-					style : 'height:30px',
-					readonly : true
-				},
-				formatoptions : {
-					srcformat : 'Y-m-d h:i:s',
-					newformat : 'Y-m-d h:i:s'
 				}
 			}, {
 				name : 'status',
@@ -145,15 +180,6 @@ var _colModel = function() {
 					newformat : 'Y-m-d h:i:s'
 				}
 			}, {
-				name : 'mobile',
-				width : 60,
-				editable : true,
-				editoptions : {
-					size : "20",
-					maxlength : "11",
-					readonly : true
-				}
-			}, {
 				name : 'weChatId',
 				width : 80,
 				editable : true,
@@ -163,38 +189,19 @@ var _colModel = function() {
 					maxlength : "11",
 					readonly : true
 				}
-			}, {
-				name : 'isAgent',
-				width : 40,
-				editable : true,
-				editoptions : {
-					size : "20",
-					maxlength : "11",
-					readonly : true
-				},
-				renderer : function(value) {
-					var rst = "";
-					switch (value) {
-					case '1':
-						rst = "是";
-						break;
-					case '0':
-						rst = "否";
-						break;
-					default:
-						rst = "N/A";
-					}
-					return rst;
-				}
-			}, {
-				name : 'introducer',
+			},
+			{
+				name : 'createTime',
 				width : 80,
 				editable : true,
-				hidden : true,
+				edittype : "datebox",
 				editoptions : {
-					size : "20",
-					maxlength : "11",
+					style : 'height:30px',
 					readonly : true
+				},
+				formatoptions : {
+					srcformat : 'Y-m-d h:i:s',
+					newformat : 'Y-m-d h:i:s'
 				}
 			} ];
 }
