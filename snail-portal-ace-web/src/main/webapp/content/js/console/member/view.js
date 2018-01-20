@@ -340,6 +340,8 @@ function style_edit_form(form) {
 		format : 'yyyy-mm-dd',
 		autoclose : true
 	}).end().find('input[name=status]').addClass('ace ace-switch ace-switch-5')
+			.after('<span class="lbl"></span>')
+			.end().find('input[name=isAgent]').addClass('ace ace-switch ace-switch-4')
 			.after('<span class="lbl"></span>');
 	var buttons = form.next().find('.EditButton .fm-button');
 	buttons.addClass('btn btn-sm').find('[class*="-icon"]').hide();// ui-icon,

@@ -1,4 +1,4 @@
-var _colNames = [ '记录编号', '玩家编号', '玩家名称', '充值方式', '支付金额', '代理编号', '代理名称',
+var _colNames = [ '记录编号', '玩家编号', '玩家名称', '充值方式', '支付金额(商城内)', '代理编号', '代理名称',
 		'<span class="label label-lg label-pink arrowed-right">金币</span>',
 		'<span class="label label-lg label-grey arrowed-right">房卡</span>',
 		'<span class="label label-lg label-success arrowed-right">比武卡</span>'

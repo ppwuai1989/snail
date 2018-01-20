@@ -32,25 +32,30 @@
 								class="ace-icon fa fa-search  align-top bigger-125 icon-on-right"></i>
 						</button>
 						<!--  -->
-						<div id="agent-account-info" style="float: right;margin-right: 150px;display:none;">
-							<span class="btn btn-purple no-border " > <i
+						<div id="agent-account-info"
+							style="float: right; margin-right: 150px; display: none;">
+							<span class="btn btn-purple no-border "> <i
 								class="ace-icon fa fa-money bigger-130"></i> <span
 								class="bigger-110">账户信息：</span>
-							</span> <span class="btn btn-app btn-sm btn-pink no-hover" style="width: auto;min-width: 80px;"> <span
-								class="line-height-1 bigger-170" id="agent-account-coins" ></span> <br> <span
-								class="line-height-1 smaller-90">金币</span>
-							</span> <span class="btn btn-app btn-sm btn-grey no-hover"  style="width: auto;min-width: 80px;"> <span
-								class="line-height-1 bigger-170" id="agent-account-gems"></span> <br> <span
-								class="line-height-1 smaller-90">房卡</span>
-							</span> <span class="btn btn-app btn-sm btn-success no-hover"  style="width: auto;min-width: 80px;"> <span
-								class="line-height-1 bigger-170" id="agent-account-pkCard"></span> <br> <span
-								class="line-height-1 smaller-90">比武卡</span>
+							</span> <span class="btn btn-app btn-sm btn-pink no-hover"
+								style="width: auto; min-width: 80px;"> <span
+								class="line-height-1 bigger-170" id="agent-account-coins"></span>
+								<br> <span class="line-height-1 smaller-90">金币</span>
+							</span> <span class="btn btn-app btn-sm btn-grey no-hover"
+								style="width: auto; min-width: 80px;"> <span
+								class="line-height-1 bigger-170" id="agent-account-gems"></span>
+								<br> <span class="line-height-1 smaller-90">房卡</span>
+							</span> <span class="btn btn-app btn-sm btn-success no-hover"
+								style="width: auto; min-width: 80px;"> <span
+								class="line-height-1 bigger-170" id="agent-account-pkCard"></span>
+								<br> <span class="line-height-1 smaller-90">比武卡</span>
 							</span>
 						</div>
 					</form>
 					<div id="toolbar" class="toolbar">
 
 						<button class="btn btn-success" id="btn-view-add"
+							style="display: none;"
 							authority="${pageContext.request.contextPath}/member/insertMember.do">
 							<i
 								class="ace-icon fa fa-plus-square  align-top bigger-125 icon-on-right"></i>
@@ -65,19 +70,37 @@
 							<i
 								class="ace-icon glyphicon  glyphicon-remove  align-top bigger-125 icon-on-right"></i>
 						</button>
+						<button class="btn btn-inverse"
+							id="btn-view-setUpAgentBySystemUser"
+							authority="${pageContext.request.contextPath}/member/setUpAgentBySystemUser.do">
+							<i class="ace-icon fa fa-cog  align-top bigger-125 icon-on-right"></i>
+						</button>
+						<button class="btn btn-inverse" id="btn-view-setUpAgent"
+							authority="${pageContext.request.contextPath}/member/setUpAgent.do">
+							<i class="ace-icon fa fa-cog  align-top bigger-125 icon-on-right"></i>
+						</button>
 						<button class="btn btn-purple" id="btn-view-topUp"
 							authority="${pageContext.request.contextPath}/member/topUpMember.do">
-							<i
-								class="ace-icon fa fa-cny  align-top bigger-125 icon-on-right"></i>
+							<i class="ace-icon fa fa-cny  align-top bigger-125 icon-on-right"></i>
 						</button>
 
 					</div>
-					
+
 				</div>
 			</div>
 		</div>
 		<table id="grid-table"></table>
 		<div id="grid-pager"></div>
+		<div id="dialog-message" class="hide">
+			<div class="alert alert-info bigger-110">
+				关闭代理后，将删除该代理的账户信息</div>
+
+			<div class="space-6"></div>
+
+			<p class="bigger-110 bolder center grey">
+				<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i> 您确定吗?
+			</p>
+		</div>
 	</div>
 	<jsp:include page="../../common/footer-1.jsp" />
 	<script
@@ -91,40 +114,43 @@
 	<jsp:include page="../../common/footer-2.jsp" />
 
 	<script type="text/javascript">
-	//加载账户信息
-	$(document).ready(
-				function(){
-					$
-					.ajax({
-						url : '${pageContext.request.contextPath}/member/findMemberAccountInfo.do',
-						type : 'get',
-						success : function(data) {
-							if (data.state) {
-								var coins = convertZero(data.response.coins);
-								var gems = convertZero(data.response.gems);
-								var pkCard = convertZero(data.response.pkCard);
-								$("#agent-account-coins").text(coins);
-								$("#agent-account-gems").text(gems);
-								$("#agent-account-pkCard").text(pkCard);
-								$("#agent-account-info").show();
-							}
-						}
-					})
-				}
-			);
-	function convertZero(value) {
-		if (value == null || value == "") {
-			value = 0;
+		//加载账户信息
+		$(document)
+				.ready(
+						function() {
+							$
+									.ajax({
+										url : '${pageContext.request.contextPath}/member/findMemberAccountInfo.do',
+										type : 'get',
+										success : function(data) {
+											if (data.state) {
+												var coins = convertZero(data.response.coins);
+												var gems = convertZero(data.response.gems);
+												var pkCard = convertZero(data.response.pkCard);
+												$("#agent-account-coins").text(
+														coins);
+												$("#agent-account-gems").text(
+														gems);
+												$("#agent-account-pkCard")
+														.text(pkCard);
+												$("#agent-account-info").show();
+											}
+										}
+									})
+						});
+		function convertZero(value) {
+			if (value == null || value == "") {
+				value = 0;
+			}
+			return value;
 		}
-		return value;
-	}
-			window.onresize = function() {
-				//console.log('autoWidthJqgrid');
-				$(cfg.grid_selector).jqGrid('setGridWidth',
-						$(".page-content").width());
-				$(cfg.grid_selector).jqGrid('setGridHeight',
-						window.innerHeight - 320);
-			} 
+		window.onresize = function() {
+			//console.log('autoWidthJqgrid');
+			$(cfg.grid_selector).jqGrid('setGridWidth',
+					$(".page-content").width());
+			$(cfg.grid_selector).jqGrid('setGridHeight',
+					window.innerHeight - 320);
+		}
 	</script>
 </body>
 </html>

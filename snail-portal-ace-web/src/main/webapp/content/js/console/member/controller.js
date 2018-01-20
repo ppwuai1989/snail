@@ -69,6 +69,37 @@ jQuery(function($) {
 							}
 						})
 			});
+	$('#btn-view-setUpAgentBySystemUser').on(
+			'click',
+			function() {
+				var gr = jQuery(cfg.grid_selector).jqGrid('getGridParam',
+						'selrow');
+				if (!gr) {
+					$.jgrid.info_dialog($.jgrid.nav.alertcap,
+							$.jgrid.nav.alerttext)
+				}
+				jQuery(cfg.grid_selector).jqGrid(
+						'editGridRow',
+						gr,
+						{
+							url : cfg.grid_setupagentbysystemuser_data_url,
+							closeAfterAdd : true,
+							recreateForm : true,
+							viewPagerButtons : true,
+							beforeShowForm : function(e) {
+								var form = $(e[0]);
+								form.closest('.ui-jqdialog').find(
+										'.ui-jqdialog-titlebar').wrapInner(
+										'<div class="widget-header" />')
+								style_edit_form(form);
+								// 设置代理时需要添加的事件
+								event_edit_form(form);
+							},
+							errorTextFormat : function(request, editType) {
+								forbidenToAccess(request)
+							}
+						})
+			});
 	$('#btn-view-topUp').on(
 			'click',
 			function() {
@@ -112,13 +143,16 @@ jQuery(function($) {
 								var gems = $("#agent-account-gems").text();
 								var pkCard = $("#agent-account-pkCard").text();
 								if (coins != null && coins != "") {
-									$("#agent-account-coins").text(coins-postdata.coins);
+									$("#agent-account-coins").text(
+											coins - postdata.coins);
 								}
 								if (gems != null && gems != "") {
-									$("#agent-account-gems").text(gems-postdata.gems);
+									$("#agent-account-gems").text(
+											gems - postdata.gems);
 								}
 								if (pkCard != null && pkCard != "") {
-									$("#agent-account-pkCard").text(pkCard-postdata.pkCard);
+									$("#agent-account-pkCard").text(
+											pkCard - postdata.pkCard);
 								}
 							}
 						})
@@ -184,5 +218,55 @@ jQuery(function($) {
 			btn.find('i').addClass('fa-check');
 			btn.removeAttr("disabled");
 		}
+	}
+	function event_edit_form(form) {
+		form.find("#tr_isAgent td")[0].innerText = "代理开关"
+		var col = form[0];
+		var isAgent = $("#isAgent")[0];
+		for (var i = 0; i < col.length; i++) {
+			col[i].disabled = true;
+			if (col[i].id == "isAgent") {
+				col[i].disabled = false;
+			}
+			if (isAgent.checked == true) {
+				if ((col[i].id == "agentId" || col[i].id == "parentAgentId")
+						|| col[i].id == "agentLevel") {
+					col[i].disabled = false;
+				}
+			}
+		}
+
+		$("#isAgent").click(function(e) {
+			if (e.target.checked == true) {
+				$("#agentLevel")[0].disabled = false;
+				$("#agentId")[0].disabled = false;
+				$("#parentAgentId")[0].disabled = false;
+			} else {
+				e.preventDefault();
+				var dialog = $("#dialog-message").removeClass('hide').dialog({
+					resizable : false,
+					modal : false,
+					title : "关闭代理提示",
+					buttons : [ {
+						html : "<i class='ace-icon fa fa-check bigger-110'></i>&nbsp; 确定",
+						"class" : "btn btn-info btn-xs",
+						click : function() {
+							e.target.checked=false;
+							$("#agentLevel")[0].disabled = true;
+							$("#agentId")[0].disabled = true;
+							$("#parentAgentId")[0].disabled = true;		
+							$( this ).dialog( "close" );
+						}
+					}, {
+						html : "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; 取消",
+						"class" : "btn btn-xs",
+						click : function() {
+							$(this).dialog("close");
+						}
+					} ]
+				});			
+			}
+
+		});
 	}
 });

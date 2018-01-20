@@ -1,4 +1,4 @@
-var _colNames = [ '用户编号', '代理标识', '代理编号', '上级编号', '账户', '用户名', '手机号', '头像',
+var _colNames = [ '代理标识','代理等级', '代理编号', '上级编号', '用户编号', '账户', '用户名', '手机号', '头像',
 		'性别',
 		'<span class="label label-lg label-pink arrowed-right">金币</span>',
 		'<span class="label label-lg label-grey arrowed-right">房卡</span>',
@@ -6,20 +6,12 @@ var _colNames = [ '用户编号', '代理标识', '代理编号', '上级编号'
 		'状态', '最后登录时间', '微信号', '注册日期' ];
 var _colModel = function() {
 	return [ {
-		name : 'userId',
-		width : 40,
-		sorttype : "int",
-		editable : true,
-		editoptions : {
-			readonly : true
-		}
-	}, {
 		name : 'isAgent',
 		width : 40,
 		editable : true,
-		edittype : "select",
+		edittype : "checkbox",
 		editoptions : {
-			value : "0:否;1:是",
+			value : "1:0",
 		},
 		renderer : function(value) {
 			var rst = "";
@@ -34,6 +26,17 @@ var _colModel = function() {
 				rst = "N/A";
 			}
 			return rst;
+		}
+	},{
+		name : 'agentLevel',
+		width : 40,		
+		editable : true,
+		edittype : "select",
+		renderer : function(value) {
+			return rsd(value, "STATIC_DATA_06");
+		},
+		editoptions : {
+			value : odparse("STATIC_DATA_06")
 		}
 	}, {
 		name : 'agentId',
@@ -59,7 +62,15 @@ var _colModel = function() {
 			number : true,
 			minValue : 0
 		}
-	}, {
+	},{
+		name : 'userId',
+		width : 40,
+		sorttype : "int",
+		editable : true,
+		editoptions : {
+			readonly : true
+		}
+	},  {
 		name : 'account',
 		width : 60,
 		editable : false,
@@ -141,7 +152,7 @@ var _colModel = function() {
 		},
 		editrules : {
 			number : true,
-			minValue : 0,			
+			minValue : 0,
 			required : true
 		}
 
