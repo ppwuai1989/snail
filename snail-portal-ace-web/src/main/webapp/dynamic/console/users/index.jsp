@@ -22,7 +22,9 @@
 			<div class="widget-body">
 				<div class="widget-main padding-6">
 					<form action="#" id="fm-search">
-						用户名称： <input name="name" type="text" style="width: 200px;"
+						账户名： <input name="account" type="text" style="width: 200px;"
+							placeholder="账户名" />手机号： <input name="mobile" type="text" style="width: 200px;"
+							placeholder="手机号" />用户名称： <input name="name" type="text" style="width: 200px;"
 							placeholder="用户名称" />
 						<button class="btn btn-info" id="btn-search"
 							authority="${pageContext.request.contextPath}/users/findUsersList.do">
@@ -33,12 +35,12 @@
 					</form>
 					<div id="toolbar" class="toolbar">
 
-						<button class="btn btn-info" id="btn-view-add"
+						<button class="btn btn-success" id="btn-view-add"
 							authority="${pageContext.request.contextPath}/users/insertUsers.do">
 							<i
 								class="ace-icon fa fa-plus-square  align-top bigger-125 icon-on-right"></i>
 						</button>
-						<button class="btn btn-info" id="btn-view-edit"
+						<button class="btn btn-warning" id="btn-view-edit"
 							authority="${pageContext.request.contextPath}/users/updateUsers.do">
 							<i
 								class="ace-icon fa fa-edit  align-top bigger-125 icon-on-right"></i>
@@ -53,15 +55,12 @@
 							<i
 								class="ace-icon glyphicon  glyphicon-cog  align-top bigger-125 icon-on-right"></i>
 						</button>
-						<button class="btn btn-warning" id="btn-view-del"
+						<button class="btn btn-danger" id="btn-view-del"
 							authority="${pageContext.request.contextPath}/users/updateUsersStatusByPrimaryKey.do">
 							<i
 								class="ace-icon glyphicon  glyphicon-remove  align-top bigger-125 icon-on-right"></i>
 						</button>
-						<button class="btn btn-warning" id="paopao-btn">
-							<i
-								class="ace-icon glyphicon  glyphicon-remove  align-top bigger-125 icon-on-right"></i>
-						</button>
+				
 					</div>
 				</div>
 			</div>

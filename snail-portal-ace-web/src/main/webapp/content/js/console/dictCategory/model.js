@@ -7,7 +7,7 @@ var _colModel = function() {
 		sortable : false,
 		editable : true,
 		editoptions : {
-			readonly : true
+		
 		}
 	}, {
 		name : 'name',

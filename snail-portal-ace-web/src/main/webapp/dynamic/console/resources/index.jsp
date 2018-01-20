@@ -37,17 +37,17 @@
 					</form>
 					<div id="toolbar" class="toolbar">
 
-						<button class="btn btn-info" id="btn-view-add"
+						<button class="btn btn-success" id="btn-view-add"
 							authority="${pageContext.request.contextPath}/resources/insertResources.do">
 							<i
 								class="ace-icon fa fa-plus-square  align-top bigger-125 icon-on-right"></i>
 						</button>
-						<button class="btn btn-info" id="btn-view-edit"
+						<button class="btn btn-warning" id="btn-view-edit"
 							authority="${pageContext.request.contextPath}/resources/updateResources.do">
 							<i
 								class="ace-icon fa fa-edit  align-top bigger-125 icon-on-right"></i>
 						</button>
-						<button class="btn btn-warning" id="btn-view-del"
+						<button class="btn btn-danger" id="btn-view-del"
 							authority="${pageContext.request.contextPath}/resources/deleteResourcesByResourcesId.do">
 							<i
 								class="ace-icon glyphicon  glyphicon-remove  align-top bigger-125 icon-on-right"></i>

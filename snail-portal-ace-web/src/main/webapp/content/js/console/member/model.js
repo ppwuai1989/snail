@@ -1,5 +1,9 @@
 var _colNames = [ '用户编号', '代理标识', '代理编号', '上级编号', '账户', '用户名', '手机号', '头像',
-		'性别', '金币数', '房卡数', '比武卡', '状态', '最后登录时间', '微信号', '注册日期' ];
+		'性别',
+		'<span class="label label-lg label-pink arrowed-right">金币</span>',
+		'<span class="label label-lg label-grey arrowed-right">房卡</span>',
+		'<span class="label label-lg label-success arrowed-right">比武卡</span>',
+		'状态', '最后登录时间', '微信号', '注册日期' ];
 var _colModel = function() {
 	return [ {
 		name : 'userId',
@@ -129,7 +133,7 @@ var _colModel = function() {
 		}
 	}, {
 		name : 'coins',
-		width : 60,
+		width : 48,
 		editable : true,
 		editoptions : {
 			size : "20",
@@ -137,8 +141,7 @@ var _colModel = function() {
 		},
 		editrules : {
 			number : true,
-			minValue : 0,
-			maxValue : $("agent-account-coins").value,
+			minValue : 0,			
 			required : true
 		}
 

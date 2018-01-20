@@ -31,6 +31,17 @@
 		<if test='condition.agentId!=null and condition.agentId!=""'>
 			and t.agent_id =#{condition.agentId,jdbcType=VARCHAR}
 		</if>
+		<if test='condition.startDate!=null and condition.startDate!=""'>
+			<![CDATA[
+				and t.create_time >=#{condition.startDate}
+			]]>
+		</if>
+		<if test='condition.endDate!=null and condition.endDate!=""'>
+			<![CDATA[
+				and t.create_time <=#{condition.endDate}
+			]]>
+		</if>
+
 		<!-- agentSearch为1代表是 代理在使用 找到他的所有附属 -->
 		<if test='agentSearch=="1" and agentSearchId!=null and agentSearchId!=""'>
 			and EXISTS(
@@ -85,7 +96,8 @@
 	</select>
 
 	<insert id="insertRecords" parameterType="org.platform.snail.portal.model.TopUpRecords">
-		insert into top_up_records
+		insert into
+		top_up_records
 		(
 		uuid,
 		way,

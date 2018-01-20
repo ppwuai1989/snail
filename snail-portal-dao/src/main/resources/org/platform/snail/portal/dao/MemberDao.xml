@@ -180,6 +180,10 @@
 				AGENT_ID=
 				#{member.agentId,jdbcType=INTEGER},
 			</if>
+			<if test="member.parentAgentId != null and member.parentAgentId !=''">
+				PARENT_AGENT_ID=
+				#{member.parentAgentId,jdbcType=INTEGER},
+			</if>
 			<if test="member.lastLoginTime != null and member.lastLoginTime !=''">
 				LAST_LOGIN_TIME=
 				#{member.lastLoginTime,jdbcType=TIMESTAMP},

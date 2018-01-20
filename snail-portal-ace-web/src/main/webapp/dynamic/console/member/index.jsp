@@ -50,22 +50,22 @@
 					</form>
 					<div id="toolbar" class="toolbar">
 
-						<button class="btn btn-info" id="btn-view-add"
+						<button class="btn btn-success" id="btn-view-add"
 							authority="${pageContext.request.contextPath}/member/insertMember.do">
 							<i
 								class="ace-icon fa fa-plus-square  align-top bigger-125 icon-on-right"></i>
 						</button>
-						<button class="btn btn-info" id="btn-view-edit"
+						<button class="btn btn-warning" id="btn-view-edit"
 							authority="${pageContext.request.contextPath}/member/updateMember.do">
 							<i
 								class="ace-icon fa fa-edit  align-top bigger-125 icon-on-right"></i>
 						</button>
-						<button class="btn btn-warning" id="btn-view-del"
+						<button class="btn btn-danger" id="btn-view-del"
 							authority="${pageContext.request.contextPath}/member/updateMemberStatusByPrimaryKey.do">
 							<i
 								class="ace-icon glyphicon  glyphicon-remove  align-top bigger-125 icon-on-right"></i>
 						</button>
-						<button class="btn btn-info" id="btn-view-topUp"
+						<button class="btn btn-purple" id="btn-view-topUp"
 							authority="${pageContext.request.contextPath}/member/topUpMember.do">
 							<i
 								class="ace-icon fa fa-cny  align-top bigger-125 icon-on-right"></i>

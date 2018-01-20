@@ -9,8 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.platform.snail.beans.DataResponse;
-import org.platform.snail.service.DataBaseLogService;
+import org.platform.snail.beans.SystemUser;
+import org.platform.snail.portal.model.TopUpRecords;
+import org.platform.snail.portal.service.TopUpRecordsService;
+import org.platform.snail.portal.vo.TopUpRecordsVo;
 import org.platform.snail.utils.Page;
+import org.platform.snail.utils.SnailBeanUtils;
 import org.platform.snail.web.action.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,17 +22,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/logs")
-public class LogsAction extends BaseController {
+@RequestMapping("/topUpRecords")
+public class TopUpRecordsAction extends BaseController {
+
 	private static final long serialVersionUID = 1L;
 	Logger logger = LogManager.getLogger(this.getClass());
-	@Autowired
-	private DataBaseLogService dataBaseLogService;
 
-	@RequestMapping(value = "/findList.do")
+	@Autowired
+	private TopUpRecordsService topUpRecordsService;
+
+	@RequestMapping(value = "/findRecordsList.do")
 	@ResponseBody
-	public DataResponse findDictList(HttpServletRequest request, Page page) {
+	public DataResponse findRecordsList(HttpServletRequest request, Page page) {
 		try {
+			SystemUser systemUser = this.getSessionSystemUser();
 			Map<String, Object> condition = new HashMap<String, Object>();
 			Enumeration e = request.getParameterNames();
 			while (e.hasMoreElements()) {
@@ -36,15 +43,17 @@ public class LogsAction extends BaseController {
 				String value = request.getParameter(key);
 				condition.put(key, value);
 			}
-			DataResponse rst = this.dataBaseLogService.findList(condition, page.getStart(), page.getLimit(),
-					page.getOrderBy());
-			if (rst.getAllRows() == null) {
-				rst.setAllRows(page.getTotalRecord());
-			}
+			TopUpRecordsVo records = new TopUpRecordsVo();
+			SnailBeanUtils.copyMap2Bean(records, condition);
+			DataResponse rst = this.topUpRecordsService.findRecordsList(records, page.getStart(), page.getLimit(),
+					page.getOrderBy(), systemUser);
 			return rst;
+			
 		} catch (Exception e) {
 			this.logger.error(e);
 			return new DataResponse(false, e.getMessage());
 		}
+
 	}
+
 }
