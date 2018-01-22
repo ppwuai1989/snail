@@ -63,6 +63,8 @@ jQuery(function($) {
 										'.ui-jqdialog-titlebar').wrapInner(
 										'<div class="widget-header" />')
 								style_edit_form(form);
+								// 修改代理时需要添加的事件
+								event_edit_form(form);
 							},
 							errorTextFormat : function(request, editType) {
 								forbidenToAccess(request)
@@ -71,12 +73,28 @@ jQuery(function($) {
 			});
 	$('#btn-view-setUpAgentBySystemUser').on(
 			'click',
-			function() {
+			function() {						
 				var gr = jQuery(cfg.grid_selector).jqGrid('getGridParam',
 						'selrow');
 				if (!gr) {
 					$.jgrid.info_dialog($.jgrid.nav.alertcap,
 							$.jgrid.nav.alerttext)
+				}
+				// 找到代理标识行
+				if(jQuery(cfg.grid_selector).getCell(gr,'isAgent')=="1"){
+					var dialog = $("#dialog-cannotSet").removeClass('hide').dialog({
+					resizable : false,
+					modal : false,
+					title : "系统提示",
+					buttons : [ {
+						html : "<i class='ace-icon fa fa-check bigger-110'></i>&nbsp; 确定",
+						"class" : "btn btn-info btn-xs",
+						click : function() {					
+							$( this ).dialog( "close" );
+						}
+					} ]
+				});	
+				return ;
 				}
 				jQuery(cfg.grid_selector).jqGrid(
 						'editGridRow',
@@ -86,14 +104,62 @@ jQuery(function($) {
 							closeAfterAdd : true,
 							recreateForm : true,
 							viewPagerButtons : true,
-							beforeShowForm : function(e) {
-								var form = $(e[0]);
+							beforeShowForm : function(e) {								
+								var form = $(e[0]);								
 								form.closest('.ui-jqdialog').find(
 										'.ui-jqdialog-titlebar').wrapInner(
 										'<div class="widget-header" />')
-								style_edit_form(form);
+								style_edit_form(form);								
 								// 设置代理时需要添加的事件
-								event_edit_form(form);
+								event_setUpAgent_form(form);
+							},
+							errorTextFormat : function(request, editType) {
+								forbidenToAccess(request)
+							}
+						})
+			});
+	
+	$('#btn-view-setUpAgent').on(
+			'click',
+			function() {						
+				var gr = jQuery(cfg.grid_selector).jqGrid('getGridParam',
+						'selrow');
+				if (!gr) {
+					$.jgrid.info_dialog($.jgrid.nav.alertcap,
+							$.jgrid.nav.alerttext)
+				}
+				// 找到代理标识行
+				if(jQuery(cfg.grid_selector).getCell(gr,'isAgent')=="1"){
+					var dialog = $("#dialog-cannotSet").removeClass('hide').dialog({
+					resizable : false,
+					modal : false,
+					title : "系统提示",
+					buttons : [ {
+						html : "<i class='ace-icon fa fa-check bigger-110'></i>&nbsp; 确定",
+						"class" : "btn btn-info btn-xs",
+						click : function() {					
+							$( this ).dialog( "close" );
+						}
+					} ]
+				});	
+				return ;
+				}
+				jQuery(cfg.grid_selector).jqGrid(
+						'editGridRow',
+						gr,
+						{
+							url : cfg.grid_setupagent_data_url,
+							closeAfterAdd : true,
+							recreateForm : true,
+							viewPagerButtons : true,
+							beforeShowForm : function(e) {								
+								var form = $(e[0]);								
+								form.closest('.ui-jqdialog').find(
+										'.ui-jqdialog-titlebar').wrapInner(
+										'<div class="widget-header" />')
+								style_edit_form(form);								
+								// 设置代理时需要添加的事件
+								event_setUpAgent_form(form);
 							},
 							errorTextFormat : function(request, editType) {
 								forbidenToAccess(request)
@@ -119,7 +185,7 @@ jQuery(function($) {
 							viewPagerButtons : true,
 							beforeShowForm : function(e) {
 								var form = $(e[0]);
-								var col = form[0];
+								var col = form[0];								
 								for (var i = 0; i < col.length; i++) {
 									if (col[i].id != "coins"
 											&& col[i].id != "gems"
@@ -219,54 +285,102 @@ jQuery(function($) {
 			btn.removeAttr("disabled");
 		}
 	}
-	function event_edit_form(form) {
-		form.find("#tr_isAgent td")[0].innerText = "代理开关"
+	function event_setUpAgent_form(form) {
+		form.find("#tr_isAgent td")[0].innerText = "代理开关";
 		var col = form[0];
-		var isAgent = $("#isAgent")[0];
+		var isAgent = $("#isAgent")[0];	
 		for (var i = 0; i < col.length; i++) {
 			col[i].disabled = true;
 			if (col[i].id == "isAgent") {
 				col[i].disabled = false;
-			}
-			if (isAgent.checked == true) {
-				if ((col[i].id == "agentId" || col[i].id == "parentAgentId")
-						|| col[i].id == "agentLevel") {
-					col[i].disabled = false;
-				}
-			}
-		}
-
+			}		
+		}	
 		$("#isAgent").click(function(e) {
-			if (e.target.checked == true) {
-				$("#agentLevel")[0].disabled = false;
+			if (e.target.checked == true) {	
+					e.preventDefault();
+					isFirstTime = false;
+					var dialog = $("#dialog-message").removeClass('hide').dialog({
+						resizable : false,
+						modal : false,
+						title : "开启代理",
+						buttons : [ {
+							html : "<i class='ace-icon fa fa-check bigger-110'></i>&nbsp; 确定",
+							"class" : "btn btn-info btn-xs",
+							click : function() {
+								e.target.checked=true;								
+								$("#mobile")[0].disabled = false;								
+								$(this).dialog("close");
+							}
+						}, {
+							html : "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; 取消",
+							"class" : "btn btn-xs",
+							click : function() {
+								$("#mobile")[0].value="";
+								$("#mobile")[0].disabled=true;
+								$(this).dialog("close");
+							}
+						} ]
+					})	
+			} else {	
+				$("#mobile")[0].value="";
+				$("#mobile")[0].disabled=true;
+			}			
+		})
+	}
+	function event_edit_form(form){
+		form.find("#tr_isAgent td")[0].innerText = "代理开关";		
+		var col = form[0];
+		var isAgent = $("#isAgent")[0];	
+		for (var i = 0; i < col.length; i++) {
+			//col[i].disabled = true;
+			if(col[i].id=="agentId"||col[i].id=="agentLevel"){
+				col[i].disabled = true;
+			}
+			if (col[i].id == "isAgent"||col[i].id == "parentAgentId") {
+				if(isAgent.checked==true){
+					col[i].disabled = false;
+				}				
+				else{
+					col[i].disabled = true;
+				}
+			}		
+		}		
+		var isFirstTime = true;
+		$("#isAgent").click(function(e) {			
+			if (e.target.checked == true) {		
+				e.target.checked=true;		
 				$("#agentId")[0].disabled = false;
 				$("#parentAgentId")[0].disabled = false;
-			} else {
-				e.preventDefault();
-				var dialog = $("#dialog-message").removeClass('hide').dialog({
-					resizable : false,
-					modal : false,
-					title : "关闭代理提示",
-					buttons : [ {
-						html : "<i class='ace-icon fa fa-check bigger-110'></i>&nbsp; 确定",
-						"class" : "btn btn-info btn-xs",
-						click : function() {
-							e.target.checked=false;
-							$("#agentLevel")[0].disabled = true;
-							$("#agentId")[0].disabled = true;
-							$("#parentAgentId")[0].disabled = true;		
-							$( this ).dialog( "close" );
-						}
-					}, {
-						html : "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; 取消",
-						"class" : "btn btn-xs",
-						click : function() {
-							$(this).dialog("close");
-						}
-					} ]
-				});			
+			} else {				
+				if(isFirstTime){
+					e.preventDefault();
+					isFirstTime = false;
+					var dialog = $("#dialog-message").removeClass('hide').dialog({
+						resizable : false,
+						modal : false,
+						title : "关闭代理提示",
+						buttons : [ {
+							html : "<i class='ace-icon fa fa-check bigger-110'></i>&nbsp; 确定",
+							"class" : "btn btn-info btn-xs",
+							click : function() {
+								e.target.checked=false;
+								$("#agentLevel")[0].disabled = true;
+								$("#agentId")[0].disabled = true;
+								$("#parentAgentId")[0].disabled = true;		
+								$( this ).dialog( "close" );
+							}
+						}, {
+							html : "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; 取消",
+							"class" : "btn btn-xs",
+							click : function() {
+								$(this).dialog("close");
+							}
+						} ]
+					})			
+				}else{			
+					$("#parentAgentId")[0].disabled = true;
+				}				
 			}
-
-		});
+		})
 	}
 });

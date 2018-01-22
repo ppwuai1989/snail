@@ -7,8 +7,9 @@ var _colNames = [ '代理标识','代理等级', '代理编号', '上级编号',
 var _colModel = function() {
 	return [ {
 		name : 'isAgent',
+		index:'isAgent',
 		width : 40,
-		editable : true,
+		editable : true,		
 		edittype : "checkbox",
 		editoptions : {
 			value : "1:0",

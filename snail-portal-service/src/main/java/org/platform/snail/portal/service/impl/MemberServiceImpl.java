@@ -417,4 +417,18 @@ public class MemberServiceImpl implements MemberService {
 		}
 
 	}
+
+	@Override
+	public DataResponse setUpAgent(JSONObject jsonObject, SystemUser systemUser) throws Exception {
+		// 设置代理（代理使用的）
+		// 首先检查该玩家手机号是否存在
+		Member memberInfo = new Member();
+		SnailBeanUtils.copyProperties(memberInfo, jsonObject);
+		if(this.memberDao.isExitUsersMobile(memberInfo.getMobile())>0){
+			return new DataResponse(false,"手机号已经被其他玩家绑定，请重新输入，或联系客服！");
+		}
+		//明天写 向用户表插入数据，并且向角色-权限表中添加 该用户数据，使其获得相应权限
+		
+		return null;
+	}
 }

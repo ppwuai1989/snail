@@ -6,6 +6,7 @@ cfg.grid_delete_data_url = contextPath
 		+ '/member/updateMemberStatusByPrimaryKey.do';
 cfg.grid_topup_data_url = contextPath + '/member/topUpMember.do';
 cfg.grid_setupagentbysystemuser_data_url = contextPath + '/member/setUpAgentBySystemUser.do';
+cfg.grid_setupagent_data_url=contextPath + '/member/setUpAgent.do';
 cfg.grid_selector = "#grid-table";
 cfg.pager_selector = "#grid-pager";
 cfg.caption = "会员";

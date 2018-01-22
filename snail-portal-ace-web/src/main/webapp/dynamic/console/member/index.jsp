@@ -93,12 +93,18 @@
 		<div id="grid-pager"></div>
 		<div id="dialog-message" class="hide">
 			<div class="alert alert-info bigger-110">
-				关闭代理后，将删除该代理的账户信息</div>
-
+				温馨提示：开启代理需要绑定该玩家的手机号，绑定成功后玩家将自动成为您的下级代理</div>
 			<div class="space-6"></div>
-
 			<p class="bigger-110 bolder center grey">
 				<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i> 您确定吗?
+			</p>
+		</div>
+		<div id="dialog-cannotSet" class="hide">
+			<div class="alert alert-info bigger-110">
+				该玩家已经是代理，无需设置！</div>
+			<div class="space-6"></div>
+			<p class="bigger-110 bolder center grey">
+				<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>如需提升、降低代理等级请联系客服。
 			</p>
 		</div>
 	</div>

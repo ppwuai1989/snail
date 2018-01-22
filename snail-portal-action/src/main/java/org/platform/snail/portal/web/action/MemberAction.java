@@ -129,5 +129,19 @@ public class MemberAction extends BaseController {
 			return new DataResponse(false, e.getMessage());
 		}
 	}
+	
+	@RequestMapping(value = "/setUpAgent.do")
+	@ResponseBody
+	public DataResponse setUpAgent(String jsons) {
+
+		try {
+			SystemUser systemUser = this.getSessionSystemUser();
+			JSONObject json = JSONObject.fromObject(jsons);
+			return this.memberService.setUpAgent(json, systemUser);
+		} catch (Exception e) {
+			this.logger.error(e);
+			return new DataResponse(false, e.getMessage());
+		}
+	}
 
 }
