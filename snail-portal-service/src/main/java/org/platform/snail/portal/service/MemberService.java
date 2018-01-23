@@ -32,8 +32,14 @@ public interface MemberService {
 	public abstract DataResponse userLoginOrRegister(UserInfo userInfo) throws Exception;
 
 	// 用户充值
-	public abstract DataResponse topUpMember(JSONObject jsonObject,SystemUser systemUser) throws Exception;
-	
-	//设置代理（代理用）
-	public abstract DataResponse setUpAgent(JSONObject jsonObject,SystemUser systemUser) throws Exception;
+	public abstract DataResponse topUpMember(JSONObject jsonObject, SystemUser systemUser) throws Exception;
+
+	// 设置代理（代理用）
+	public abstract DataResponse setUpAgent(JSONObject jsonObject, SystemUser systemUser) throws Exception;
+
+	// 绑定会员（代理用）
+	public abstract DataResponse checkMember(JSONObject jsonObject, SystemUser systemUser) throws Exception;
+
+	// 绑定会员（代理用）
+	public abstract DataResponse bindMember(JSONObject jsonObject, SystemUser systemUser) throws Exception;
 }

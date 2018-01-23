@@ -446,7 +446,7 @@ public class MemberServiceImpl implements MemberService {
 			int insertU = this.usersDao.registerUsers(user);
 			if (insertU > 0) {
 				// 用户插入成功后，插入一个低级代理的角色
-				// System.out.println(user.getUserId());			
+				// System.out.println(user.getUserId());
 				this.usersDao.insertUsersRole(user.getUserId(), new String[] { CommonKeys.juniorAgent });
 				// 插入角色后，更新会员表信息 ，代理等级，id，名字、是否代理等
 				// 因为传入的memberInfo有其他信息，为了确保不被修改，我们new一个Member实体
@@ -472,6 +472,43 @@ public class MemberServiceImpl implements MemberService {
 			return new DataResponse(false, "对不起您不是代理，不可使用该功能！");
 		}
 		return dr;
+	}
+
+	@Override
+	public DataResponse checkMember(JSONObject jsonObject, SystemUser systemUser) throws Exception {
+		MemberVo checkInfo = new MemberVo();
+		SnailBeanUtils.copyProperties(checkInfo, jsonObject);
+		// 根据userid查出会员信息,根据parentAgentId判断是否已经被绑定
+		checkInfo = this.memberDao.selectMemberVoByPrimaryKey(checkInfo.getUserId());
+		if (checkInfo != null) {
+			if (SnailUtils.isNotBlankString(checkInfo.getParentAgentId())) {
+				return new DataResponse(false, "该会员已经被其他代理绑定！");
+			} else {
+				return new DataResponse(true, "您可以绑定该会员，点击确定完成绑定！");
+			}
+		} else {
+			return new DataResponse(true, "该会员不存在！");
+		}
+
+	}
+
+	@Override
+	public DataResponse bindMember(JSONObject jsonObject, SystemUser systemUser) throws Exception {
+		Member bindInfo = new Member();
+		SnailBeanUtils.copyProperties(bindInfo, jsonObject);
+		if (systemUser.getAgent() != null) {
+			bindInfo.setParentAgentId(systemUser.getAgent().getAgentId());
+			int update = this.memberDao.updateUsersByPrimaryKey(bindInfo);
+			if (update > 0) {
+				
+				return new DataResponse(true, "绑定会员成功！");
+			}
+			else{
+				return new DataResponse(false, "绑定失败，未知错误！");
+			}			
+		} else {
+			return new DataResponse(false, "您不是代理，不可以绑定会员！");
+		}
 	}
 
 }

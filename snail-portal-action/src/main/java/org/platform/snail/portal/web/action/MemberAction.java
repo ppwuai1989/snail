@@ -143,5 +143,34 @@ public class MemberAction extends BaseController {
 			return new DataResponse(false, e.getMessage());
 		}
 	}
+	@RequestMapping(value = "/checkMember.do")
+	@ResponseBody
+	public DataResponse checkMember(String jsons) {
+
+		try {
+			SystemUser systemUser = this.getSessionSystemUser();
+			JSONObject json = JSONObject.fromObject(jsons);
+			return this.memberService.checkMember(json, systemUser);
+		} catch (Exception e) {
+			this.logger.error(e);
+			return new DataResponse(false, e.getMessage());
+		}
+	}
+	
+	@RequestMapping(value = "/bindMember.do")
+	@ResponseBody
+	public DataResponse bindMember(String jsons) {
+
+		try {
+			SystemUser systemUser = this.getSessionSystemUser();
+			JSONObject json = JSONObject.fromObject(jsons);
+			return this.memberService.bindMember(json, systemUser);
+		} catch (Exception e) {
+			this.logger.error(e);
+			return new DataResponse(false, e.getMessage());
+		}
+	}
+	
+	
 
 }

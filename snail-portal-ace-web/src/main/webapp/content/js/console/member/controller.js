@@ -257,10 +257,48 @@ jQuery(function($) {
 			modal : false,
 			title : "绑定会员",
 			buttons : [ {
-				html : "<i class='ace-icon fa fa-check bigger-110'></i>&nbsp; 确定",
+				html : "<i id='bind-member-confirm' disabled='true' class='ace-icon fa fa-check bigger-110'></i>&nbsp; 确定",
 				"class" : "btn btn-info btn-xs",
-				click : function() {					
-					$(this).dialog( "close" );
+				click : function() {
+					$.ajax({
+						url : contextPath + '/member/bindMember.do',
+						type : 'post',	
+						data: {jsons:"{userId:"+$("#memberId").val()+"}"},
+						success : function(rst) {							
+							if (rst.state) {
+								bootbox.dialog({
+									title : '系统提示',
+									message : rst.errorMessage,
+									buttons : {
+										"success" : {
+											"label" : "<i class='ace-icon fa fa-check'></i>确定",
+											"className" : "btn-sm btn-success",
+											"callback" : function() {
+												dialog.dialog("close");
+											}
+										}
+									}
+								});
+							}else{
+								bootbox.dialog({
+									title : '系统提示',
+									message : rst.errorMessage,
+									buttons : {
+										"success" : {
+											"label" : "<i class='ace-icon fa fa-check'></i>确定",
+											"className" : "btn-sm btn-success",
+											"callback" : function() {
+												dialog.dialog("close");
+											}
+										}
+									}
+								});
+							}
+							jQuery(cfg.grid_selector).jqGrid('setGridParam', {				        
+					        }).trigger('reloadGrid');
+							$("#dialog-bindMember").dialog( "close" );
+						}
+					})	
 				}
 			}, {
 				html : "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; 取消",
@@ -270,23 +308,29 @@ jQuery(function($) {
 				}
 			} ]
 		});	
+		 $("#bind-member-confirm").parents("button").hide();
 		$("#memberId").keyup(function(e){
 			 var regu = /^[0-9]+\.?[0-9]*$/;
 			 var val= $("#memberId").val();
+			
 			if(regu.test(val)){
-				if(val.length==8){
-					$("#errMsg").hide();
+				if(val.length==8){					
 					$.ajax({
-						url : '${pageContext.request.contextPath}/member/bindMember.do',
-						type : 'post',
-						data: "{userId:" + val + "}",
+						url : contextPath + '/member/checkMember.do',
+						type : 'post',	
+						data: {jsons:"{userId:"+val+"}"},
 						success : function(rst) {
+							$("#errMsg").find("i")[0].innerText=rst.errorMessage;
+							$("#errMsg").show();
 							if (rst.state) {
-					
+								$("#bind-member-confirm").parents("button").show();
+							}else{
+								$("#bind-member-confirm").parents("button").hide();
 							}
 						}
 					})
 				}else{
+					$("#bind-member-confirm").parents("button").hide();
 					$("#errMsg").find("i")[0].innerText="还需输入"+(8-val.length)+"个数字";
 					$("#errMsg").show();
 				}

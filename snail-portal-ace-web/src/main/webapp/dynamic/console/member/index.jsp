@@ -116,8 +116,8 @@
 					placeholder="会员编号" maxlength="8"/>
 			</div>
 			<div class="space-6"></div>
-			<p id="errMsg" class="bigger-110 bolder center grey" style="display:none;">
-				<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>
+			<p id="errMsg" class="bigger-110 bolder center grey">
+				<i class="ace-icon fa fa-hand-o-right blue bigger-110">请输入您要绑定的会员编号</i>
 			</p>
 		</div>
 	</div>
