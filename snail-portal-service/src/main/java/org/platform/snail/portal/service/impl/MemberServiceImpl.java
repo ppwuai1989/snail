@@ -458,9 +458,8 @@ public class MemberServiceImpl implements MemberService {
 				updateMember.setMobile(memberInfo.getMobile());
 				updateMember.setUserId(memberInfo.getUserId());
 				int updateM = this.memberDao.updateUsersByPrimaryKey(updateMember);
-				if (updateM > 0) {
-					dr.setState(true);
-					dr.setErrorMessage("设置代理成功！请通知代理及时登录并修改初始密码--手机号后六位！");
+				if (updateM > 0) {			
+					return new DataResponse(true, "设置代理成功！请通知代理及时登录并修改初始密码--手机号后六位！");
 				} else {
 					return new DataResponse(false, "注册失败！更新玩家信息失败");
 				}
@@ -471,7 +470,7 @@ public class MemberServiceImpl implements MemberService {
 		} else {
 			return new DataResponse(false, "对不起您不是代理，不可使用该功能！");
 		}
-		return dr;
+		
 	}
 
 	@Override
@@ -499,8 +498,7 @@ public class MemberServiceImpl implements MemberService {
 		if (systemUser.getAgent() != null) {
 			bindInfo.setParentAgentId(systemUser.getAgent().getAgentId());
 			int update = this.memberDao.updateUsersByPrimaryKey(bindInfo);
-			if (update > 0) {
-				
+			if (update > 0) {				
 				return new DataResponse(true, "绑定会员成功！");
 			}
 			else{

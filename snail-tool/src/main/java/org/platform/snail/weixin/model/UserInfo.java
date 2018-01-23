@@ -21,7 +21,7 @@ public class UserInfo implements Serializable {
 
 	private String nickname;
 
-	// 与系统中不同，1--男性，2--女性，0--未知
+	// 1--男性，2--女性，0--未知
 	private String sex;
 
 	private String language;
@@ -35,7 +35,7 @@ public class UserInfo implements Serializable {
 	private String headimgurl;
 
 	private String privilege;
-	
+
 	private String unionid;
 
 	private Long errcode;
@@ -63,22 +63,11 @@ public class UserInfo implements Serializable {
 	}
 
 	/**
-	 * @param sex 对应微信接口转换
+	 * @param sex
+	 *            对应微信接口转换
 	 */
 	public void setSex(String sex) {
-		switch (sex) {
-		case "0":
-			this.sex = "2";
-			break;
-		case "1":
-			this.sex = "1";
-			break;
-		case "2":
-			this.sex = "0";
-			break;
-		default:
-			this.sex = "0";
-		}
+		this.sex = sex;
 	}
 
 	public String getLanguage() {

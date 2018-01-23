@@ -126,22 +126,11 @@ var _colModel = function() {
 		width : 30,
 		editable : true,
 		edittype : "select",
-		editoptions : {
-			value : "0:女;1:男"
-		},
 		renderer : function(value) {
-			var rst = "";
-			switch (value) {
-			case '1':
-				rst = "男";
-				break;
-			case '0':
-				rst = "女";
-				break;
-			default:
-				rst = "N/A";
-			}
-			return rst;
+			return rsd(value, "STATIC_DATA_01");
+		},
+		editoptions : {
+			value : odparse("STATIC_DATA_01")
 		}
 	}, {
 		name : 'coins',
