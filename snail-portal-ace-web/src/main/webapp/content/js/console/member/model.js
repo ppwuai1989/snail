@@ -1,4 +1,4 @@
-var _colNames = [ '代理标识','代理等级', '代理编号', '上级编号', '用户编号', '账户', '用户名', '手机号', '头像',
+var _colNames = [ '代理标识','代理等级', '代理编号', '上级编号', '会员编号', '账户', '用户名', '手机号', '头像',
 		'性别',
 		'<span class="label label-lg label-pink arrowed-right">金币</span>',
 		'<span class="label label-lg label-grey arrowed-right">房卡</span>',

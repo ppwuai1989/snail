@@ -43,5 +43,7 @@ public interface UsersDao {
 	public abstract List<Role> selectRoleListByUserId(@Param("userId") String userId);
 
 	public abstract int isExitUsersByEmail(@Param("email") String email);
+	//通过后台设置注册用户成为代理 返回userId
+	public abstract int registerUsers(@Param("users") Users users);
 
 }

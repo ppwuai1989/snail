@@ -24,4 +24,13 @@ public interface CommonKeys {
 	String wayOfInGame = "1";
 	String wayOfAgent = "2";
 	String wayOfSystemUser = "3";
+
+	// 初级代理对应的角色编号（对应数据库中role）
+	String superManager = "1";
+	String seniorAgent = "2";
+	String mediumAgent = "3";
+	String juniorAgent = "4";
+	String directlyUnderAgent = "5";
+	String systemManager = "6";
+
 }

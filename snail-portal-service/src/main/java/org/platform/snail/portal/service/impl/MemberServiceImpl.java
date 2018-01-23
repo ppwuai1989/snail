@@ -6,8 +6,10 @@ import java.util.Map;
 
 import org.platform.snail.beans.DataResponse;
 import org.platform.snail.beans.SystemUser;
+import org.platform.snail.model.Users;
 import org.platform.snail.portal.dao.AgentDao;
 import org.platform.snail.portal.dao.MemberDao;
+import org.platform.snail.portal.dao.UsersDao;
 import org.platform.snail.portal.model.Member;
 import org.platform.snail.portal.model.TopUpRecords;
 import org.platform.snail.portal.service.MemberService;
@@ -32,6 +34,9 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private AgentDao agentDao;
+
+	@Autowired
+	private UsersDao usersDao;
 
 	@Autowired
 	private TopUpRecordsService topUpRecordsService;
@@ -422,13 +427,51 @@ public class MemberServiceImpl implements MemberService {
 	public DataResponse setUpAgent(JSONObject jsonObject, SystemUser systemUser) throws Exception {
 		// 设置代理（代理使用的）
 		// 首先检查该玩家手机号是否存在
-		Member memberInfo = new Member();
-		SnailBeanUtils.copyProperties(memberInfo, jsonObject);
-		if(this.memberDao.isExitUsersMobile(memberInfo.getMobile())>0){
-			return new DataResponse(false,"手机号已经被其他玩家绑定，请重新输入，或联系客服！");
+		DataResponse dr = new DataResponse();
+		if (systemUser.getAgent() != null) {
+			Member memberInfo = new Member();
+			SnailBeanUtils.copyProperties(memberInfo, jsonObject);
+			if (this.memberDao.isExitUsersMobile(memberInfo.getMobile()) > 0) {
+				return new DataResponse(false, "手机号已经被其他玩家绑定，请重新输入，或联系客服！");
+			}
+			// 向用户表插入数据，并且向角色-权限表中添加 该用户数据，使其获得相应权限
+
+			Users user = new Users();
+			user.setAccount(memberInfo.getMobile());// 设置手机为账户
+			user.setSex(memberInfo.getSex());
+			user.setPassword(SnailUtils.getMd5(memberInfo.getMobile().substring(memberInfo.getMobile().length() - 6)));// 手机后六位为密码
+			user.setMobile(memberInfo.getMobile());
+			user.setName(memberInfo.getName());
+			user.setStatus("1");
+			int insertU = this.usersDao.registerUsers(user);
+			if (insertU > 0) {
+				// 用户插入成功后，插入一个低级代理的角色
+				// System.out.println(user.getUserId());			
+				this.usersDao.insertUsersRole(user.getUserId(), new String[] { CommonKeys.juniorAgent });
+				// 插入角色后，更新会员表信息 ，代理等级，id，名字、是否代理等
+				// 因为传入的memberInfo有其他信息，为了确保不被修改，我们new一个Member实体
+				Member updateMember = new Member();
+				updateMember.setIsAgent("1");
+				updateMember.setAgentId(user.getUserId());// 代理ID
+				updateMember.setParentAgentId(systemUser.getAgent().getAgentId());
+				updateMember.setAgentLevel(CommonKeys.junior);
+				updateMember.setMobile(memberInfo.getMobile());
+				updateMember.setUserId(memberInfo.getUserId());
+				int updateM = this.memberDao.updateUsersByPrimaryKey(updateMember);
+				if (updateM > 0) {
+					dr.setState(true);
+					dr.setErrorMessage("设置代理成功！请通知代理及时登录并修改初始密码--手机号后六位！");
+				} else {
+					return new DataResponse(false, "注册失败！更新玩家信息失败");
+				}
+			} else {
+				return new DataResponse(false, "注册失败！平台账号未注册成功");
+			}
+
+		} else {
+			return new DataResponse(false, "对不起您不是代理，不可使用该功能！");
 		}
-		//明天写 向用户表插入数据，并且向角色-权限表中添加 该用户数据，使其获得相应权限
-		
-		return null;
+		return dr;
 	}
+
 }

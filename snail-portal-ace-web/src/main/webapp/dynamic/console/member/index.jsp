@@ -55,7 +55,6 @@
 					<div id="toolbar" class="toolbar">
 
 						<button class="btn btn-success" id="btn-view-add"
-							style="display: none;"
 							authority="${pageContext.request.contextPath}/member/insertMember.do">
 							<i
 								class="ace-icon fa fa-plus-square  align-top bigger-125 icon-on-right"></i>
@@ -74,6 +73,11 @@
 							id="btn-view-setUpAgentBySystemUser"
 							authority="${pageContext.request.contextPath}/member/setUpAgentBySystemUser.do">
 							<i class="ace-icon fa fa-cog  align-top bigger-125 icon-on-right"></i>
+						</button>
+						<button class="btn btn-success" id="btn-view-bind"
+							authority="${pageContext.request.contextPath}/member/bindMember.do">
+							<i
+								class="ace-icon fa fa-plus-square  align-top bigger-125 icon-on-right"></i>
 						</button>
 						<button class="btn btn-inverse" id="btn-view-setUpAgent"
 							authority="${pageContext.request.contextPath}/member/setUpAgent.do">
@@ -100,11 +104,20 @@
 			</p>
 		</div>
 		<div id="dialog-cannotSet" class="hide">
-			<div class="alert alert-info bigger-110">
-				该玩家已经是代理，无需设置！</div>
+			<div class="alert alert-info bigger-110">该玩家已经是代理，无需设置！</div>
 			<div class="space-6"></div>
 			<p class="bigger-110 bolder center grey">
 				<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>如需提升、降低代理等级请联系客服。
+			</p>
+		</div>
+		<div id="dialog-bindMember" class="hide">
+			<div class="alert bigger-110">
+				会员编号： <input name="userId" id="memberId" type="text" style="width: 100px;"
+					placeholder="会员编号" maxlength="8"/>
+			</div>
+			<div class="space-6"></div>
+			<p id="errMsg" class="bigger-110 bolder center grey" style="display:none;">
+				<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>
 			</p>
 		</div>
 	</div>

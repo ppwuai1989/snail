@@ -251,6 +251,54 @@ jQuery(function($) {
 							}
 						})
 			});
+	$("#btn-view-bind").on('click',function(){	
+		var dialog = $("#dialog-bindMember").removeClass('hide').dialog({
+			resizable : false,
+			modal : false,
+			title : "绑定会员",
+			buttons : [ {
+				html : "<i class='ace-icon fa fa-check bigger-110'></i>&nbsp; 确定",
+				"class" : "btn btn-info btn-xs",
+				click : function() {					
+					$(this).dialog( "close" );
+				}
+			}, {
+				html : "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; 取消",
+				"class" : "btn btn-xs",
+				click : function() {					
+					$(this).dialog("close");
+				}
+			} ]
+		});	
+		$("#memberId").keyup(function(e){
+			 var regu = /^[0-9]+\.?[0-9]*$/;
+			 var val= $("#memberId").val();
+			if(regu.test(val)){
+				if(val.length==8){
+					$("#errMsg").hide();
+					$.ajax({
+						url : '${pageContext.request.contextPath}/member/bindMember.do',
+						type : 'post',
+						data: "{userId:" + val + "}",
+						success : function(rst) {
+							if (rst.state) {
+					
+							}
+						}
+					})
+				}else{
+					$("#errMsg").find("i")[0].innerText="还需输入"+(8-val.length)+"个数字";
+					$("#errMsg").show();
+				}
+				// $("#errMsg").hide();
+			}else{
+				$("#memberId").val(val.replace(/[^\d]/g, ''));	
+				$("#errMsg").find("i")[0].innerText="请输入数字!";
+				$("#errMsg").show();
+			}			
+		});
+	})
+	
 	$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
 		_title : function(title) {
 			var $title = this.options.title || '&nbsp;'
@@ -332,7 +380,7 @@ jQuery(function($) {
 		var col = form[0];
 		var isAgent = $("#isAgent")[0];	
 		for (var i = 0; i < col.length; i++) {
-			//col[i].disabled = true;
+			// col[i].disabled = true;
 			if(col[i].id=="agentId"||col[i].id=="agentLevel"){
 				col[i].disabled = true;
 			}

@@ -77,7 +77,7 @@
 		)
 		values (0,
 		#{users.account,jdbcType=VARCHAR},
-		substr(#{users.mobile,jdbcType=VARCHAR}, -6),
+		#{users.password,jdbcType=VARCHAR},
 		#{users.sex,jdbcType=CHAR},
 		#{users.idCard,jdbcType=VARCHAR},
 		#{users.name,jdbcType=VARCHAR},
@@ -97,7 +97,7 @@
 		set
 		SEX = #{users.sex,jdbcType=CHAR},
 		account=#{users.account,jdbcType=VARCHAR},
-		<!--password=#{users.password,jdbcType=VARCHAR},  -->
+		<!--password=#{users.password,jdbcType=VARCHAR}, -->
 		ID_CARD =
 		#{users.idCard,jdbcType=VARCHAR},
 		NAME =
@@ -228,7 +228,7 @@
 				#{item,jdbcType=VARCHAR}, now());
 			</foreach>
 		</if>
-	
+
 	</insert>
 	<select id="selectRoleList" resultMap="role">
 		select * from ROLE t
@@ -245,4 +245,31 @@
 		select count(*) from
 		users where email=#{email}
 	</select>
+	<insert id="registerUsers" parameterType="org.platform.snail.model.Users">
+		<selectKey resultType="java.lang.String" order="AFTER"
+			keyProperty="users.userId">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into USERS
+		(
+		ACCOUNT,
+		PASSWORD,
+		SEX,
+		NAME,
+		STATUS,
+		LAST_LOGIN_TIME, 
+		MOBILE,
+		CREATE_TIME
+		)
+		values (
+		#{users.account,jdbcType=VARCHAR},
+		#{users.password,jdbcType=VARCHAR},
+		#{users.sex,jdbcType=CHAR},
+		#{users.name,jdbcType=VARCHAR},
+		#{users.status,jdbcType=CHAR},
+		now(),
+		#{users.mobile,jdbcType=VARCHAR},			
+		now()
+		)
+	</insert>
 </mapper>
