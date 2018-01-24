@@ -15,4 +15,6 @@ public interface AgentDao {
 
 	public abstract int updateAgentByAgentId(@Param("agent") Agent agent);
 
+	public abstract AgentVo selectAgentByAgentId(@Param("agentId") String agentId);
+
 }

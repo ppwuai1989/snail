@@ -5,6 +5,7 @@ import java.util.List;
 import org.platform.snail.beans.DataResponse;
 import org.platform.snail.beans.SystemUser;
 import org.platform.snail.portal.dao.AgentDao;
+import org.platform.snail.portal.dao.UsersDao;
 import org.platform.snail.portal.model.Agent;
 import org.platform.snail.portal.service.AgentService;
 import org.platform.snail.portal.vo.AgentVo;
@@ -22,6 +23,9 @@ public class AgentServiceImpl implements AgentService {
 
 	@Autowired
 	private AgentDao agentDao;
+	@Autowired
+	private UsersDao usersDao;
+
 	@Autowired
 	private DataBaseLogService dataBaseLogService;
 
@@ -47,28 +51,37 @@ public class AgentServiceImpl implements AgentService {
 		if (SnailUtils.isBlankString(agent.getSex())) {
 			return new DataResponse(false, "性别不能为空!");
 		}
-		String oldLevel = systemUser.getAgent().getAgentLevel();
-		// 当该代理为 非级别代理时可用
-		if (SnailUtils.isBlankString(oldLevel) && SnailUtils.isNotBlankString(agent.getAgentLevel())) {
-			return new DataResponse(false, "该代理非级别型代理!");
-		}
-		if (SnailUtils.isNotBlankString(oldLevel) && SnailUtils.isBlankString(agent.getAgentLevel())) {
-			return new DataResponse(false, "该代理级别不可为空!");
-		}
-		if (oldLevel.equals(CommonKeys.senior) || oldLevel.equals(CommonKeys.medium)
-				|| oldLevel.equals(CommonKeys.junior)) {
-			if (agent.getAgentLevel().equals("3")) {
-				// 升级为高级代理将移除其上级代理
-				agent.setParentAgentId(null);
+		// 判断更改的等级，向角色权限表中做更新，再更新会员表中的代理信息
+		String[] roleId = null;
+		switch (agent.getAgentLevel()) {
+		case CommonKeys.junior:
+			if (SnailUtils.isBlankString(agent.getParentAgentId())) {
+				return new DataResponse(false, "您必须为初级代理指定一个上级！");
+			} else {
+				roleId = new String[] { CommonKeys.juniorAgent };
 			}
+			break;
+		case CommonKeys.medium:
+			if (SnailUtils.isBlankString(agent.getParentAgentId())) {
+				return new DataResponse(false, "您必须为中级代理指定一个上级！");
+			} else {
+				roleId = new String[] { CommonKeys.mediumAgent };
+			}
+			break;
+		case CommonKeys.senior:
+			agent.setParentAgentId(null);
+			roleId = new String[] { CommonKeys.seniorAgent };
+			break;
 		}
-		AgentVo o = this.agentDao.findAgentList(agent, 1, 1, "").get(0);
+		this.usersDao.insertUsersRole(agent.getAgentId(), roleId);// 修改相应权限
+		// 更新代理信息 做日志记录
+		AgentVo o = this.agentDao.selectAgentByAgentId(agent.getAgentId());
 		int update = this.agentDao.updateAgentByAgentId(agent);
 		if (update > 0) {
 			this.dataBaseLogService.log(CommonKeys.logUpdate, "更新", o.toString(), agent.toString(),
 					"代理管理-id为" + agent.getAgentId(), systemUser, "27");
 		}
-		return null;
+		return new DataResponse(true, "更新成功！");
 	}
 
 }

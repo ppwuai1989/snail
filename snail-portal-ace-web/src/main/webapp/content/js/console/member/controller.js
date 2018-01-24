@@ -71,55 +71,6 @@ jQuery(function($) {
 							}
 						})
 			});
-	$('#btn-view-setUpAgentBySystemUser').on(
-			'click',
-			function() {						
-				var gr = jQuery(cfg.grid_selector).jqGrid('getGridParam',
-						'selrow');
-				if (!gr) {
-					$.jgrid.info_dialog($.jgrid.nav.alertcap,
-							$.jgrid.nav.alerttext)
-				}
-				// 找到代理标识行
-				if(jQuery(cfg.grid_selector).getCell(gr,'isAgent')=="1"){
-					$("#dialog-cannotSet").children()[0].innerText="该玩家已经是代理，无需设置！";
-					var dialog = $("#dialog-cannotSet").removeClass('hide').dialog({
-					resizable : false,
-					modal : false,
-					title : "系统提示",
-					buttons : [ {
-						html : "<i class='ace-icon fa fa-check bigger-110'></i>&nbsp; 确定",
-						"class" : "btn btn-info btn-xs",
-						click : function() {					
-							$( this ).dialog( "close" );
-						}
-					} ]
-				});	
-				return ;
-				}
-				jQuery(cfg.grid_selector).jqGrid(
-						'editGridRow',
-						gr,
-						{
-							url : cfg.grid_setupagentbysystemuser_data_url,
-							closeAfterAdd : true,
-							recreateForm : true,
-							viewPagerButtons : true,
-							beforeShowForm : function(e) {								
-								var form = $(e[0]);								
-								form.closest('.ui-jqdialog').find(
-										'.ui-jqdialog-titlebar').wrapInner(
-										'<div class="widget-header" />')
-								style_edit_form(form);								
-								// 设置代理时需要添加的事件
-								//event_setUpAgent_form(form);
-							},
-							errorTextFormat : function(request, editType) {
-								forbidenToAccess(request)
-							}
-						})
-			});
-	
 	$('#btn-view-setUpAgent').on(
 			'click',
 			function() {						

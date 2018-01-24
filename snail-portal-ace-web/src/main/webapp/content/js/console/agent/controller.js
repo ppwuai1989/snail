@@ -63,7 +63,8 @@ jQuery(function($) {
 										'.ui-jqdialog-titlebar').wrapInner(
 										'<div class="widget-header" />')
 								style_edit_form(form);
-							},
+								event_edit_form(form);
+							},							
 							errorTextFormat : function(request,editType) {
 								forbidenToAccess(request)
 							}
@@ -108,6 +109,20 @@ jQuery(function($) {
 		}
 	}));
 
+	function event_edit_form(form){
+		var gr=jQuery(cfg.grid_selector).jqGrid('getGridParam',
+		'selrow');
+		var agentLevel=jQuery(cfg.grid_selector).getCell(gr,'agentLevel');
+		if(agentLevel=="3"){
+			form.find("#parentAgentId")[0].disabled=true;
+		}else{
+			form.find("#parentAgentId")[0].disabled=false;
+		}
+//		$("#agentLevel").change(function(){
+//			alert(123);
+//		})
+	}
+
 	/*
 	 * function style_ajax_button(btn,status){ //console.log(status);
 	 * if(status){ $('#'+btn).find('i').removeClass('fa-check');
@@ -116,6 +131,7 @@ jQuery(function($) {
 	 * $('#'+btn).find('i').removeClass('fa-spin');
 	 * $('#'+btn).find('i').addClass('fa-check'); } $('#'+btn).disabled=status; }
 	 */
+	
 	function style_ajax_button(btnId, status) {
 		console.log(status);
 		var btn = $('#' + btnId);
@@ -131,4 +147,6 @@ jQuery(function($) {
 			btn.removeAttr("disabled");
 		}
 	}
+	
 });
+

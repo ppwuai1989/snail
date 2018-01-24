@@ -13,9 +13,6 @@ var _colModel = function() {
 		name : 'parentAgentId',
 		width : 30,
 		editable : true,
-		editoptions : {
-			readonly : true
-		}
 	}, {
 		name : 'agentLevel',
 		width : 30,
@@ -25,7 +22,17 @@ var _colModel = function() {
 			return rsd(value, "STATIC_DATA_06");
 		},
 		editoptions : {
-			value : odparse("STATIC_DATA_06")
+			value : odparse("STATIC_DATA_06"),
+			dataEvents : [ {
+				type : 'change',
+				fn : function(){
+					if($(this).val()=="3"){						
+						$("#parentAgentId")[0].disabled=true;
+					}else{
+						$("#parentAgentId")[0].disabled=false;
+					}
+				}
+			} ]
 		}
 	}, {
 		name : 'name',

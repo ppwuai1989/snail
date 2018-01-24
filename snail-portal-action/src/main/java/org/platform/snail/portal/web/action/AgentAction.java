@@ -41,7 +41,7 @@ public class AgentAction extends BaseController {
 		}
 	}
 
-	@RequestMapping(value = "/upadateAgent.do")
+	@RequestMapping(value = "/updateAgent.do")
 	@ResponseBody
 	public DataResponse updateAgent(String jsons) {
 		try {
@@ -53,5 +53,8 @@ public class AgentAction extends BaseController {
 			return new DataResponse(false, e.getMessage());
 		}
 	}
+	
+
+
 
 }

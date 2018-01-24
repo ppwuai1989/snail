@@ -69,40 +69,46 @@
 		</choose>
 		limit #{start},#{limit}
 	</select>
-
+	<select id="selectAgentByAgentId" resultMap="agentVo"
+		parameterType="java.lang.String">
+		select * from t_users t, users u
+		where t.agent_id=u.user_id
+		and
+		t.agent_id=#{agentId,jdbcType=INTEGER}
+	</select>
 	<update id="updateAgentByAgentId" parameterType="org.platform.snail.portal.model.Agent">
 		update
 		t_users t
 		<set>
-			<if test="agent.name != null and agent.name!=''">
+			<if test="agent.name!=''">
 				t.NAME =
 				#{agent.name,jdbcType=VARCHAR},
 			</if>
-			<if test="agent.sex != null and agent.sex!=''">
+			<if test="agent.sex!=''">
 				t.SEX =
 				#{agent.sex,jdbcType=CHAR},
 			</if>
-			<if test="agent.mobile != null and agent.mobile!=''">
+			<if test="agent.mobile!=''">
 				t.mobile=
 				#{agent.mobile,jdbcType=VARCHAR},
 			</if>
-			<if test="agent.coins != null and agent.coins!=''">
+			<if test="agent.coins!=''">
 				t.coins=
 				#{agent.coins,jdbcType=VARCHAR},
 			</if>
-			<if test="agent.gems != null and agent.gems!=''">
+			<if test="agent.gems!=''">
 				t.GEMS=
 				#{agent.gems,jdbcType=VARCHAR},
 			</if>
-			<if test="agent.pkCard != null and agent.pkCard !=''">
+			<if test="agent.pkCard !=''">
 				t.PK_CARD =
 				#{agent.pkCard,jdbcType=VARCHAR},
 			</if>
-			<if test="agent.parentAgentId != null and agent.parentAgentId !=''">
+			<if test="agent.parentAgentId !=''">
 				t.parent_agent_id=
 				#{agent.parentAgentId,jdbcType=INTEGER},
 			</if>
-			<if test="agent.agentLevel != null and agent.agentLevel !=''">
+			<if test="agent.agentLevel !=''">
 				t.agent_level=
 				#{agent.agentLevel,jdbcType=VARCHAR},
 			</if>
@@ -119,5 +125,5 @@
 		</set>
 		where
 		u.user_id=#{agent.agentId,jdbcType=INTEGER};
-	</update>	
+	</update>
 </mapper>

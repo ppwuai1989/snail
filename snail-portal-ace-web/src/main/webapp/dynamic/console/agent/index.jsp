@@ -56,7 +56,6 @@
 							<i
 								class="ace-icon glyphicon  glyphicon-remove  align-top bigger-125 icon-on-right"></i>
 						</button>
-
 					</div>
 				</div>
 			</div>

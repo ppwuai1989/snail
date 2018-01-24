@@ -12,4 +12,5 @@ public interface AgentService {
 
 	public abstract DataResponse updateAgentByAgentId(JSONObject jsonObject, SystemUser systemUser)throws Exception;
 
+	
 }
