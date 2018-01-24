@@ -82,6 +82,7 @@ jQuery(function($) {
 				}
 				// 找到代理标识行
 				if(jQuery(cfg.grid_selector).getCell(gr,'isAgent')=="1"){
+					$("#dialog-cannotSet").children()[0].innerText="该玩家已经是代理，无需设置！";
 					var dialog = $("#dialog-cannotSet").removeClass('hide').dialog({
 					resizable : false,
 					modal : false,
@@ -111,7 +112,7 @@ jQuery(function($) {
 										'<div class="widget-header" />')
 								style_edit_form(form);								
 								// 设置代理时需要添加的事件
-								event_setUpAgent_form(form);
+								//event_setUpAgent_form(form);
 							},
 							errorTextFormat : function(request, editType) {
 								forbidenToAccess(request)
@@ -130,6 +131,7 @@ jQuery(function($) {
 				}
 				// 找到代理标识行
 				if(jQuery(cfg.grid_selector).getCell(gr,'isAgent')=="1"){
+					$("#dialog-cannotSet").children()[0].innerText="该玩家已经是代理，无需设置！";
 					var dialog = $("#dialog-cannotSet").removeClass('hide').dialog({
 					resizable : false,
 					modal : false,
@@ -165,6 +167,105 @@ jQuery(function($) {
 								forbidenToAccess(request)
 							}
 						})
+			});
+	$('#btn-view-upgradeAgent').on(
+			'click',
+			function() {
+				var gr = jQuery(cfg.grid_selector).jqGrid('getGridParam',
+				'selrow');
+				if (!gr) {
+					$.jgrid.info_dialog($.jgrid.nav.alertcap,
+					$.jgrid.nav.alerttext)
+				}
+				if(jQuery(cfg.grid_selector).getCell(gr,'isAgent')!="1"){
+					$("#dialog-cannotSet").children()[0].innerText="该玩家非代理，不可升级！";
+					var dialog = $("#dialog-cannotSet").removeClass('hide').dialog({
+					resizable : false,
+					modal : false,
+					title : "系统提示",
+					buttons : [ {
+						html : "<i class='ace-icon fa fa-check bigger-110'></i>&nbsp; 确定",
+						"class" : "btn btn-info btn-xs",
+						click : function() {					
+							$( this ).dialog( "close" );
+						}
+					} ]
+				});	
+				return ;
+				}else{
+					if(jQuery(cfg.grid_selector).getCell(gr,'agentLevel') > 1){						
+						$("#dialog-cannotSet").children()[0].innerText="该玩家已经是中级代理，无需升级！";
+							var dialog = $("#dialog-cannotSet").removeClass('hide').dialog({
+							resizable : false,
+							modal : false,
+							title : "系统提示",
+							buttons : [ {
+								html : "<i class='ace-icon fa fa-check bigger-110'></i>&nbsp; 确定",
+								"class" : "btn btn-info btn-xs",
+								click : function() {					
+									$( this ).dialog( "close" );
+								}
+							} ]
+						});	
+						return;
+					}
+				}
+				var dialog = $("#dialog-upgradeAgent").removeClass('hide').dialog({
+					resizable : false,
+					modal : false,
+					title : "升级代理",
+					buttons : [ {
+						html : "<i id='bind-member-confirm' disabled='true' class='ace-icon fa fa-check bigger-110'></i>&nbsp; 确定",
+						"class" : "btn btn-info btn-xs",
+						click : function() {
+							$.ajax({
+								url : contextPath + '/member/upgradeAgent.do',
+								type : 'post',	
+								data: {jsons:"{userId:"+gr+",agentId:"+jQuery(cfg.grid_selector).getCell(gr,'agentId')+"}"},
+								success : function(rst) {							
+									if (rst.state) {
+										bootbox.dialog({
+											title : '系统提示',
+											message : rst.errorMessage,
+											buttons : {
+												"success" : {
+													"label" : "<i class='ace-icon fa fa-check'></i>确定",
+													"className" : "btn-sm btn-success",
+													"callback" : function() {
+														dialog.dialog("close");
+													}
+												}
+											}
+										});
+									}else{
+										bootbox.dialog({
+											title : '系统提示',
+											message : rst.errorMessage,
+											buttons : {
+												"success" : {
+													"label" : "<i class='ace-icon fa fa-check'></i>确定",
+													"className" : "btn-sm btn-success",
+													"callback" : function() {
+														dialog.dialog("close");
+													}
+												}
+											}
+										});
+									}
+									jQuery(cfg.grid_selector).jqGrid('setGridParam', {				        
+							        }).trigger('reloadGrid');
+									$("#dialog-bindMember").dialog( "close" );
+								}
+							})	
+						}
+					}, {
+						html : "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; 取消",
+						"class" : "btn btn-xs",
+						click : function() {					
+							$(this).dialog("close");
+						}
+					} ]
+				});	
 			});
 	$('#btn-view-topUp').on(
 			'click',
@@ -309,10 +410,11 @@ jQuery(function($) {
 			} ]
 		});	
 		 $("#bind-member-confirm").parents("button").hide();
+		 $("#memberId").val("");
+		 $("#errMsg").find("i")[0].innerText="请输入您要绑定的会员编号"
 		$("#memberId").keyup(function(e){
 			 var regu = /^[0-9]+\.?[0-9]*$/;
-			 var val= $("#memberId").val();
-			
+			 var val= $("#memberId").val();			
 			if(regu.test(val)){
 				if(val.length==8){					
 					$.ajax({
@@ -420,6 +522,25 @@ jQuery(function($) {
 		})
 	}
 	function event_edit_form(form){
+		form.find("#tr_isAgent td")[0].innerText = "代理开关";
+		var level_html = form.find("#agentLevel")[0].innerHTML;
+		var col = form[0];
+		var isAgent = $("#isAgent")[0];
+		for(var i = 0; i < col.length; i++){
+			if(col[i].id=="agentId"||col[i].id=="agentLevel"||col[i].id == "isAgent"){
+				col[i].disabled = true;
+			}		
+			if(col[i].id == "parentAgentId"){
+				if(isAgent.checked==true){
+					col[i].disabled=true;
+				}
+			}
+		}
+		if(isAgent.checked==false){
+			form.find("#agentLevel")[0].innerHTML="<option role='option' value=''>无</option>"+level_html;			
+		}		
+	}
+	function event_setUpAgent_form_back(form){
 		form.find("#tr_isAgent td")[0].innerText = "代理开关";		
 		var col = form[0];
 		var isAgent = $("#isAgent")[0];	
@@ -474,5 +595,6 @@ jQuery(function($) {
 				}				
 			}
 		})
-	}
+	}	
+
 });

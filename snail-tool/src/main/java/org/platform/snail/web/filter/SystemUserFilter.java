@@ -54,12 +54,7 @@ public class SystemUserFilter implements Filter {
 		if (req.getServletPath().endsWith("/weChatLogin.do")) {
 			res.setHeader("Access-Control-Allow-Origin", "*");
 			res.setHeader("Access-Control-Allow-Headers", "Origin,x-requested-with,Content-Type,Accept,X-Cookie");
-			res.setHeader("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-			// Collection<String> c = res.getHeaderNames();
-			// for (String s : c) {
-			// System.out.println(s);
-			// System.out.println(res.getHeader(s));
-			// }
+			res.setHeader("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");			
 			filterChain.doFilter(arg0, arg1);
 			return;
 		}

@@ -171,6 +171,18 @@ public class MemberAction extends BaseController {
 		}
 	}
 	
-	
+	@RequestMapping(value = "/upgradeAgent.do")
+	@ResponseBody
+	public DataResponse upgradeAgent(String jsons) {
+
+		try {
+			SystemUser systemUser = this.getSessionSystemUser();
+			JSONObject json = JSONObject.fromObject(jsons);
+			return this.memberService.upgradeAgent(json, systemUser);
+		} catch (Exception e) {
+			this.logger.error(e);
+			return new DataResponse(false, e.getMessage());
+		}
+	}
 
 }

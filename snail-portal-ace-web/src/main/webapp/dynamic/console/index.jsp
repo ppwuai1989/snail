@@ -11,8 +11,8 @@
 	HttpSession sessions = request.getSession();
 	SystemUser systemUser = (SystemUser) sessions.getAttribute("SystemUser");
 	Map<String, Resources> map = systemUser.getMap();
-	String url_Btn1 = getBtnUrl("3", map);
-	String url_Btn2 = getBtnUrl("4", map);
+	String url_Btn1 = getBtnUrl("26", map);
+	String url_Btn2 = getBtnUrl("29", map);
 	String url_Btn3 = getBtnUrl("5", map);
 	String url_Btn4 = getBtnUrl("22", map);
 %>

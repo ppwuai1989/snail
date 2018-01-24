@@ -16,14 +16,36 @@ public interface CommonKeys {
 	int logRetrieve = 2;
 	int logUpdate = 3;
 	int logDelete = 4;
-	// 对应代理等级 初级--1 中级--2 高级--3
+	
+	// 代理等级start
+	/**
+	 * 高级--3
+	 */
 	String senior = "3";
+	/**
+	 * 中级--2
+	 */
 	String medium = "2";
+	/**
+	 * 初级--1
+	 */
 	String junior = "1";
-	// 对应充值方式 1--游戏内，2--代理代充，3--管理员充值
+	// 代理等级end
+
+	// 充值方式 start，2--代理代充，3--管理员充值
+	/**
+	 * 1--游戏内充值
+	 */
 	String wayOfInGame = "1";
+	/**
+	 * 2--代理代充
+	 */
 	String wayOfAgent = "2";
+	/**
+	 * 3--管理员充值
+	 */
 	String wayOfSystemUser = "3";
+	// 充值方式 end
 
 	// 初级代理对应的角色编号（对应数据库中role）
 	String superManager = "1";

@@ -3,7 +3,7 @@ var _colNames = [ '代理编号', '上级编号', '代理等级', '昵称', '性
 var _colModel = function() {
 	return [ {
 		name : 'agentId',
-		width : 50,
+		width : 30,
 		sorttype : "int",
 		editable : true,
 		editoptions : {
@@ -11,7 +11,7 @@ var _colModel = function() {
 		}
 	}, {
 		name : 'parentAgentId',
-		width : 70,
+		width : 30,
 		editable : true,
 		editoptions : {
 			readonly : true
@@ -34,25 +34,14 @@ var _colModel = function() {
 		editoptions : {}
 	}, {
 		name : 'sex',
-		width : 30,
+		width : 20,
 		editable : true,
 		edittype : "select",
-		editoptions : {
-			value : "0:女;1:男"
-		},
 		renderer : function(value) {
-			var rst = "";
-			switch (value) {
-			case '1':
-				rst = "男";
-				break;
-			case '0':
-				rst = "女";
-				break;
-			default:
-				rst = "N/A";
-			}
-			return rst;
+			return rsd(value, "STATIC_DATA_01");
+		},
+		editoptions : {
+			value : odparse("STATIC_DATA_01")
 		}
 	}, {
 		name : 'coins',

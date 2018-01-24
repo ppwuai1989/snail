@@ -42,4 +42,7 @@ public interface MemberService {
 
 	// 绑定会员（代理用）
 	public abstract DataResponse bindMember(JSONObject jsonObject, SystemUser systemUser) throws Exception;
+
+	// 升级代理（高级代理用）
+	public abstract DataResponse upgradeAgent(JSONObject jsonObject, SystemUser systemUser) throws Exception;
 }

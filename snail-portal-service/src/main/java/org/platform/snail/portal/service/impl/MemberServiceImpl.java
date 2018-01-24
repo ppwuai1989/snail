@@ -458,7 +458,7 @@ public class MemberServiceImpl implements MemberService {
 				updateMember.setMobile(memberInfo.getMobile());
 				updateMember.setUserId(memberInfo.getUserId());
 				int updateM = this.memberDao.updateUsersByPrimaryKey(updateMember);
-				if (updateM > 0) {			
+				if (updateM > 0) {
 					return new DataResponse(true, "设置代理成功！请通知代理及时登录并修改初始密码--手机号后六位！");
 				} else {
 					return new DataResponse(false, "注册失败！更新玩家信息失败");
@@ -470,7 +470,7 @@ public class MemberServiceImpl implements MemberService {
 		} else {
 			return new DataResponse(false, "对不起您不是代理，不可使用该功能！");
 		}
-		
+
 	}
 
 	@Override
@@ -498,14 +498,42 @@ public class MemberServiceImpl implements MemberService {
 		if (systemUser.getAgent() != null) {
 			bindInfo.setParentAgentId(systemUser.getAgent().getAgentId());
 			int update = this.memberDao.updateUsersByPrimaryKey(bindInfo);
-			if (update > 0) {				
+			if (update > 0) {
 				return new DataResponse(true, "绑定会员成功！");
-			}
-			else{
+			} else {
 				return new DataResponse(false, "绑定失败，未知错误！");
-			}			
+			}
 		} else {
 			return new DataResponse(false, "您不是代理，不可以绑定会员！");
+		}
+	}
+
+	@Override
+	public DataResponse upgradeAgent(JSONObject jsonObject, SystemUser systemUser) throws Exception {
+		Member upgradeInfo = new Member();
+		SnailBeanUtils.copyProperties(upgradeInfo, jsonObject);
+		if (systemUser.getAgent() != null) {
+			if (systemUser.getAgent().getAgentLevel().equals(CommonKeys.senior)) {
+				upgradeInfo.setAgentLevel(CommonKeys.medium);
+				upgradeInfo.setParentAgentId(systemUser.getAgent().getAgentId());
+				try {
+					int upgradeLevel = this.usersDao.insertUsersRole(upgradeInfo.getUserId(),
+							new String[] { CommonKeys.mediumAgent });
+
+					int update = this.memberDao.updateUsersByPrimaryKey(upgradeInfo);
+					if (update > 0) {
+						return new DataResponse(true, "升级成功！该代理现在是中级代理哦！");
+					} else {
+						return new DataResponse(false, "升级失败，未知错误！");
+					}
+				} catch (Exception e) {
+					return new DataResponse(false, "升级失败，错误信息：" + e.getMessage());
+				}
+			} else {
+				return new DataResponse(false, "只有高级代理才可做升级操作哦！");
+			}
+		} else {
+			return new DataResponse(false, "您不是代理，无权对玩家做升级操作！");
 		}
 	}
 

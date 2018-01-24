@@ -83,11 +83,15 @@
 							authority="${pageContext.request.contextPath}/member/setUpAgent.do">
 							<i class="ace-icon fa fa-cog  align-top bigger-125 icon-on-right"></i>
 						</button>
+						<button class="btn btn-warning" id="btn-view-upgradeAgent"
+							authority="${pageContext.request.contextPath}/member/upgradeAgent.do">
+							<i
+								class="ace-icon fa fa-level-up  align-top bigger-125 icon-on-right"></i>
+						</button>
 						<button class="btn btn-purple" id="btn-view-topUp"
 							authority="${pageContext.request.contextPath}/member/topUpMember.do">
 							<i class="ace-icon fa fa-cny  align-top bigger-125 icon-on-right"></i>
 						</button>
-
 					</div>
 
 				</div>
@@ -103,11 +107,19 @@
 				<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i> 您确定吗?
 			</p>
 		</div>
-		<div id="dialog-cannotSet" class="hide">
-			<div class="alert alert-info bigger-110">该玩家已经是代理，无需设置！</div>
+			<div id="dialog-upgradeAgent" class="hide">
+			<div class="alert alert-info bigger-110">
+				温馨提示：您将该代理升级为中级代理，升级成功后该代理将自动成为您的下级代理</div>
 			<div class="space-6"></div>
 			<p class="bigger-110 bolder center grey">
-				<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>如需提升、降低代理等级请联系客服。
+				<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i> 您确定吗?
+			</p>
+		</div>
+		<div id="dialog-cannotSet" class="hide">
+			<div class="alert alert-info bigger-110"></div>
+			<div class="space-6"></div>
+			<p class="bigger-110 bolder center grey">
+				<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>
 			</p>
 		</div>
 		<div id="dialog-bindMember" class="hide">
@@ -117,7 +129,7 @@
 			</div>
 			<div class="space-6"></div>
 			<p id="errMsg" class="bigger-110 bolder center grey">
-				<i class="ace-icon fa fa-hand-o-right blue bigger-110">请输入您要绑定的会员编号</i>
+				<i class="ace-icon fa fa-hand-o-right blue bigger-110"></i>
 			</p>
 		</div>
 	</div>
