@@ -3,6 +3,7 @@ var _colNames = [ '代理标识','代理等级', '代理编号', '上级编号',
 		'<span class="label label-lg label-pink arrowed-right">金币</span>',
 		'<span class="label label-lg label-grey arrowed-right">房卡</span>',
 		'<span class="label label-lg label-success arrowed-right">比武卡</span>',
+		'积分',
 		'状态', '最后登录时间', '微信号', '注册日期' ];
 var _colModel = function() {
 	return [ {
@@ -166,6 +167,19 @@ var _colModel = function() {
 		editoptions : {
 			size : "20",
 			maxlength : "25"
+		},
+		editrules : {
+			number : true,
+			minValue : 0,
+			required : true
+		}
+	}, {
+		name : 'score',
+		width : 30,
+		editable : true,
+		editoptions : {
+			size : "20",
+			maxlength : "25"			
 		},
 		editrules : {
 			number : true,

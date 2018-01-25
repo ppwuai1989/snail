@@ -23,6 +23,7 @@ public class Member implements Serializable {
 	private String coins;
 	private String gems;
 	private String pkCard;
+	private String score;//新增score
 	private String roomId;
 	private String gameType;
 	private String history;
@@ -306,6 +307,14 @@ public class Member implements Serializable {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+
+	public String getScore() {
+		return score;
+	}
+
+	public void setScore(String score) {
+		this.score = score;
 	}
 
 }

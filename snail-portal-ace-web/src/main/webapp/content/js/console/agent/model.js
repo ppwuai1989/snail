@@ -1,4 +1,4 @@
-var _colNames = [ '代理编号', '上级编号', '代理等级', '昵称', '性别', '金币数', '房卡数', '比武卡',
+var _colNames = [ '代理编号', '上级编号', '代理等级', '昵称', '性别', '金币数', '房卡数', '比武卡','积分',
 		'手机号', '状态', '最后登录时间', '注册日期' ];
 var _colModel = function() {
 	return [ {
@@ -70,6 +70,15 @@ var _colModel = function() {
 		}
 	}, {
 		name : 'pkCard',
+		width : 30,
+		editable : true,
+		editoptions : {
+			size : "20",
+			maxlength : "25",
+			readonly : true
+		}
+	}, {
+		name : 'score',
 		width : 30,
 		editable : true,
 		editoptions : {

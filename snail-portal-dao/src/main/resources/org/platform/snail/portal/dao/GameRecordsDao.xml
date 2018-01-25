@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.platform.snail.portal.dao.GameRecordsDao">
+	<resultMap id="records" type="org.platform.snail.portal.model.GameRecords">
+		<id column="ROOM" property="room" jdbcType="INTEGER" />
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<id column="game_index" property="gameIndex" jdbcType="INTEGER" />
+		<id column="round" property="round" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="is_banker" property="isBanker" jdbcType="CHAR" />
+		<result column="base_info" property="baseInfo" jdbcType="VARCHAR" />
+		<result column="chu" property="chu" jdbcType="VARCHAR" />
+		<result column="tian" property="tian" jdbcType="VARCHAR" />
+		<result column="mo" property="mo" jdbcType="VARCHAR" />
+		<result column="snapshots" property="snapshots" jdbcType="VARCHAR" />
+		<result column="coins" property="coins" jdbcType="VARCHAR" />
+		<result column="result" property="result" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="whereCondition">
+		from t_games_tb g,t_users u
+		where g.id = u.userid
+		<if test='condition.room!=null and condition.room!=""'>
+			and g.room =#{condition.room,jdbcType=VARCHAR}
+		</if>
+		<if test='condition.id!=null and condition.id!=""'>
+			and g.id =#{condition.id,jdbcType=VARCHAR}
+		</if>
+		<if test='condition.name!=null and condition.name!=""'>
+			and u.name like
+			concat(#{condition.name,jdbcType=VARCHAR},'%')
+		</if>
+		<if test='condition.round!=null and condition.round!=""'>
+			and g.round =#{condition.round,jdbcType=VARCHAR}
+			<if test='condition.gameIndex!=null and condition.gameIndex!=""'>
+				and g.game_index =#{condition.gameIndex,jdbcType=VARCHAR}
+			</if>
+		</if>
+		<if test='condition.isBanker!=null and condition.isBanker!=""'>
+			and g.is_banker =#{condition.isBanker,jdbcType=VARCHAR}
+		</if>
+		<!--后期用以判断输赢 
+		<if test='condition.result!=null and condition.result!=""'>
+			and g.result =#{condition.result,jdbcType=INTEGER}
+		</if> -->
+		<if test='condition.startDate!=null and condition.startDate!=""'>
+			<![CDATA[
+			and g.create_time>=#{condition.startDate}
+			]]>
+		</if>
+		<if test='condition.endDate!=null and condition.endDate!=""'>
+			 <![CDATA[
+				and g.create_time<=#{condition.endDate}  
+				]]>
+		</if>
+			<!-- agentSearch为1代表是 代理在使用 找到他的所有附属 -->
+		<if test='agentSearch=="1" and agentSearchId!=null and agentSearchId!=""'>
+			and EXISTS(
+			SELECT *
+			FROM
+			(
+			SELECT a.userid
+			FROM t_users a
+			WHERE a.parent_agent_id=${agentSearchId} UNION
+			SELECT b.userid
+			FROM
+			t_users b
+			WHERE
+			EXISTS(
+			SELECT *
+			FROM t_users c
+			WHERE
+			c.parent_agent_id=${agentSearchId} AND
+			c.agent_id=b.parent_agent_id)
+			UNION
+			SELECT d.userid
+			FROM t_users d
+			WHERE EXISTS(
+			SELECT *
+			FROM t_users b
+			WHERE EXISTS(
+			SELECT *
+			FROM t_users
+			c
+			WHERE
+			c.parent_agent_id=${agentSearchId} AND c.agent_id=b.parent_agent_id)
+			AND
+			b.agent_id=d.parent_agent_id)) r where r.userid=g.userid )
+		</if>		
+	</sql>
+	<select id="findCount" resultType="int">
+		SELECT COUNT(*)
+		<include refid="whereCondition" />
+	</select>
+	<select id="findList" resultMap="records">
+		select
+		g.room,
+		g.id,
+		u.name,
+		u.parent_agent_id,
+		g.game_index,
+		g.round,
+		g.is_banker,
+		g.base_info,
+		g.chu,
+		g.tian,
+		g.mo,
+		g.snapshots,
+		g.coins,
+		g.result,
+		g.create_time
+		<include refid="whereCondition" />
+		<choose>
+			<when test='orderBy!=null and orderBy!=""'>
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY g.CREATE_TIME desc
+			</otherwise>
+		</choose>
+		limit #{start},#{limit}
+	</select>
+</mapper>

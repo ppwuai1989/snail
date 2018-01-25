@@ -21,7 +21,7 @@ public class TopUpRecords implements Serializable {
 
 	private String gems;
 
-	private String pkCard;
+	private String pkCard;	
 
 	private String userId;
 
@@ -128,7 +128,5 @@ public class TopUpRecords implements Serializable {
 				+ ", pkCard=" + pkCard + ", userId=" + userId + ", userName=" + userName + ", agentId=" + agentId
 				+ ", agentName=" + agentName + ", createTime=" + createTime + "]";
 	}
-
-	
 
 }

@@ -25,6 +25,8 @@ public class Agent implements java.io.Serializable {
 	private String gems;
 
 	private String pkCard;
+	
+	private String score;//新增score
 
 	private String weChatId;
 
@@ -196,6 +198,14 @@ public class Agent implements java.io.Serializable {
 				+ ", name=" + name + ", sex=" + sex + ", coins=" + coins + ", gems=" + gems + ", pkCard=" + pkCard
 				+ ", weChatId=" + weChatId + ", mobile=" + mobile + ", account=" + account + ", status=" + status
 				+ ", lastLoginTime=" + lastLoginTime + ", createTime=" + createTime + "]";
+	}
+
+	public String getScore() {
+		return score;
+	}
+
+	public void setScore(String score) {
+		this.score = score;
 	}
 
 }

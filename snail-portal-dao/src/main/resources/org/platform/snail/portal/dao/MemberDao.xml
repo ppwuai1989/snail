@@ -12,10 +12,11 @@
 		<result column="EXP" property="experience" jdbcType="VARCHAR" />
 		<result column="COINS" property="coins" jdbcType="VARCHAR" />
 		<result column="GEMS" property="gems" jdbcType="VARCHAR" />
+		<result column="PK_CARD" property="pkCard" jdbcType="VARCHAR" />
+		<result column="score" jdbcType="VARCHAR" property="score" />
 		<result column="LAST_LOGIN_TIME" property="lastLoginTime"
 			jdbcType="TIMESTAMP" />
-		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-		<result column="PK_CARD" property="pkCard" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />		
 		<result column="ROOMID" property="roomId" jdbcType="VARCHAR" />
 		<result column="GAMETYPE" property="gameType" jdbcType="VARCHAR" />
 		<result column="HISTORY" property="history" jdbcType="VARCHAR" />
@@ -113,7 +114,7 @@
 		insert into t_users
 		(ACCOUNT,NAME,
 		SEX, HEADIMG, LV,EXP,
-		COINS,GEMS,PK_CARD,
+		COINS,GEMS,PK_CARD,score,
 		WECHAT_ID,MOBILE,
 		IS_AGENT,AGENT_ID,
 		LAST_LOGIN_TIME,CREATE_TIME,STATUS,
@@ -130,6 +131,7 @@
 		#{member.coins,jdbcType=VARCHAR},
 		#{member.gems,jdbcType=VARCHAR},
 		#{member.pkCard,jdbcType=VARCHAR},
+		#{member.score,jdbcType=VARCHAR},
 		#{member.weChatId,jdbcType=VARCHAR},
 		#{member.mobile,jdbcType=VARCHAR},
 		#{member.isAgent,jdbcType=VARCHAR},
@@ -172,6 +174,10 @@
 			<if test="member.pkCard != null and member.pkCard !=''">
 				PK_CARD =
 				#{member.pkCard,jdbcType=VARCHAR},
+			</if>
+			<if test="member.score != null and member.score !=''">
+				SCORE=
+				#{member.score,jdbcType=VARCHAR},
 			</if>
 			<if test="member.isAgent != null and member.isAgent !=''">
 				IS_AGENT=
@@ -238,7 +244,7 @@
 	</select>
 	<select id="findMemberAccountInfo" resultMap="memberVo"
 		parameterType="java.lang.String">
-		select t.coins,t.gems,t.pk_card pkCard
+		select t.coins,t.gems,t.pk_card,t.score
 		from t_users t
 		where 1=1
 		and t.agent_id=#{agentId}
@@ -280,7 +286,7 @@
 		insert into t_users
 		(ACCOUNT,NAME,
 		SEX, HEADIMG, LV,EXP,
-		COINS,GEMS,PK_CARD,
+		COINS,GEMS,PK_CARD,score,
 		WECHAT_ID,MOBILE,
 		IS_AGENT,AGENT_ID,
 		LAST_LOGIN_TIME,CREATE_TIME,STATUS,
@@ -297,6 +303,7 @@
 		#{member.coins,jdbcType=VARCHAR},
 		#{member.gems,jdbcType=VARCHAR},
 		#{member.pkCard,jdbcType=VARCHAR},
+		#{member.score,jdbcType=VARCHAR},
 		#{member.weChatId,jdbcType=VARCHAR},
 		#{member.mobile,jdbcType=VARCHAR},
 		#{member.isAgent,jdbcType=VARCHAR},

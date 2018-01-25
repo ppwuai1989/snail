@@ -213,6 +213,7 @@ public class MemberServiceImpl implements MemberService {
 			member.setGems("0");
 			member.setPkCard("0");
 			member.setIsAgent("0");
+			member.setScore("0");
 			member.setAccount(userInfo.getUnionid());
 			member.setWeChatId(userInfo.getOpenid());
 			member.setName(userInfo.getNickname());
