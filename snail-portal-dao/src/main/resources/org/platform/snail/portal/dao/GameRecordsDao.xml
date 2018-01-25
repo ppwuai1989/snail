@@ -86,7 +86,7 @@
 			WHERE
 			c.parent_agent_id=${agentSearchId} AND c.agent_id=b.parent_agent_id)
 			AND
-			b.agent_id=d.parent_agent_id)) r where r.userid=g.userid )
+			b.agent_id=d.parent_agent_id)) r where r.userid=g.id )
 		</if>		
 	</sql>
 	<select id="findCount" resultType="int">

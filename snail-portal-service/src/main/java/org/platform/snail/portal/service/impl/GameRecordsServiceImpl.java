@@ -33,10 +33,11 @@ public class GameRecordsServiceImpl implements GameRecordsService {
 			}
 		}
 		List<GameRecordsVo> list = this.recordsDao.findList(condition, start, start + limit, orderBy, isSearch, agentId);
+		rst.setList(list);
 		if (start < 1) {
 			int allRows = this.recordsDao.findCount(condition, isSearch, agentId);
 			rst.setAllRows(allRows);
-		}
+		}		
 		return rst;
 	}
 
