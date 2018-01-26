@@ -25,20 +25,27 @@
 			<div class="widget-body">
 				<div class="widget-main padding-6">
 					<form action="#" id="fm-search" style="padding-left: 10px;">
-						玩家编号： <input
-							name="userId" type="text" style="width: 100px;"
-							placeholder="玩家编号" /> 充值方式<input class="easyui-combobox"
-							id="topUpWay"
+						<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">玩家编号</span><input name="userId"
+							type="text" style="width: 100px;" placeholder="玩家编号" /> <span
+							class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">充值方式</span><input
+							class="easyui-combobox" id="topUpWay"
 							style="width: 100px; height: 30px; line-height: 30px;" name="way"
 							data-options="
                     panelHeight:'auto'
-            ">代理编号：
-						<input name="agentId" type="text" style="width: 100px;"
-							placeholder="代理编号" /> 充值日期: <input class="easyui-datebox"
-							name="startDate"
-							style="width: 200px; height: 30px; line-height: 30px;">到
-						<input class="easyui-datebox" name="endDate"
-							style="width: 200px; height: 30px; line-height: 30px;">
+            ">
+						<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">代理编号</span> <input name="agentId"
+							type="text" style="width: 100px;" placeholder="代理编号" /> <span
+							class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">充值日期</span><input
+							class="easyui-datebox" name="startDate"
+							style="width: 100px; height: 30px; line-height: 30px;"><span
+							class="label label-sm label-primary arrowed arrowed-right"
+							style="margin-left: 8px;">到</span> <input class="easyui-datebox"
+							name="endDate"
+							style="width: 100px; height: 30px; line-height: 30px;">
 
 						<button class="btn btn-info" id="btn-search"
 							authority="${pageContext.request.contextPath}/topUpRecords/findRecordsList.do">

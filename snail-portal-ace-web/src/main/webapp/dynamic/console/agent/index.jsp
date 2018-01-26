@@ -22,17 +22,22 @@
 			<div class="widget-body">
 				<div class="widget-main padding-6">
 					<form action="#" id="fm-search">						
-						代理编号： <input name="agentId" type="text" style="width: 100px;"
-							placeholder="代理编号" /> 上级编号： <input name="parentAgentId"
-							type="text" style="width: 100px;" placeholder="上级编号" />代理等级：<input
+						<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">代理编号</span><input name="agentId" type="text" style="width: 100px;"
+							placeholder="代理编号" /> <span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">上级编号</span> <input name="parentAgentId"
+							type="text" style="width: 100px;" placeholder="上级编号" /><span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">代理等级</span><input
 							class="easyui-combobox" id="agentLevel"
 							style="width: 50px; height: 30px; line-height: 30px;"
 							name="agentLevel"
 							data-options="
                     panelHeight:'auto'
             ">
-						昵称： <input name="name" type="text" style="width: 100px;"
-							placeholder="昵称" /> 手机号： <input name="mobile" type="text"
+						<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">昵称</span><input name="name" type="text" style="width: 100px;"
+							placeholder="昵称" /> <span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">手机号</span> <input name="mobile" type="text"
 							style="width: 100px;" placeholder="手机号" />
 						<button class="btn btn-info" id="btn-search"
 							authority="${pageContext.request.contextPath}/agent/findAgentList.do">

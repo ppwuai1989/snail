@@ -26,9 +26,11 @@
 			<div class="widget-body">
 				<div class="widget-main padding-6">
 					<form action="#" id="fm-search">
-						字典名称： <input name="name" type="text"
-							style="width: 200px;" placeholder="字典名称"/>
-							字典类型：<input class="easyui-combobox" id="categoryId" style="width:200px;height:30px;line-height: 30px;"
+						<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">字典名称</span><input name="name" type="text"
+							style="width: 120px;" placeholder="字典名称"/>
+							<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">字典类型</span><input class="easyui-combobox" id="categoryId" style="width:100px;height:30px;line-height: 30px;"
             name="categoryId"
             data-options="
                     panelHeight:'auto'

@@ -22,7 +22,8 @@
 			<div class="widget-body">
 				<div class="widget-main padding-6">
 					<form action="#" id="fm-search">
-						角色名称： <input name="roleName" type="text"
+						<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">角色名称</span><input name="roleName" type="text"
 							style="width: 200px;" placeholder="角色名称"/>
 						<button class="btn btn-info" id="btn-search"
 							authority="${pageContext.request.contextPath}/role/findRoleList.do">

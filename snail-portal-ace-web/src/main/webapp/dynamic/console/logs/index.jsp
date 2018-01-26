@@ -25,15 +25,22 @@
 			<div class="widget-body">
 				<div class="widget-main padding-6">
 					<form action="#" id="fm-search">
-						内容： <input name="logs" type="text" style="width: 200px;"
-							placeholder="内容" /> 时间: <input class="easyui-datebox"
-							name="startDate"
-							style="width: 200px; height: 30px; line-height: 30px;"> 至
-						<input class="easyui-datebox" name="endDate"
-							style="width: 200px; height: 30px; line-height: 30px;"><br>
-						类别：<input class="easyui-combobox"
+						<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">内容</span><input name="logs"
+							type="text" style="width: 200px;" placeholder="内容" /><span
+							class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">类别</span><input
+							class="easyui-combobox"
 							style="width: 200px; height: 30px; line-height: 30px;"
 							name="logType" id="logType" data-options="panelHeight:'auto'">
+						<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">时间</span><input class="easyui-datebox"
+							name="startDate"
+							style="width: 100px; height: 30px; line-height: 30px;"><span
+							class="label label-sm label-primary arrowed arrowed-right"
+							style="margin-left: 8px;">到</span> <input class="easyui-datebox"
+							name="endDate"
+							style="width: 100px; height: 30px; line-height: 30px;">
 						<button class="btn btn-info" id="btn-search"
 							authority="${pageContext.request.contextPath}/logs/findList.do">
 							<i

@@ -12,7 +12,7 @@
 <jsp:include page="../../common/common.jsp" />
 <body>
 	<div class="page-content">
-	<div class="widget-box" id="widget-box">
+		<div class="widget-box" id="widget-box">
 			<div class="widget-header">
 				<h5 class="widget-title smaller">设置查询条件</h5>
 
@@ -22,13 +22,18 @@
 			<div class="widget-body">
 				<div class="widget-main padding-6">
 					<form action="#" id="fm-search">
-					上级资源： 
-							<input id="cc1" name="parentResourcesId" class="easyui-combotree" data-options="url:'${pageContext.request.contextPath}/resources/selectResourcesTreeList.do?id=01',method:'get',animate: true,
-                lines:true," style='width:200px;line-height: 30px;height: 30px;'>
-							<a href="javascript:clearQparams()">清除</a>
-						资源名称： <input name="resourcesName" type="text" maxlength="20" placeholder="资源名称"
-							style="width: 200px;"/>
-								<button class="btn btn-info" id="btn-search"
+						<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">上级资源</span> <input id="cc1"
+							name="parentResourcesId" class="easyui-combotree"
+							data-options="url:'${pageContext.request.contextPath}/resources/selectResourcesTreeList.do?id=01',method:'get',animate: true,
+                lines:true,"
+							style='width: 200px; line-height: 30px; height: 30px;'> <a
+							href="javascript:clearQparams()">清除</a> <span
+							class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">资源名称</span> <input
+							name="resourcesName" type="text" maxlength="20"
+							placeholder="资源名称" style="width: 200px;" />
+						<button class="btn btn-info" id="btn-search"
 							authority="${pageContext.request.contextPath}/resources/findResourcesList.do">
 							<i
 								class="ace-icon fa fa-search  align-top bigger-125 icon-on-right"></i>
@@ -56,17 +61,21 @@
 				</div>
 			</div>
 		</div>
-	<div class="easyui-layout" id="cc" style="width:100%;height:300px;">
-	
-		
+		<div class="easyui-layout" id="cc" style="width: 100%; height: 300px;">
 
-		<div data-options="region:'center',title:'',iconCls:'icon-ok'" id="easyui-center">
-			<table id="grid-table"></table>
-	
-			<div id="grid-pager"></div>
-		</div>
-		<div id="cc-west" class="easyui-west" data-options="region:'west',split:true" title="我的树" style="width:200px;">
-		 <ul id="tt" class="easyui-tree" data-options="
+
+
+			<div data-options="region:'center',title:'',iconCls:'icon-ok'"
+				id="easyui-center">
+				<table id="grid-table"></table>
+
+				<div id="grid-pager"></div>
+			</div>
+			<div id="cc-west" class="easyui-west"
+				data-options="region:'west',split:true" title="我的树"
+				style="width: 200px;">
+				<ul id="tt" class="easyui-tree"
+					data-options="
                url: '${pageContext.request.contextPath}/resources/selectResourcesTreeList.do?id=01',
                 method: 'get',
                 animate: true,
@@ -81,27 +90,27 @@
                     });
                 }
             "></ul>
-		
-		</div>
-		<!--  
+
+			</div>
+			<!--  
 		<div data-options="region:'south',split:true" style="height:50px;"></div>
         <div data-options="region:'east',split:true" title="East" style="width:100px;"></div>
         -->
-</div>
+		</div>
 	</div>
 
-<div id="mm" class="easyui-menu" style="width:120px;">
-        <div onclick="treeappend()" data-options="iconCls:'icon-add'">添加</div>
-        <div onclick="treeedit()" data-options="iconCls:'icon-edit'">编辑</div>
-        <div onclick="treeremove()" data-options="iconCls:'icon-remove'">删除</div>
-        <div class="menu-sep"></div>
-        <div onclick="treereload()" data-options="iconCls:'icon-refresh'">刷新</div>
-        <div onclick="expand()">展开</div>
-        <div onclick="collapse()">收回</div>
-    </div>
-    <script type="text/javascript">
-       
-    </script>
+	<div id="mm" class="easyui-menu" style="width: 120px;">
+		<div onclick="treeappend()" data-options="iconCls:'icon-add'">添加</div>
+		<div onclick="treeedit()" data-options="iconCls:'icon-edit'">编辑</div>
+		<div onclick="treeremove()" data-options="iconCls:'icon-remove'">删除</div>
+		<div class="menu-sep"></div>
+		<div onclick="treereload()" data-options="iconCls:'icon-refresh'">刷新</div>
+		<div onclick="expand()">展开</div>
+		<div onclick="collapse()">收回</div>
+	</div>
+	<script type="text/javascript">
+		
+	</script>
 	<jsp:include page="../../common/footer-1.jsp" />
 	<script
 		src="${pageContext.request.contextPath}/content/js/console/resources/config.js"></script>
@@ -114,37 +123,38 @@
 
 	<jsp:include page="../../common/footer-2.jsp" />
 
-<script type="text/javascript">
-window.onresize = function () {
-	setTimeout("autoResize()",100);
-}
-function autoResize(){
-	jQuery('.panel-tool').find('a').on( 'click', function(e) {
-		setTimeout("autoResize()",1000);
-	});
-	var h=window.innerHeight-180;
-	$('#cc').layout('resize', {
-		width:'100%',
-		height:h
-	});
-	$('#cc').css("height",h);
-	$(cfg.grid_selector).jqGrid('setGridHeight', h-138);
-	var display=$('#cc-west').css('display');
-	console.log(display)
-	if(display=='none'){
-		$(cfg.grid_selector).jqGrid('setGridWidth', $(".page-content").width());
-	}else{
-		$(cfg.grid_selector).jqGrid('setGridWidth', $(".page-content").width()-200);
-	}
-	console.log('autoResize:'+h);
-}
-jQuery(function($) {
-	jQuery('.layout-button-left').on( 'click', function(e) {
-		setTimeout("autoResize()",1000);
-	});
-	
-});
+	<script type="text/javascript">
+		window.onresize = function() {
+			setTimeout("autoResize()", 100);
+		}
+		function autoResize() {
+			jQuery('.panel-tool').find('a').on('click', function(e) {
+				setTimeout("autoResize()", 1000);
+			});
+			var h = window.innerHeight - 180;
+			$('#cc').layout('resize', {
+				width : '100%',
+				height : h
+			});
+			$('#cc').css("height", h);
+			$(cfg.grid_selector).jqGrid('setGridHeight', h - 138);
+			var display = $('#cc-west').css('display');
+			console.log(display)
+			if (display == 'none') {
+				$(cfg.grid_selector).jqGrid('setGridWidth',
+						$(".page-content").width());
+			} else {
+				$(cfg.grid_selector).jqGrid('setGridWidth',
+						$(".page-content").width() - 200);
+			}
+			console.log('autoResize:' + h);
+		}
+		jQuery(function($) {
+			jQuery('.layout-button-left').on('click', function(e) {
+				setTimeout("autoResize()", 1000);
+			});
 
-</script>
+		});
+	</script>
 </body>
 </html>

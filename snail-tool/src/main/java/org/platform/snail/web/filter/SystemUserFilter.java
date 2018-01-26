@@ -54,7 +54,15 @@ public class SystemUserFilter implements Filter {
 		if (req.getServletPath().endsWith("/weChatLogin.do")) {
 			res.setHeader("Access-Control-Allow-Origin", "*");
 			res.setHeader("Access-Control-Allow-Headers", "Origin,x-requested-with,Content-Type,Accept,X-Cookie");
-			res.setHeader("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");			
+			res.setHeader("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+			filterChain.doFilter(arg0, arg1);
+			return;
+		}
+		// 管理平台的开放接口
+		if (req.getServletPath().indexOf("/openAPI") > -1) {
+			res.setHeader("Access-Control-Allow-Origin", "*");
+			res.setHeader("Access-Control-Allow-Headers", "Origin,x-requested-with,Content-Type,Accept,X-Cookie");
+			res.setHeader("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
 			filterChain.doFilter(arg0, arg1);
 			return;
 		}
@@ -65,8 +73,8 @@ public class SystemUserFilter implements Filter {
 				this.initService(req);
 				// 1.权限逻辑首先要判断该请求是否属于系统保护资源
 				// 2如果不是系统保护资源直接跳过，否则要在用户权限资源中检索是否拥有该请求的权限，如果没有则踢出系统
-				//System.out.println("请求地址[" + req.getRequestURI() + "]");
-				String requestUrl = req.getRequestURI().replace("/portal", "");			
+				// System.out.println("请求地址[" + req.getRequestURI() + "]");
+				String requestUrl = req.getRequestURI().replace("/portal", "");
 				// 如果系统保护资源中含有该请求地址isHaveResource()返回true，则需要进行权限认证，不能跳过且skip为false。
 				skip = !this.isHaveResource(requestUrl, sysResources);
 				if (skip) {
@@ -74,9 +82,9 @@ public class SystemUserFilter implements Filter {
 					return;
 				} else {
 					// 判断当前请求是否在用户权限列表中，如果isHaveResource为true，则用户有权进行操作
-					//为了防止用户在登录状态下，被管理员调整了权限，改为从数据库中获取权限而非取session--2018.1.11
+					// 为了防止用户在登录状态下，被管理员调整了权限，改为从数据库中获取权限而非取session--2018.1.11
 					SystemUser systemUser = (SystemUser) req.getSession().getAttribute(CommonKeys.SystemUser);
-						SystemUser nowSystemUser=this.systemService.getSystemUser(systemUser.getUsers().getUserId());
+					SystemUser nowSystemUser = this.systemService.getSystemUser(systemUser.getUsers().getUserId());
 					boolean hasRight = isHaveResource(requestUrl, nowSystemUser.getResources());
 					if (hasRight) {
 						filterChain.doFilter(arg0, arg1);
@@ -84,7 +92,8 @@ public class SystemUserFilter implements Filter {
 					} else {
 						// 记录到系统日志中
 						String log = "id为[" + nowSystemUser.getUsers().getUserId() + "]的用户["
-								+ nowSystemUser.getUsers().getName() + "]，越权访问系统保护资源[" + req.getRequestURI() + "]，被强制登出！";
+								+ nowSystemUser.getUsers().getName() + "]，越权访问系统保护资源[" + req.getRequestURI()
+								+ "]，被强制登出！";
 						this.dataBaseLogService.log(log, "越权访问被踢出", "", req.getRequestURI(), "系统日志", nowSystemUser);
 						String type = req.getHeader("X-Requested-With") == null ? ""
 								: req.getHeader("X-Requested-With");
@@ -94,23 +103,22 @@ public class SystemUserFilter implements Filter {
 							res.setStatus(HttpServletResponse.SC_FORBIDDEN);
 							return;
 						} else {
-							res.sendRedirect("/portal/dynamic/common/kicked.jsp");	
+							res.sendRedirect("/portal/dynamic/common/kicked.jsp");
 							return;
 						}
 					}
 				}
 			} else {
-				String type = req.getHeader("X-Requested-With") == null ? ""
-						: req.getHeader("X-Requested-With");
+				String type = req.getHeader("X-Requested-With") == null ? "" : req.getHeader("X-Requested-With");
 				if (StringUtils.equals(type, "XMLHttpRequest")) {
 					res.setHeader("UNLOGIN", "UNLOGIN");
 					res.setHeader("UNLOGINPATH", "/portal/dynamic/common/unLogin.jsp");
 					res.setStatus(HttpServletResponse.SC_FOUND);
 					return;
 				} else {
-					res.sendRedirect("/portal/dynamic/common/unLogin.jsp");		
+					res.sendRedirect("/portal/dynamic/common/unLogin.jsp");
 					return;
-				}				
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(this.getClass().getName() + "出错啦" + e.getMessage());

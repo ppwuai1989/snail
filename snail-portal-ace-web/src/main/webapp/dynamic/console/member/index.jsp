@@ -22,10 +22,15 @@
 			<div class="widget-body">
 				<div class="widget-main padding-6">
 					<form action="#" id="fm-search">
-						会员编号： <input name="userId" type="text" style="width: 100px;"
-							placeholder="会员编号" /> 用户名称： <input name="name" type="text"
-							style="width: 150px;" placeholder="用户名称" /> 手机号： <input
-							name="mobile" type="text" style="width: 100px;" placeholder="手机号" />
+						<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">会员编号</span> <input name="userId"
+							type="text" style="width: 100px;" placeholder="会员编号" /> <span
+							class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">用户名称</span> <input name="name"
+							type="text" style="width: 150px;" placeholder="用户名称" /> <span
+							class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">手机号</span> <input name="mobile"
+							type="text" style="width: 100px;" placeholder="手机号" />
 						<button class="btn btn-info" id="btn-search"
 							authority="${pageContext.request.contextPath}/member/findMemberList.do">
 							<i
@@ -107,7 +112,7 @@
 				<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i> 您确定吗?
 			</p>
 		</div>
-			<div id="dialog-upgradeAgent" class="hide">
+		<div id="dialog-upgradeAgent" class="hide">
 			<div class="alert alert-info bigger-110">
 				温馨提示：您将该代理升级为中级代理，升级成功后该代理将自动成为您的下级代理</div>
 			<div class="space-6"></div>
@@ -124,8 +129,8 @@
 		</div>
 		<div id="dialog-bindMember" class="hide">
 			<div class="alert bigger-110">
-				会员编号： <input name="userId" id="memberId" type="text" style="width: 100px;"
-					placeholder="会员编号" maxlength="8"/>
+				会员编号： <input name="userId" id="memberId" type="text"
+					style="width: 100px;" placeholder="会员编号" maxlength="8" />
 			</div>
 			<div class="space-6"></div>
 			<p id="errMsg" class="bigger-110 bolder center grey">

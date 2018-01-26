@@ -25,31 +25,45 @@
 			<div class="widget-body">
 				<div class="widget-main padding-6">
 					<form action="#" id="fm-search" style="padding-left: 10px;">
-						会员编号： <input name="id" type="text" style="width: 100px;"
-							placeholder="会员编号" /> 会员昵称： <input name="name" type="text"
-							style="width: 100px;" placeholder="会员昵称" /> 局数：<input
+						<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">会员编号</span><input name="id"
+							type="text" style="width: 100px;" placeholder="会员编号" /> <span
+							class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">会员昵称</span><input name="name"
+							type="text" style="width: 100px;" placeholder="会员昵称" /> <span
+							class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">局数</span><input
 							class="easyui-combobox" id="round"
-							style="width: 100px; height: 30px; line-height: 30px;"
+							style="width: 50px; height: 30px; line-height: 30px;"
 							name="round"
 							data-options="
                     panelHeight:'auto'
-            ">回合数：<input
-							class="easyui-combobox" id="gameIndex"
-							style="width: 100px; height: 30px; line-height: 30px;"
-							name="gameIndex"
-							data-options="
+            ">
+						<div style="display: inline-block;">
+							<span class="label label-xlg label-primary arrowed-right"
+								style="margin-left: 10px;">回合数</span><input
+								class="easyui-combobox" id="gameIndex"
+								style="width: 50px; height: 30px; line-height: 30px;"
+								name="gameIndex"
+								data-options="
                     panelHeight:'auto'
-            ">庄家：<input
+            ">
+						</div>
+						<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">庄家标识</span><input
 							class="easyui-combobox" id="isBanker"
-							style="width: 100px; height: 30px; line-height: 30px;"
+							style="width: 50px; height: 30px; line-height: 30px;"
 							name="isBanker"
 							data-options="
                     panelHeight:'auto'
             ">
-						游戏时间: <input class="easyui-datebox" name="startDate"
-							style="width: 200px; height: 30px; line-height: 30px;">到
-						<input class="easyui-datebox" name="endDate"
-							style="width: 200px; height: 30px; line-height: 30px;">
+						<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">游戏时间</span><input
+							class="easyui-datebox" name="startDate"
+							style="width: 100px; height: 30px; line-height: 30px;"><span
+							class="label label-sm label-primary arrowed arrowed-right"
+							style="margin-left: 8px;">到</span> <input class="easyui-datebox" name="endDate"
+							style="width: 100px; height: 30px; line-height: 30px;">
 
 						<button class="btn btn-info" id="btn-search"
 							authority="${pageContext.request.contextPath}/gameRecords/findRecordsList.do">
@@ -86,27 +100,37 @@
 				'text' : '全部',
 				'value' : ''
 			}, ];
-			for (var i = 0; i < 12; i++) {
+			for (var i = 1; i <= 12; i++) {
 				themeComboRound.push({
 					"text" : i,
 					"value" : i
 				});
 			}
 			$("#round").combobox("loadData", themeComboRound);
-
+			//局数改变事件
+			$("#round").combobox({
+				onChange : function(e) {
+					$("#gameIndex").combobox('setValue', '');
+					if (e != "") {
+						$("#gameIndex").parent().show();
+					} else {
+						$("#gameIndex").parent().hide();
+					}
+				}
+			});
 			//给回合数赋值
 			var themeComboGameIndex = [ {
 				'text' : '全部',
 				'value' : ''
 			}, ];
-			for (var i = 0; i < 5; i++) {
+			for (var i = 1; i <= 5; i++) {
 				themeComboGameIndex.push({
 					"text" : i,
 					"value" : i
 				});
 			}
 			$("#gameIndex").combobox("loadData", themeComboGameIndex);
-
+			$("#gameIndex").parent().hide();
 			//给庄家标识赋值
 			var data = odparse("STATIC_DATA_02").split(';');
 			var themeComboIsBanker = [ {

@@ -16,7 +16,7 @@ public interface CommonKeys {
 	int logRetrieve = 2;
 	int logUpdate = 3;
 	int logDelete = 4;
-	
+
 	// 代理等级start
 	/**
 	 * 高级--3
@@ -54,5 +54,15 @@ public interface CommonKeys {
 	String juniorAgent = "4";
 	String directlyUnderAgent = "5";
 	String systemManager = "6";
+
+	// goodsName 商品名称！用于商城购买物品
+	/**
+	 * 1--金币
+	 */
+	String goods_coins = "1";
+	/**
+	 * 2--比武卡
+	 */
+	String goods_pkCard = "2";
 
 }

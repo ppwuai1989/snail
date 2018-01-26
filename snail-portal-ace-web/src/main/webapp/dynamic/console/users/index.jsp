@@ -22,9 +22,12 @@
 			<div class="widget-body">
 				<div class="widget-main padding-6">
 					<form action="#" id="fm-search">
-						账户名： <input name="account" type="text" style="width: 200px;"
-							placeholder="账户名" />手机号： <input name="mobile" type="text" style="width: 200px;"
-							placeholder="手机号" />用户名称： <input name="name" type="text" style="width: 200px;"
+						<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">账户名</span><input name="account" type="text" style="width: 150px;"
+							placeholder="账户名" /><span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">手机号</span><input name="mobile" type="text" style="width: 100px;"
+							placeholder="手机号" /><span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">用户名称</span><input name="name" type="text" style="width: 120px;"
 							placeholder="用户名称" />
 						<button class="btn btn-info" id="btn-search"
 							authority="${pageContext.request.contextPath}/users/findUsersList.do">

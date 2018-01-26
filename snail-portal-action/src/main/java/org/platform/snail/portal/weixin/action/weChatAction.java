@@ -37,9 +37,7 @@ public class weChatAction implements Serializable {
 		Enumeration<String> e = request.getParameterNames();
 		while (e.hasMoreElements()) {
 			String key = e.nextElement();
-			String value = request.getParameter(key);
-			// System.out.println("获取参数key:[" + key + "]" + ",value:[" + value +
-			// "]");
+			String value = request.getParameter(key);			
 			condition.put(key, value);
 		}
 		if (condition.containsKey("code")) {

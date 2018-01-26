@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.platform.snail.portal.dao.OpenAPIDao">
+
+	<insert id="createOrder" parameterType="org.platform.snail.portal.model.TopUpRecords">
+		insert into
+		top_up_records
+		(
+		uuid,
+		way,
+		cost,
+		coins,
+		gems,
+		pk_card,
+		user_id,
+		user_name,	
+		order_id,
+		pay_status,			
+		create_time
+		)
+		values (
+		uuid(),
+		#{records.way,jdbcType=CHAR},
+		#{records.cost,jdbcType=VARCHAR},
+		#{records.coins,jdbcType=VARCHAR},
+		#{records.gems,jdbcType=VARCHAR},
+		#{records.pkCard,jdbcType=VARCHAR},
+		#{records.userId,jdbcType=INTEGER},
+		#{records.userName,jdbcType=VARCHAR},	
+		#{records.orderId,jdbcType=VARCHAR},
+		#{records.payStatus,jdbcType=VARCHAR},		
+		now()
+		)
+	</insert>
+</mapper>

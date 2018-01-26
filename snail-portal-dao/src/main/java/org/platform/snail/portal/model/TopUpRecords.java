@@ -30,9 +30,52 @@ public class TopUpRecords implements Serializable {
 	private String agentId;
 
 	private String agentName;
-
+	
+	private String orderId;
+	
+	private String paysApiId;
+	
+	private String realPrice;
+	
+	private String payStatus;
+	
 	@JsonSerialize(using = CustomDateSerializer.class)
 	private Date createTime;
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	
+	
+
+	public String getPaysApiId() {
+		return paysApiId;
+	}
+
+	public void setPaysApiId(String paysApiId) {
+		this.paysApiId = paysApiId;
+	}
+
+	public String getRealPrice() {
+		return realPrice;
+	}
+
+	public void setRealPrice(String realPrice) {
+		this.realPrice = realPrice;
+	}
+
+	public String getPayStatus() {
+		return payStatus;
+	}
+
+	public void setPayStatus(String payStatus) {
+		this.payStatus = payStatus;
+	}
 
 	public String getId() {
 		return id;

@@ -22,8 +22,9 @@
 			<div class="widget-body">
 				<div class="widget-main padding-6">
 					<form action="#" id="fm-search">
-						字典类型名称： <input name="name" type="text"
-							style="width: 200px;" placeholder="字典类型名称"/>
+						<span class="label label-xlg label-primary arrowed-right"
+							style="margin-left: 10px;">类型名称</span><input name="name" type="text"
+							style="width: 200px;" placeholder="类型名称"/>
 						<button class="btn btn-info" id="btn-search"
 							authority="${pageContext.request.contextPath}/dictCategory/findDictCategoryList.do">
 							 <i
