@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.platform.snail.portal.dao.OpenAPIDao">
-
+	<resultMap id="topUpRecordsVo" type="org.platform.snail.portal.vo.TopUpRecordsVo">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="cost" property="cost" jdbcType="VARCHAR" />
+		<result column="coins" property="coins" jdbcType="VARCHAR" />
+		<result column="gems" property="gems" jdbcType="VARCHAR" />
+		<result column="pk_card" property="pkCard" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="order_id" property="orderId" jdbcType="VARCHAR" />
+		<result column="pay_status" property="payStatus" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 创建支付订单 -->
 	<insert id="createOrder" parameterType="org.platform.snail.portal.model.TopUpRecords">
 		insert into
 		top_up_records
@@ -13,23 +23,51 @@
 		gems,
 		pk_card,
 		user_id,
-		user_name,	
+		user_name,
 		order_id,
-		pay_status,			
+		pay_status,
 		create_time
 		)
 		values (
 		uuid(),
-		#{records.way,jdbcType=CHAR},
-		#{records.cost,jdbcType=VARCHAR},
-		#{records.coins,jdbcType=VARCHAR},
-		#{records.gems,jdbcType=VARCHAR},
-		#{records.pkCard,jdbcType=VARCHAR},
-		#{records.userId,jdbcType=INTEGER},
-		#{records.userName,jdbcType=VARCHAR},	
-		#{records.orderId,jdbcType=VARCHAR},
-		#{records.payStatus,jdbcType=VARCHAR},		
+		#{order.way,jdbcType=CHAR},
+		#{order.cost,jdbcType=VARCHAR},
+		#{order.coins,jdbcType=VARCHAR},
+		#{order.gems,jdbcType=VARCHAR},
+		#{order.pkCard,jdbcType=VARCHAR},
+		#{order.userId,jdbcType=INTEGER},
+		#{order.userName,jdbcType=VARCHAR},
+		#{order.orderId,jdbcType=VARCHAR},
+		#{order.payStatus,jdbcType=VARCHAR},
 		now()
 		)
 	</insert>
+
+	<!-- 根据订单号、会员编号查询充值信息 -->
+	<select id="findTopUpRecordsByOrderInfo" resultMap="topUpRecordsVo">
+		select *
+		from
+		top_up_records t where 1=1
+		and
+		t.order_id=#{orderId,jdbcType=VARCHAR}
+	</select>
+	<!-- 根据会员编号查询会员信息 MemberDao.selectMemberVoByPrimaryKey -->
+	<!-- 更新用户账户信息 MemberDao.updateUsersByPrimaryKey -->
+	<!-- 更新支付订单信息 -->
+	<update id="updateTopUpRecordsByOrderInfo" parameterType="org.platform.snail.portal.model.TopUpRecords">
+		update
+		top_up_records t
+		set
+		t.cost=#{order.cost,jdbcType=VARCHAR},
+		t.paysapi_id=#{order.paysApiId,jdbcType=VARCHAR},
+		t.realprice=#{order.realPrice,jdbcType=VARCHAR},
+		t.pay_status=#{order.payStatus,jdbcType=VARCHAR}
+		where 1=1
+		and
+		t.order_id=#{order.orderId,jdbcType=VARCHAR}
+		and
+		t.user_id=#{order.userId,jdbcType=INTEGER}
+	</update>
+
+
 </mapper>

@@ -12,6 +12,10 @@
 		<result column="user_name" property="userName" jdbcType="VARCHAR" />
 		<result column="agent_id" property="agentId" jdbcType="INTEGER" />
 		<result column="agent_name" property="agentName" jdbcType="VARCHAR" />
+		<result column="order_id" property="orderId" jdbcType="VARCHAR" />
+		<result column="paysapi_id" property="paysApiId" jdbcType="VARCHAR" />
+		<result column="realprice" property="realPrice" jdbcType="VARCHAR" />
+		<result column="pay_status" property="payStatus" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 	</resultMap>
 	<resultMap id="recordsVo" extends="records"
@@ -30,6 +34,9 @@
 		</if>
 		<if test='condition.agentId!=null and condition.agentId!=""'>
 			and t.agent_id =#{condition.agentId,jdbcType=VARCHAR}
+		</if>
+		<if test='condition.payStatus!=null and condition.payStatus!=""'>
+			and t.pay_status =#{condition.payStatus,jdbcType=VARCHAR}
 		</if>
 		<if test='condition.startDate!=null and condition.startDate!=""'>
 			<![CDATA[
