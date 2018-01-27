@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.platform.snail.portal.dao.GameControlDao">
-	<resultMap id="resources" type="org.platform.snail.portal.model.GameControl">
+	<resultMap id="gameControl" type="org.platform.snail.portal.model.GameControl">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="game_type" property="gameType" jdbcType="VARCHAR" />
 		<result column="robot_banker_rate" property="robotBankerRate"
@@ -20,249 +20,132 @@
 			jdbcType="VARCHAR" />
 		<result column="sys_lose_lower_limit" property="sysLoseLowerLimit"
 			jdbcType="VARCHAR" />
-		<result column="sys_status_switch_time" property="status"
+		<result column="sys_status_switch_time" property="sysStatusSwitchTime"
 			jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
 	</resultMap>
-	<resultMap id="resourcesVo" extends="resources"
-		type="org.platform.snail.portal.vo.ResourcesVo">
-		<result column="CREATE_USER_NAME" property="userName" jdbcType="VARCHAR" />
+	<resultMap id="gameControlVo" extends="gameControl"
+		type="org.platform.snail.portal.vo.GameControlVo">
 	</resultMap>
-	<sql id="Base_Column_List">
-		RESOURCES_ID, PARENT_RESOURCES_ID, RESOURCES_NAME,
-		RESOURCES_URL, RESOURCES_PATH,
-		RESOURCES_ICON, RESOURCES_TYPE,
-		CREATE_TIME, CREATE_USER_ID, REMARK,
-		status
-	</sql>
-	<select id="selectByPrimaryKey" resultMap="resources"
-		parameterType="java.lang.String">
-		select
-		<include refid="Base_Column_List" />
-		from resources
-		where RESOURCES_ID = #{resourcesId,jdbcType=INTEGER}
-	</select>
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-		update resources t
-		set t.status='0'
-		where t.resources_id=#{resourcesId,jdbcType=INTEGER}
-	</delete>
-	<insert id="insert" parameterType="org.platform.snail.portal.model.Resources">
-		insert into resources
-		(RESOURCES_ID, PARENT_RESOURCES_ID,
-		RESOURCES_NAME,
-		RESOURCES_URL,
-		RESOURCES_PATH, RESOURCES_ICON,
-		RESOURCES_TYPE, CREATE_TIME,
-		CREATE_USER_ID,
-		REMARK, status)
-		values (#{resourcesId,jdbcType=INTEGER},
-		#{parentResourcesId,jdbcType=INTEGER},
-		#{resourcesName,jdbcType=VARCHAR},
-		#{resourcesUrl,jdbcType=VARCHAR},
-		#{resourcesPath,jdbcType=VARCHAR}, #{resourcesIcon,jdbcType=VARCHAR},
-		#{resourcesType,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-		#{createUserId,jdbcType=INTEGER},
-		#{remark,jdbcType=VARCHAR},
-		#{status,jdbcType=VARCHAR})
-	</insert>
-	<insert id="insertSelective" parameterType="org.platform.snail.portal.model.Resources">
-		insert into resources
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="resourcesId != null">
-				RESOURCES_ID,
-			</if>
-			<if test="parentResourcesId != null">
-				PARENT_RESOURCES_ID,
-			</if>
-			<if test="resourcesName != null">
-				RESOURCES_NAME,
-			</if>
-			<if test="resourcesUrl != null">
-				RESOURCES_URL,
-			</if>
-			<if test="resourcesPath != null">
-				RESOURCES_PATH,
-			</if>
-			<if test="resourcesIcon != null">
-				RESOURCES_ICON,
-			</if>
-			<if test="resourcesType != null">
-				RESOURCES_TYPE,
-			</if>
-			<if test="createTime != null">
-				CREATE_TIME,
-			</if>
-			<if test="createUserId != null">
-				CREATE_USER_ID,
-			</if>
-			<if test="remark != null">
-				REMARK,
-			</if>
-			<if test="status != null">
-				status,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="resourcesId != null">
-				#{resourcesId,jdbcType=VARCHAR},
-			</if>
-			<if test="parentResourcesId != null">
-				#{parentResourcesId,jdbcType=VARCHAR},
-			</if>
-			<if test="resourcesName != null">
-				#{resourcesName,jdbcType=VARCHAR},
-			</if>
-			<if test="resourcesUrl != null">
-				#{resourcesUrl,jdbcType=VARCHAR},
-			</if>
-			<if test="resourcesPath != null">
-				#{resourcesPath,jdbcType=VARCHAR},
-			</if>
-			<if test="resourcesIcon != null">
-				#{resourcesIcon,jdbcType=VARCHAR},
-			</if>
-			<if test="resourcesType != null">
-				#{resourcesType,jdbcType=VARCHAR},
-			</if>
-			<if test="createTime != null">
-				#{createTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="createUserId != null">
-				#{createUserId,jdbcType=VARCHAR},
-			</if>
-			<if test="remark != null">
-				#{remark,jdbcType=VARCHAR},
-			</if>
-			<if test="status != null">
-				#{status,jdbcType=VARCHAR},
-			</if>
-		</trim>
-	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="org.platform.snail.portal.model.Resources">
-		update resources
-		<set>
-			<if test="parentResourcesId != null">
-				PARENT_RESOURCES_ID =
-				#{parentResourcesId,jdbcType=INTEGER},
-			</if>
-			<if test="resourcesName != null">
-				RESOURCES_NAME = #{resourcesName,jdbcType=VARCHAR},
-			</if>
-			<if test="resourcesUrl != null">
-				RESOURCES_URL = #{resourcesUrl,jdbcType=VARCHAR},
-			</if>
-			<if test="resourcesPath != null">
-				RESOURCES_PATH = #{resourcesPath,jdbcType=VARCHAR},
-			</if>
-			<if test="resourcesIcon != null">
-				RESOURCES_ICON = #{resourcesIcon,jdbcType=VARCHAR},
-			</if>
-			<if test="resourcesType != null">
-				RESOURCES_TYPE = #{resourcesType,jdbcType=VARCHAR},
-			</if>
-			<if test="createTime != null">
-				CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="createUserId != null">
-				CREATE_USER_ID = #{createUserId,jdbcType=VARCHAR},
-			</if>
-			<if test="remark != null">
-				REMARK = #{remark,jdbcType=VARCHAR},
-			</if>
-			<if test="status != null">
-				status = #{status,jdbcType=VARCHAR},
-			</if>
-		</set>
-		where RESOURCES_ID = #{resourcesId,jdbcType=INTEGER}
-	</update>
-	<update id="updateByPrimaryKey" parameterType="org.platform.snail.portal.model.Resources">
-		update resources
-		set PARENT_RESOURCES_ID = #{parentResourcesId,jdbcType=INTEGER},
-		RESOURCES_NAME = #{resourcesName,jdbcType=VARCHAR},
-		RESOURCES_URL =
-		#{resourcesUrl,jdbcType=VARCHAR},
-		RESOURCES_PATH =
-		#{resourcesPath,jdbcType=VARCHAR},
-		RESOURCES_ICON =
-		#{resourcesIcon,jdbcType=VARCHAR},
-		RESOURCES_TYPE =
-		#{resourcesType,jdbcType=VARCHAR},
-		REMARK = #{remark,jdbcType=VARCHAR},
-		status = #{status,jdbcType=VARCHAR}
-		where RESOURCES_ID =
-		#{resourcesId,jdbcType=INTEGER}
-	</update>
 
-	<sql id="whereCondition">
-		from resources , users where resources.create_user_id=users.user_id
-
-		<if test="condition.resourcesName!=null and condition.resourcesName!=''">
-			and resources_name like
-			concat(#{condition.resourcesName,jdbcType=VARCHAR},'%')
+	<sql id="PagingWhereCondition">
+		from t_game_control t
+		where 1=1
+		<if test='condition.id !=null and condition.id !=""'>
+			and t.id =#{condition.id,jdbcType=VARCHAR}
 		</if>
-		<if test="condition.resourcesType!=null and condition.resourcesType!=''">
-			and resources_type
-			=#{condition.resourcesType,jdbcType=VARCHAR}
+		<if test='condition.status !=null and condition.status !=""'>
+			and t.status =#{condition.status,jdbcType=VARCHAR}
 		</if>
-		<if test="condition.resourcesId!=null and condition.resourcesId!=''">
-			and resources_id
-			=#{condition.resourcesId,jdbcType=INTEGER}
-		</if>
-		<if
-			test="condition.parentResourcesId!=null and condition.parentResourcesId!=''">
-			and parent_resources_id
-			=#{condition.parentResourcesId,jdbcType=INTEGER}
+		<if test='condition.gameType !=null and condition.gameType !=""'>
+			and .t.game_type = #{condition.gameType,jdbcType=VARCHAR}
 		</if>
 	</sql>
-	<select id="findCount" resultType="int">
+
+	<select id="findControlListCount" resultType="int">
 		SELECT COUNT(*)
-		<include refid="whereCondition" />
+		<include refid="PagingWhereCondition" />
 	</select>
-	<select id="findList" resultMap="resourcesVo">
-		select
-		resources.RESOURCES_ID, resources.PARENT_RESOURCES_ID,
-		resources.RESOURCES_NAME,
-		resources.RESOURCES_URL,
-		resources.RESOURCES_PATH,
-		resources.RESOURCES_ICON,
-		resources.RESOURCES_TYPE,
-		resources.CREATE_TIME,
-		resources.CREATE_USER_ID, resources.REMARK,
-		resources.status,users.name CREATE_USER_NAME
-		<include refid="whereCondition" />
+
+	<select id="findControlList" resultMap="gameControlVo">
+		SELECT *
+		<include refid="PagingWhereCondition" />
 		<choose>
-			<when test="orderBy!=null and orderBy!=''">
+			<when test='orderBy!=null and orderBy!=""'>
 				ORDER BY ${orderBy}
 			</when>
 			<otherwise>
-				ORDER BY RESOURCES_ID
+				ORDER BY t.status desc
 			</otherwise>
 		</choose>
 		limit #{start},#{limit}
 	</select>
-	<select id="selectResourcesTreeList" resultType="map">
-		SELECT
-		t.resources_id ID,
-		t.parent_resources_id PID,
-		t.resources_name TEXT,
-		''
-		SRC,
-		'' HREF,
-		(SELECT
-		COUNT(*)
-		FROM
-		resources
-		WHERE
-		resources.parent_resources_id = t.resources_id)
-		CHILD_COUNT
-		FROM
-		resources t
-		ORDER BY t.RESOURCES_ID
-	</select>
 
-	<select id="isExitByName" resultType="int">
-		select count(*) from
-		resources where resources_name
-		=#{name,jdbcType=VARCHAR}
-	</select>
+	<insert id="insertControl" parameterType="org.platform.snail.portal.model.GameControl">
+		<if test="control.status !=null and control.status == '1'.toString() ">
+			update t_game_control t set t.status='0' where
+			t.game_type=#{control.gameType,jdbcType=VARCHAR};
+		</if>
+		insert into
+		t_game_control
+		(
+		game_type,
+		robot_banker_rate,
+		player_banker_rate,
+		area_warning_line,
+		area_overline_change_rate,
+		take_banker_rate,
+		take_player_rate,
+		sys_win_upper_limit,
+		sys_lose_lower_limit,
+		sys_status_switch_time,
+		status
+		)values(
+		#{control.gameType,jdbcType=VARCHAR},
+		#{control.robotBankerRate,jdbcType=VARCHAR},
+		#{control.playerBankerRate,jdbcType=VARCHAR},
+		#{control.areaWarningLine,jdbcType=VARCHAR},
+		#{control.areaOverlineChangeRate,jdbcType=VARCHAR},
+		#{control.takeBankerRate,jdbcType=VARCHAR},
+		#{control.takePlayerRate,jdbcType=VARCHAR},
+		#{control.sysWinUpperLimit,jdbcType=VARCHAR},
+		#{control.sysLoseLowerLimit,jdbcType=VARCHAR},
+		#{control.sysStatusSwitchTime,jdbcType=VARCHAR},
+		#{control.status,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<update id="updateControl" parameterType="org.platform.snail.portal.model.GameControl">
+		<if test="control.status !=null and control.status == '1'.toString() ">
+			update t_game_control t set t.status='0' where
+			t.game_type=#{control.gameType,jdbcType=VARCHAR};
+		</if>
+		update t_game_control t
+		<set>
+			<if test='control.gameType !=null'>
+				t.game_type=#{control.gameType,jdbcType=VARCHAR},
+			</if>
+			<if test='control.robotBankerRate !=null'>
+				t.robot_banker_rate=#{control.robotBankerRate,jdbcType=VARCHAR},
+			</if>
+			<if test='control.playerBankerRate !=null'>
+				t.player_banker_rate=#{control.playerBankerRate,jdbcType=VARCHAR},
+			</if>
+			<if test='control.areaWarningLine !=null'>
+				t.area_warning_line=#{control.areaWarningLine,jdbcType=VARCHAR},
+			</if>
+			<if test='control.areaOverlineChangeRate !=null'>
+				t.area_overline_change_rate=#{control.areaOverlineChangeRate,jdbcType=VARCHAR},
+			</if>
+			<if test='control.areaOverlineChangeRate !=null'>
+				t.area_overline_change_rate=#{control.areaOverlineChangeRate,jdbcType=VARCHAR},
+			</if>
+			<if test='control.takeBankerRate !=null'>
+				t.take_banker_rate=#{control.takeBankerRate,jdbcType=VARCHAR},
+			</if>
+			<if test='control.takePlayerRate !=null'>
+				t.take_player_rate=#{control.takePlayerRate,jdbcType=VARCHAR},
+			</if>
+			<if test='control.sysWinUpperLimit !=null'>
+				t.sys_win_upper_limit=#{control.sysWinUpperLimit,jdbcType=VARCHAR},
+			</if>
+			<if test='control.sysLoseLowerLimit !=null'>
+				t.sys_lose_lower_limit=#{control.sysLoseLowerLimit,jdbcType=VARCHAR},
+			</if>
+			<if test='control.sysStatusSwitchTime !=null'>
+				t.sys_status_switch_time=#{control.sysStatusSwitchTime,jdbcType=VARCHAR},
+			</if>
+			<if test='control.status !=null'>
+				t.status=#{control.status,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where t.id=#{control.id,jdbcType=INTEGER}
+	</update>
+
+	<delete id="deleteControl" parameterType="java.lang.String">
+		delete t from
+		t_game_control t
+		where t.id=#{id,jdbcType=VARCHAR}
+	</delete>
+
 </mapper>
