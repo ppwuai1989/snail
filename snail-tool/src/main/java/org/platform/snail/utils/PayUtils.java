@@ -16,7 +16,7 @@ public class PayUtils {
 
 	public static String NOTIFY_URL = "http://paopao.viphk.ngrok.org/portal/openAPI/notifyPay.do";
 
-	public static String RETURN_URL = "http://tb.n0b16.cn/payorder.html";
+	public static String RETURN_URL = "http://tb.n0b16.cn/payResult.html";
 
 	public static String BASE_URL = "https://pay.paysapi.com";
 
