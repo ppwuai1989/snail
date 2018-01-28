@@ -1,5 +1,8 @@
 package org.platform.snail.portal.service.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +13,7 @@ import org.platform.snail.portal.dao.GameControlDao;
 import org.platform.snail.portal.model.GameControl;
 import org.platform.snail.portal.service.GameControlService;
 import org.platform.snail.portal.vo.GameControlVo;
+import org.platform.snail.portal.vo.SystemStateVo;
 import org.platform.snail.service.DataBaseLogService;
 import org.platform.snail.utils.CommonKeys;
 import org.platform.snail.utils.SnailBeanUtils;
@@ -132,6 +136,29 @@ public class GameControlServiceImpl implements GameControlService {
 		this.gameControlDao.deleteControl(id);
 		this.dataBaseLogService.log(CommonKeys.logDelete, "删除", "[id：" + id + "]", "", "游戏控制", systemUser, "33");
 		return new DataResponse(true, "删除成功！");
+	}
+
+	@Override
+	public DataResponse selectSystemState(String gameType) throws Exception {
+		DataResponse rst = new DataResponse();
+		SystemStateVo ss = this.gameControlDao.selectSystemState(gameType);
+		if (ss != null) {
+			if (ss.getGameType() != null && ss.getId() != null) {
+				// 根据游戏类型找到当前正在启用状态的控制器，并查出转换时间
+				GameControlVo control = this.gameControlDao.selectActiveControlByGameType(gameType);
+				String switchTime = String.valueOf(Math.round(Float.valueOf(control.getSysStatusSwitchTime()) * 60 * 60*1000));// 单位是小时转换为秒
+				// 计算下次转换时间
+				Long lastSwitchTime = ss.getUpdateTime().getTime();
+				Long nowTime = System.currentTimeMillis();
+				String nextSwitchTime = String.valueOf(((lastSwitchTime + Long.valueOf(switchTime))-nowTime));
+				ss.setNextSwitchTime(nextSwitchTime);// 返回一个剩余时间的秒数字符串
+			}
+			rst.setResponse(ss);
+			rst.setState(true);
+		} else {
+			return new DataResponse(false, "未查询到系统状态信息！");
+		}
+		return rst;
 	}
 
 }

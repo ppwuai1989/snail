@@ -53,7 +53,7 @@ public class GameControlAction extends BaseController {
 			return new DataResponse(false, "保存失败！", e.getMessage());
 		}
 	}
-	
+
 	@RequestMapping(value = "/updateControl.do")
 	@ResponseBody
 	public DataResponse updateControl(String jsons) {
@@ -66,18 +66,35 @@ public class GameControlAction extends BaseController {
 			return new DataResponse(false, "更新失败！", e.getMessage());
 		}
 	}
-	
+
 	@RequestMapping(value = "/deleteControl.do")
 	@ResponseBody
 	public DataResponse deleteControl(String jsons) {
 		try {
-			SystemUser systemUser = this.getSessionSystemUser();	
+			SystemUser systemUser = this.getSessionSystemUser();
 			JSONObject json = JSONObject.fromObject(jsons);
-			String id=json.getString("id");
+			String id = json.getString("id");
 			return this.gameControlService.deleteControl(id, systemUser);
 		} catch (Exception e) {
 			this.logger.error(e);
 			return new DataResponse(false, "删除失败！", e.getMessage());
+		}
+	}
+
+	@RequestMapping(value = "/selectSystemState.do")
+	@ResponseBody
+	public DataResponse selectSystemState(String gameType) {
+		try {
+			SystemUser systemUser = this.getSessionSystemUser();
+			//禁止未登录请求系统状态
+			if (systemUser != null) {
+				return this.gameControlService.selectSystemState(gameType);
+			} else {
+				return new DataResponse(false, "您不是系统用户，无权查询！");
+			}
+		} catch (Exception e) {
+			this.logger.error(e);
+			return new DataResponse(false, "查询失败！", e.getMessage());
 		}
 	}
 

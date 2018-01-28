@@ -186,9 +186,9 @@ CREATE TABLE IF NOT EXISTS `logs` (
   `ip` varchar(50) DEFAULT NULL COMMENT 'ip地址',
   `log_type` varchar(50) DEFAULT NULL COMMENT '日志类型对应resources中type为页面类型的id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=669 DEFAULT CHARSET=utf8 COMMENT='操作日志表';
+) ENGINE=InnoDB AUTO_INCREMENT=680 DEFAULT CHARSET=utf8 COMMENT='操作日志表';
 
--- 正在导出表  sxwl.logs 的数据：~335 rows (大约)
+-- 正在导出表  sxwl.logs 的数据：~346 rows (大约)
 /*!40000 ALTER TABLE `logs` DISABLE KEYS */;
 INSERT INTO `logs` (`id`, `log`, `user_id`, `user_name`, `create_time`, `object_value`, `old`, `news`, `name`, `ip`, `log_type`) VALUES
 	(334, 'id为1的用户在2018-01-14 00:22:46登录了系统。', 1, '潘志鹏', '2018-01-14 00:22:46', '1', '2018-01-13 22:29:05', '2018-01-14 00:22:46', '用户登录', NULL, ''),
@@ -525,7 +525,18 @@ INSERT INTO `logs` (`id`, `log`, `user_id`, `user_name`, `create_time`, `object_
 	(665, 'id为[1]的用户[潘志鹏]\r\n在[2018-01-28 01:46:32]\r\n对[游戏控制]\r\n做了[删除]操作:\r\n删除了[id：null]。', 1, '潘志鹏', '2018-01-28 01:46:32', '游戏控制', '[id：null]', '', '删除', NULL, '33'),
 	(666, 'id为[1]的用户[潘志鹏]\r\n在[2018-01-28 01:47:07]\r\n对[游戏控制]\r\n做了[删除]操作:\r\n删除了[id：null]。', 1, '潘志鹏', '2018-01-28 01:47:07', '游戏控制', '[id：null]', '', '删除', NULL, '33'),
 	(667, 'id为1的用户在2018-01-28 01:51:19登录了系统。', 1, '潘志鹏', '2018-01-28 01:51:19', '1', '2018-01-28 01:44:37', '2018-01-28 01:51:19', '用户登录', NULL, ''),
-	(668, 'id为[1]的用户[潘志鹏]\r\n在[2018-01-28 01:51:30]\r\n对[游戏控制]\r\n做了[删除]操作:\r\n删除了[id：2]。', 1, '潘志鹏', '2018-01-28 01:51:30', '游戏控制', '[id：2]', '', '删除', NULL, '33');
+	(668, 'id为[1]的用户[潘志鹏]\r\n在[2018-01-28 01:51:30]\r\n对[游戏控制]\r\n做了[删除]操作:\r\n删除了[id：2]。', 1, '潘志鹏', '2018-01-28 01:51:30', '游戏控制', '[id：2]', '', '删除', NULL, '33'),
+	(669, 'id为1的用户在2018-01-28 20:10:43登录了系统。', 1, '潘志鹏', '2018-01-28 20:10:43', '1', '2018-01-28 01:51:19', '2018-01-28 20:10:43', '用户登录', NULL, ''),
+	(670, 'id为1的用户在2018-01-28 22:04:03登录了系统。', 1, '潘志鹏', '2018-01-28 22:04:03', '1', '2018-01-28 20:10:43', '2018-01-28 22:04:03', '用户登录', NULL, ''),
+	(671, 'id为1的用户在2018-01-28 23:31:23登录了系统。', 1, '潘志鹏', '2018-01-28 23:31:23', '1', '2018-01-28 22:04:03', '2018-01-28 23:31:23', '用户登录', NULL, ''),
+	(672, 'id为[1]的用户[潘志鹏]\r\n在[2018-01-28 23:43:41]\r\n对[游戏控制]\r\n做了[添加]操作:\r\n添加了GameControl [id=_empty, gameType=0, robotBankerRate=0.2, playerBankerRate=0.2, areaWarningLine=456132, areaOverlineChangeRate=0.7, takeBankerRate=0.003, takePlayerRate=0.002, sysWinUpperLimit=46735312, sysLoseLowerLimit=456123, sysStatusSwitchTime=1.5, status=1]。', 1, '潘志鹏', '2018-01-28 23:43:41', '游戏控制', '', 'GameControl [id=_empty, gameType=0, robotBankerRate=0.2, playerBankerRate=0.2, areaWarningLine=456132, areaOverlineChangeRate=0.7, takeBankerRate=0.003, takePlayerRate=0.002, sysWinUpperLimit=46735312, sysLoseLowerLimit=456123, sysStatusSwitchTime=1.5, status=1]', '添加', NULL, '33'),
+	(673, 'id为[1]的用户[潘志鹏]\r\n在[2018-01-28 23:44:22]\r\n对[游戏控制]\r\n做了[添加]操作:\r\n添加了GameControl [id=_empty, gameType=2, robotBankerRate=0.8, playerBankerRate=0.8, areaWarningLine=14616156, areaOverlineChangeRate=0.8, takeBankerRate=0.010, takePlayerRate=0.020, sysWinUpperLimit=4189789415, sysLoseLowerLimit=41551, sysStatusSwitchTime=1, status=1]。', 1, '潘志鹏', '2018-01-28 23:44:22', '游戏控制', '', 'GameControl [id=_empty, gameType=2, robotBankerRate=0.8, playerBankerRate=0.8, areaWarningLine=14616156, areaOverlineChangeRate=0.8, takeBankerRate=0.010, takePlayerRate=0.020, sysWinUpperLimit=4189789415, sysLoseLowerLimit=41551, sysStatusSwitchTime=1, status=1]', '添加', NULL, '33'),
+	(674, 'id为1的用户在2018-01-29 00:59:04登录了系统。', 1, '潘志鹏', '2018-01-29 00:59:04', '1', '2018-01-28 23:31:23', '2018-01-29 00:59:04', '用户登录', NULL, ''),
+	(675, 'id为1的用户在2018-01-29 01:02:42登录了系统。', 1, '潘志鹏', '2018-01-29 01:02:42', '1', '2018-01-29 00:59:04', '2018-01-29 01:02:42', '用户登录', NULL, ''),
+	(676, 'id为1的用户在2018-01-29 01:05:55登录了系统。', 1, '潘志鹏', '2018-01-29 01:05:55', '1', '2018-01-29 01:02:42', '2018-01-29 01:05:55', '用户登录', NULL, ''),
+	(677, 'id为1的用户在2018-01-29 01:07:43登录了系统。', 1, '潘志鹏', '2018-01-29 01:07:43', '1', '2018-01-29 01:05:55', '2018-01-29 01:07:43', '用户登录', NULL, ''),
+	(678, 'id为1的用户在2018-01-29 01:13:19登录了系统。', 1, '潘志鹏', '2018-01-29 01:13:19', '1', '2018-01-29 01:07:43', '2018-01-29 01:13:19', '用户登录', NULL, ''),
+	(679, 'id为1的用户在2018-01-29 01:27:45登录了系统。', 1, '潘志鹏', '2018-01-29 01:27:45', '1', '2018-01-29 01:13:19', '2018-01-29 01:27:45', '用户登录', NULL, '');
 /*!40000 ALTER TABLE `logs` ENABLE KEYS */;
 
 -- 导出  表 sxwl.province 结构
@@ -980,12 +991,14 @@ CREATE TABLE IF NOT EXISTS `t_game_control` (
   `sys_status_switch_time` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '系统状态转换时间',
   `status` char(2) NOT NULL COMMENT '启用状态（同一时间只有一个1--启用）',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='游戏控制表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='游戏控制表';
 
--- 正在导出表  sxwl.t_game_control 的数据：~1 rows (大约)
+-- 正在导出表  sxwl.t_game_control 的数据：~3 rows (大约)
 /*!40000 ALTER TABLE `t_game_control` DISABLE KEYS */;
 INSERT INTO `t_game_control` (`id`, `game_type`, `robot_banker_rate`, `player_banker_rate`, `area_warning_line`, `area_overline_change_rate`, `take_banker_rate`, `take_player_rate`, `sys_win_upper_limit`, `sys_lose_lower_limit`, `sys_status_switch_time`, `status`) VALUES
-	(1, '1', 0.50, 0.50, 600000.00, 0.50, 0.005, 0.005, 6000000000000, 3000000000, 0.50, '1');
+	(1, '1', 0.50, 0.50, 600000.00, 0.50, 0.005, 0.005, 6000000000000, 3000000000, 0.50, '1'),
+	(2, '0', 0.20, 0.20, 456132.00, 0.70, 0.003, 0.002, 46735312, 456123, 1.50, '1'),
+	(3, '2', 0.80, 0.80, 14616156.00, 0.80, 0.010, 0.020, 4189789415, 41551, 1.00, '1');
 /*!40000 ALTER TABLE `t_game_control` ENABLE KEYS */;
 
 -- 导出  表 sxwl.t_guests 结构
@@ -1170,19 +1183,25 @@ CREATE TABLE IF NOT EXISTS `t_rooms_tb_large` (
 /*!40000 ALTER TABLE `t_rooms_tb_large` DISABLE KEYS */;
 /*!40000 ALTER TABLE `t_rooms_tb_large` ENABLE KEYS */;
 
--- 导出  表 sxwl.t_system_status 结构
-DROP TABLE IF EXISTS `t_system_status`;
-CREATE TABLE IF NOT EXISTS `t_system_status` (
+-- 导出  表 sxwl.t_system_state 结构
+DROP TABLE IF EXISTS `t_system_state`;
+CREATE TABLE IF NOT EXISTS `t_system_state` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `game_type` varchar(10) NOT NULL DEFAULT '0' COMMENT '游戏类型',
-  `income` int(20) NOT NULL DEFAULT '0' COMMENT '系统当前进账',
-  `state` varchar(2) NOT NULL COMMENT '系统当前状态（0蓄水，1放水）',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='游戏系统状态表';
+  `game_type` varchar(10) DEFAULT NULL COMMENT '游戏类型',
+  `income` bigint(20) DEFAULT NULL COMMENT '系统当前进账',
+  `state` varchar(2) DEFAULT NULL COMMENT '系统当前状态（0蓄水，1放水）',
+  `update_time` datetime DEFAULT NULL COMMENT ' 更新时间（根据更新时间和转换时间之和  减去当前查询时间，即得到下次转换状态时间）',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `game_type` (`game_type`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='游戏系统状态表';
 
--- 正在导出表  sxwl.t_system_status 的数据：~0 rows (大约)
-/*!40000 ALTER TABLE `t_system_status` DISABLE KEYS */;
-/*!40000 ALTER TABLE `t_system_status` ENABLE KEYS */;
+-- 正在导出表  sxwl.t_system_state 的数据：~3 rows (大约)
+/*!40000 ALTER TABLE `t_system_state` DISABLE KEYS */;
+INSERT INTO `t_system_state` (`id`, `game_type`, `income`, `state`, `update_time`) VALUES
+	(1, '0', 5000000, '0', '2018-01-29 02:33:56'),
+	(2, '1', 999999, '1', '2018-01-29 02:33:56'),
+	(3, '2', -456457, '0', '2018-01-29 02:33:56');
+/*!40000 ALTER TABLE `t_system_state` ENABLE KEYS */;
 
 -- 导出  表 sxwl.t_users 结构
 DROP TABLE IF EXISTS `t_users`;
@@ -1261,7 +1280,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- 正在导出表  sxwl.users 的数据：~6 rows (大约)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`user_id`, `account`, `password`, `sex`, `id_card`, `name`, `department_id`, `area_code`, `birthday`, `status`, `last_login_time`, `mobile`, `email`, `seat`, `user_level`, `create_time`) VALUES
-	(1, 'sxwlpzp', '7c6c29686e7849ed0ae0a74989d3e630', '1', '410102198909080032', '潘志鹏', NULL, NULL, '1989-09-08', '1', '2018-01-28 01:51:19', '18039231952', '364325668@qq.com', NULL, NULL, '2017-12-28 15:31:28'),
+	(1, 'sxwlpzp', '7c6c29686e7849ed0ae0a74989d3e630', '1', '410102198909080032', '潘志鹏', NULL, NULL, '1989-09-08', '1', '2018-01-29 01:27:45', '18039231952', '364325668@qq.com', NULL, NULL, '2017-12-28 15:31:28'),
 	(2, 'sxwlwyk', '670b14728ad9902aecba32e22fa4f6bd', '1', '410102199705200013', '王永科', NULL, NULL, '1997-05-20', '1', '2018-01-25 23:13:44', '18039231920', '440055678@qq.com', NULL, NULL, '2018-01-02 14:24:57'),
 	(3, 'sxwlcmy', '670b14728ad9902aecba32e22fa4f6bd', '1', '410102199704100012', '陈梦圆', NULL, NULL, '1997-04-10', '1', '2018-01-06 17:33:29', '18039231955', '6781254@qq.com', NULL, NULL, '2018-01-02 14:25:50'),
 	(4, 'sxwlzxy', '670b14728ad9902aecba32e22fa4f6bd', '2', '410102198012100012', '郑向阳', NULL, NULL, '1980-12-10', '1', '2018-01-20 15:49:17', '13912349874', '4598597156@qq.com', NULL, NULL, '2018-01-06 14:10:23'),

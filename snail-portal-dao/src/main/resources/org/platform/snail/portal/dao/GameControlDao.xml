@@ -28,6 +28,17 @@
 		type="org.platform.snail.portal.vo.GameControlVo">
 	</resultMap>
 
+	<resultMap id="systemState" type="org.platform.snail.portal.model.SystemState">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="game_type" property="gameType" jdbcType="VARCHAR" />
+		<result column="income" property="income" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<resultMap id="systemStateVo" extends="systemState"
+		type="org.platform.snail.portal.vo.SystemStateVo">
+	</resultMap>
+
 	<sql id="PagingWhereCondition">
 		from t_game_control t
 		where 1=1
@@ -147,5 +158,29 @@
 		t_game_control t
 		where t.id=#{id,jdbcType=VARCHAR}
 	</delete>
+
+	<select id="selectActiveControlByGameType" parameterType="java.lang.String"
+		resultMap="gameControlVo">
+		select * from t_game_control t
+		where
+		t.game_type=#{gameType,jdbcType=VARCHAR}
+		and t.status='1'
+	</select>
+
+	<!-- 查询系统状态 -->
+	<select id="selectSystemState" parameterType="java.lang.String"
+		resultMap="systemStateVo">
+		<choose>
+			<when test="gameType !=null and gameType !=''">
+				select * from t_system_state t
+				where
+				t.game_type=#{gameType,jdbcType=VARCHAR}
+
+			</when>
+			<otherwise>
+				select sum(income) income from t_system_state
+			</otherwise>
+		</choose>
+	</select>
 
 </mapper>

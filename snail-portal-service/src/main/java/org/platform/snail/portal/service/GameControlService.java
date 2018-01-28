@@ -8,12 +8,14 @@ import net.sf.json.JSONObject;
 
 public interface GameControlService {
 
-	public abstract DataResponse findControlList(GameControl control, int start, int limit, String orderBy)throws Exception;
-	
-	public abstract DataResponse insertControl(JSONObject json, SystemUser systemUser)throws Exception;
-	
-	public abstract DataResponse updateControl(JSONObject json, SystemUser systemUser)throws Exception;
-	
-	public abstract DataResponse deleteControl(String id,SystemUser systemUser)throws Exception;
+	public abstract DataResponse findControlList(GameControl control, int start, int limit, String orderBy)
+			throws Exception;
 
+	public abstract DataResponse insertControl(JSONObject json, SystemUser systemUser) throws Exception;
+
+	public abstract DataResponse updateControl(JSONObject json, SystemUser systemUser) throws Exception;
+
+	public abstract DataResponse deleteControl(String id, SystemUser systemUser) throws Exception;
+
+	public abstract DataResponse selectSystemState(String gameType) throws Exception;
 }
