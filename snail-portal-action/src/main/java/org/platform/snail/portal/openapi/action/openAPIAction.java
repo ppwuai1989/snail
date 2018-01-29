@@ -67,10 +67,10 @@ public class OpenAPIAction implements Serializable {
 		// 保证密钥一致性
 		try {
 			if (PayUtils.checkPayKey(paySaPi)) {
-				System.out.println("更新数据库start！");
+				System.out.println("/notifyPay.do更新数据库start！");
 				// 首先根据订单号查出充值信息，先给用户充值。
 				this.openAPIService.completeOrder(paySaPi);
-				System.out.println("更新数据库end！");
+				System.out.println("/notifyPay.do更新数据库end！");
 			} else {
 				System.out.println("密钥错误！");
 			}
