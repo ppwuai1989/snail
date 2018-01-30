@@ -47,7 +47,7 @@ public class OpenAPIAction implements Serializable {
 				String value = request.getParameter(key);
 				remoteMap.put(key, value);
 			}
-			remoteMap.put("orderid", PayUtils.getOrderIdByUUId());
+			remoteMap.put("orderid", PayUtils.getOrderIdByUUId());			
 			resultMap.put("data", PayUtils.payOrder(remoteMap));
 			if (this.openAPIService.createOrder(remoteMap)) {
 				dr.setResponse(resultMap);

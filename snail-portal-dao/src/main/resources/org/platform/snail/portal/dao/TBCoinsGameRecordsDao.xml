@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.platform.snail.portal.dao.GameRecordsDao">
-	<resultMap id="records" type="org.platform.snail.portal.model.GameRecords">
-		<id column="ROOM" property="room" jdbcType="INTEGER" />
+<mapper namespace="org.platform.snail.portal.dao.TBCoinsGameRecordsDao">
+	<resultMap id="records" type="org.platform.snail.portal.model.TBCoinsGameRecords">		
 		<id column="ID" property="id" jdbcType="INTEGER" />
 		<id column="game_index" property="gameIndex" jdbcType="INTEGER" />
 		<id column="round" property="round" jdbcType="INTEGER" />
@@ -17,15 +16,10 @@
 		<result column="result" property="result" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 	</resultMap>
-	<resultMap type="org.platform.snail.portal.vo.GameRecordsVo" id="recordsVo" extends="records">
-	</resultMap>
 
 	<sql id="whereCondition">
-		from t_games_tb g,t_users u
-		where g.id = u.userid
-		<if test='condition.room!=null and condition.room!=""'>
-			and g.room =#{condition.room,jdbcType=VARCHAR}
-		</if>
+		from t_games_tb_large g,t_users u
+		where g.id = u.userid		
 		<if test='condition.id!=null and condition.id!=""'>
 			and g.id =#{condition.id,jdbcType=VARCHAR}
 		</if>
@@ -96,8 +90,7 @@
 		<include refid="whereCondition" />
 	</select>
 	<select id="findList" resultMap="records">
-		select
-		g.room,
+		select		
 		g.id,
 		u.name,
 		u.parent_agent_id,
