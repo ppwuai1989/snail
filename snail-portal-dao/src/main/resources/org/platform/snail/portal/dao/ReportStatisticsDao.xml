@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.platform.snail.portal.dao.ReportStatisticsDao">
+	<resultMap id="tbReport" type="org.platform.snail.portal.model.TBGameReport">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="play_times" property="playTimes" jdbcType="CHAR" />
+		<result column="banker_times" property="bankerTimes" jdbcType="VARCHAR" />
+		<result column="chu_times" property="chuTimes" jdbcType="VARCHAR" />
+		<result column="chu_num" property="chuNum" jdbcType="VARCHAR" />
+		<result column="tian_times" property="tianTimes" jdbcType="VARCHAR" />
+		<result column="tian_num" property="tianNum" jdbcType="VARCHAR" />
+		<result column="mo_times" property="moTimes" jdbcType="VARCHAR" />
+		<result column="mo_num" property="moNum" jdbcType="VARCHAR" />
+		<result column="result_num" property="resultNum" jdbcType="VARCHAR" />
+	</resultMap>	
+
+	<sql id="tbGameStatistcsShares">
+		<![CDATA[
+		g.id,
+		COUNT(*) play_times,
+		sum(case when
+		g.is_banker='1' then 1
+		else 0
+		end) banker_times,
+		sum(case when g.chu > 0
+		then 1
+		else 0 end) chu_times,
+		sum(case when g.chu =null then 0
+		else g.chu
+		end) chu_num,
+		sum(case when
+		g.tian > 0 then 1
+		else 0 end) tian_times,
+		sum(case when g.tian =null
+		then 0
+		else g.tian end) tian_num,
+		sum(case
+		when g.mo > 0 then 1
+		else 0
+		end) mo_times,
+		sum(case when g.mo =null then
+		0
+		else g.mo end) mo_num,
+		sum(case when g.result=null then 0
+		else g.result
+		end) result_num
+		]]>
+	</sql>
+
+	<sql id="tbGameStatistcsWhereCondition">
+		<if test='condition.startDate!=null and condition.startDate!=""'>
+			<![CDATA[
+				and g.create_time>=#{condition.startDate}
+			]]>
+		</if>
+		<if test='condition.endDate!=null and condition.endDate!=""'>
+			 <![CDATA[
+				and g.create_time<=#{condition.endDate}  
+			 ]]>
+		</if>
+	</sql>
+
+	<select id="tbGameStatistcs" resultMap="tbReport">
+		select
+		s.id,
+		u.name,
+		sum(s.play_times) play_times,
+		sum(s.banker_times)
+		banker_times,
+		sum(s.chu_times) chu_times,
+		sum(s.chu_num) chu_num,
+		sum(s.tian_times) tian_times,
+		sum(s.tian_num)
+		tian_num,
+		sum(s.mo_times)
+		mo_times,
+		sum(s.mo_num) mo_num,
+		sum(s.result_num) result_num
+		from(
+		SELECT
+		<include refid="tbGameStatistcsShares" />
+		FROM t_games_tb g
+		where 1=1
+		<include refid="tbGameStatistcsWhereCondition" />
+		GROUP BY id
+		union
+		SELECT
+		<include refid="tbGameStatistcsShares" />
+		FROM
+		t_games_tb_large g
+		where 1=1
+		<include refid="tbGameStatistcsWhereCondition" />
+		GROUP BY id
+		) s,t_users u
+		where s.id=u.userid
+		<!-- agentSearch为1代表是 代理在使用 找到他的所有附属 -->
+		<if test='agentSearch=="1" and agentSearchId!=null and agentSearchId!=""'>
+			and EXISTS(
+			SELECT *
+			FROM
+			(
+			SELECT a.userid
+			FROM t_users a
+			WHERE a.parent_agent_id=${agentSearchId} UNION
+			SELECT b.userid
+			FROM
+			t_users b
+			WHERE
+			EXISTS(
+			SELECT *
+			FROM t_users c
+			WHERE
+			c.parent_agent_id=${agentSearchId} AND
+			c.agent_id=b.parent_agent_id)
+			UNION
+			SELECT d.userid
+			FROM t_users d
+			WHERE EXISTS(
+			SELECT *
+			FROM t_users b
+			WHERE EXISTS(
+			SELECT *
+			FROM t_users
+			c
+			WHERE
+			c.parent_agent_id=${agentSearchId} AND c.agent_id=b.parent_agent_id)
+			AND
+			b.agent_id=d.parent_agent_id)) r where r.userid=s.id )
+		</if>
+		group by s.id
+		<choose>
+			<when test='orderBy!=null and orderBy!=""'>
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY s.id 
+			</otherwise>
+		</choose>
+		limit #{start},#{limit}
+	</select>
+</mapper>
