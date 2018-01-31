@@ -12,7 +12,7 @@ public class PayUtils {
 
 	private static Logger logger = LogManager.getLogger();
 
-	public static String UID = "ea3ce7cfb4eadfa91009b233";
+	public static String UID = Config.getProperty("paysapi.uid");
 
 	public static String NOTIFY_URL = "http://paopao.viphk.ngrok.org/portal/openAPI/notifyPay.do";
 
@@ -20,7 +20,7 @@ public class PayUtils {
 
 	public static String BASE_URL = "https://pay.paysapi.com";
 
-	public static String TOKEN = "5e915d2667990b04bee4371ecc9dfd23";
+	public static String TOKEN = Config.getProperty("paysapi.token");
 
 	public static Map<String, Object> payOrder(Map<String, Object> remoteMap) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
