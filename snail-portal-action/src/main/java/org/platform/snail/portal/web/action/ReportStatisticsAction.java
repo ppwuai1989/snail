@@ -10,9 +10,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.platform.snail.beans.DataResponse;
 import org.platform.snail.beans.SystemUser;
-import org.platform.snail.portal.model.TopUpRecords;
-import org.platform.snail.portal.service.TopUpRecordsService;
-import org.platform.snail.portal.vo.TopUpRecordsVo;
+import org.platform.snail.portal.service.ReportStatisticsService;
+import org.platform.snail.portal.vo.TBGameReportVo;
 import org.platform.snail.utils.Page;
 import org.platform.snail.utils.SnailBeanUtils;
 import org.platform.snail.web.action.BaseController;
@@ -22,18 +21,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/topUpRecords")
-public class TopUpRecordsAction extends BaseController {
+@RequestMapping("/reportStatistics")
+public class ReportStatisticsAction extends BaseController {
 
 	private static final long serialVersionUID = 1L;
 	Logger logger = LogManager.getLogger(this.getClass());
 
 	@Autowired
-	private TopUpRecordsService topUpRecordsService;
+	private ReportStatisticsService reportService;
 
-	@RequestMapping(value = "/findRecordsList.do")
+	@RequestMapping(value = "/tb/findTBDetailReport.do")
 	@ResponseBody
-	public DataResponse findRecordsList(HttpServletRequest request, Page page) {
+	public DataResponse findTBDetailReport(HttpServletRequest request, Page page) {
 		try {
 			SystemUser systemUser = this.getSessionSystemUser();
 			Map<String, Object> condition = new HashMap<String, Object>();
@@ -43,20 +42,18 @@ public class TopUpRecordsAction extends BaseController {
 				String value = request.getParameter(key);
 				condition.put(key, value);
 			}
-			TopUpRecordsVo records = new TopUpRecordsVo();
-			SnailBeanUtils.copyMap2Bean(records, condition);
-			DataResponse rst = this.topUpRecordsService.findRecordsList(records, page.getStart(), page.getLimit(),
+			TBGameReportVo report = new TBGameReportVo();
+			SnailBeanUtils.copyMap2Bean(report, condition);
+			DataResponse rst = this.reportService.tbGameStatistics(report, page.getStart(), page.getLimit(),
 					page.getOrderBy(), systemUser);
 			if (rst.getAllRows() == null) {
 				rst.setAllRows(page.getTotalRecord());
 			}
 			return rst;
-			
+
 		} catch (Exception e) {
 			this.logger.error(e);
 			return new DataResponse(false, e.getMessage());
 		}
-
 	}
-
 }

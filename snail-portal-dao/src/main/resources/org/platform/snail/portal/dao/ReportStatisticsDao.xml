@@ -13,9 +13,9 @@
 		<result column="mo_times" property="moTimes" jdbcType="VARCHAR" />
 		<result column="mo_num" property="moNum" jdbcType="VARCHAR" />
 		<result column="result_num" property="resultNum" jdbcType="VARCHAR" />
-	</resultMap>	
+	</resultMap>
 
-	<sql id="tbGameStatistcsShares">
+	<sql id="tbGameStatisticsShares">
 		<![CDATA[
 		g.id,
 		COUNT(*) play_times,
@@ -48,7 +48,10 @@
 		]]>
 	</sql>
 
-	<sql id="tbGameStatistcsWhereCondition">
+	<sql id="tbGameStatisticsWhereCondition">
+		<if test='condition.id!=null and condition.id!=""'>			
+				and g.id=#{condition.id,jdbcType=INTEGER}  			
+		</if>
 		<if test='condition.startDate!=null and condition.startDate!=""'>
 			<![CDATA[
 				and g.create_time>=#{condition.startDate}
@@ -61,7 +64,7 @@
 		</if>
 	</sql>
 
-	<select id="tbGameStatistcs" resultMap="tbReport">
+	<sql id="tbGameStatisticsFromCondition">
 		select
 		s.id,
 		u.name,
@@ -79,21 +82,24 @@
 		sum(s.result_num) result_num
 		from(
 		SELECT
-		<include refid="tbGameStatistcsShares" />
+		<include refid="tbGameStatisticsShares" />
 		FROM t_games_tb g
 		where 1=1
-		<include refid="tbGameStatistcsWhereCondition" />
+		<include refid="tbGameStatisticsWhereCondition" />
 		GROUP BY id
 		union
 		SELECT
-		<include refid="tbGameStatistcsShares" />
+		<include refid="tbGameStatisticsShares" />
 		FROM
 		t_games_tb_large g
 		where 1=1
-		<include refid="tbGameStatistcsWhereCondition" />
+		<include refid="tbGameStatisticsWhereCondition" />
 		GROUP BY id
 		) s,t_users u
-		where s.id=u.userid
+		where s.id=u.userid	
+		<if test='condition.name!=null and condition.name!=""'>			
+				and u.name like concat(#{condition.name,jdbcType=VARCHAR} ,'%') 			
+		</if>	
 		<!-- agentSearch为1代表是 代理在使用 找到他的所有附属 -->
 		<if test='agentSearch=="1" and agentSearchId!=null and agentSearchId!=""'>
 			and EXISTS(
@@ -129,12 +135,21 @@
 			b.agent_id=d.parent_agent_id)) r where r.userid=s.id )
 		</if>
 		group by s.id
+	</sql>
+
+	<select id="tbGameStatisticsCount" resultType="int">
+		select count(*) from(
+		<include refid="tbGameStatisticsFromCondition" />
+		) c
+	</select>
+	<select id="tbGameStatistics" resultMap="tbReport">
+		<include refid="tbGameStatisticsFromCondition" />		
 		<choose>
 			<when test='orderBy!=null and orderBy!=""'>
 				ORDER BY ${orderBy}
 			</when>
 			<otherwise>
-				ORDER BY s.id 
+				ORDER BY s.id
 			</otherwise>
 		</choose>
 		limit #{start},#{limit}
