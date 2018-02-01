@@ -200,6 +200,7 @@ public class MemberServiceImpl implements MemberService {
 			memberVo.setHeadImg(userInfo.getHeadimgurl());
 			memberVo.setPrivilege(userInfo.getPrivilege());
 			int update = this.memberDao.updateMemberUserInfoByUserId(memberVo);
+			System.out.println("id为[" + memberVo.getUserId() + "]的用户[" + memberVo.getName() + "]登录成功!");
 			rst.setState(true);
 			rst.setErrorMessage("用户登录成功！");
 			rst.setResponse(memberVo);
