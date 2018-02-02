@@ -29,7 +29,7 @@ var _colModel = function() {
 		width : 250,
 		editable : true,
 		editoptions : {
-			size : "20",
+			size : "60",
 			maxlength : "250"
 		}
 	},  {

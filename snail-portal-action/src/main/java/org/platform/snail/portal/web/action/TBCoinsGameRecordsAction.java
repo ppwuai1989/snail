@@ -47,6 +47,9 @@ public class TBCoinsGameRecordsAction extends BaseController {
 			SnailBeanUtils.copyMap2Bean(records, condition);
 			DataResponse rst = this.recordsService.findRecordsList(records, page.getStart(), page.getLimit(),
 					page.getOrderBy(), systemUser);
+			if (rst.getAllRows() == null) {
+				rst.setAllRows(page.getTotalRecord());
+			}
 			return rst;
 		} catch (Exception e) {
 			this.logger.error(e);

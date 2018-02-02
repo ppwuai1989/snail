@@ -18,6 +18,7 @@ import org.platform.snail.portal.vo.AgentVo;
 import org.platform.snail.portal.vo.MemberVo;
 import org.platform.snail.service.DataBaseLogService;
 import org.platform.snail.utils.CommonKeys;
+import org.platform.snail.utils.ImgUtils;
 import org.platform.snail.utils.SnailBeanUtils;
 import org.platform.snail.utils.SnailUtils;
 import org.platform.snail.weixin.model.UserInfo;
@@ -67,7 +68,17 @@ public class MemberServiceImpl implements MemberService {
 				isSearch = "1";
 			}
 		}
+		//long before = System.currentTimeMillis();
 		List<MemberVo> list = this.memberDao.findUsersList(condition, start, start + limit, orderBy, isSearch, agentId);
+//		long middle = System.currentTimeMillis();
+//		System.out.println("查询时间：[" + (middle - before) + "]毫秒");
+		for (MemberVo i : list) {
+			if (i.getHeadImg().indexOf("wx.qlogo.cn") < 0 && i.getHeadImg().indexOf("open.weixin.qq.com") < 0) {
+				i.setHeadImg(ImgUtils.getBase64ImgString(i.getHeadImg()));
+			}			
+		}
+		// long after = System.currentTimeMillis();
+		// System.out.println("转换图片时间：[" + (after - middle) + "]毫秒");
 		rst.setList(list);
 		if (start <= 1) {
 			int allRows = this.memberDao.findUsersCount(condition, isSearch, agentId);
@@ -186,8 +197,8 @@ public class MemberServiceImpl implements MemberService {
 	public DataResponse userLoginOrRegister(UserInfo userInfo) throws Exception {
 		DataResponse rst = new DataResponse();
 		int isExit = this.memberDao.isExitUsersUnionId(userInfo.getUnionid());
-		MemberVo memberVo = new MemberVo();
 		if (isExit > 0) {
+			MemberVo memberVo = new MemberVo();
 			memberVo = this.memberDao.selectMemberByUnionId(userInfo.getUnionid());
 			// 更新用户微信的信息和登录时间
 			memberVo.setWeChatId(userInfo.getOpenid());
@@ -203,6 +214,7 @@ public class MemberServiceImpl implements MemberService {
 			System.out.println("id为[" + memberVo.getUserId() + "]的用户[" + memberVo.getName() + "]登录成功!");
 			rst.setState(true);
 			rst.setErrorMessage("用户登录成功！");
+			memberVo.setHeadImg(ImgUtils.getBase64ImgString(memberVo.getHeadImg()));// 返回可跨域图片
 			rst.setResponse(memberVo);
 		} else {
 			Member member = new Member();
@@ -228,6 +240,7 @@ public class MemberServiceImpl implements MemberService {
 			member.setUnionId(userInfo.getUnionid());
 			int insert = this.memberDao.registerMemberByWeChat(member);
 			if (insert > 0) {
+				member.setHeadImg(ImgUtils.getBase64ImgString(member.getHeadImg()));
 				rst.setResponse(member);
 				rst.setErrorMessage("注册成功！");
 				rst.setState(true);

@@ -11,8 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.platfom.snail.pay.model.PaySaPi;
 import org.platform.snail.beans.DataResponse;
 import org.platform.snail.portal.service.OpenAPIService;
+import org.platform.snail.utils.ImgUtils;
 import org.platform.snail.utils.PayUtils;
-
+import org.platform.snail.utils.SnailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -32,7 +33,12 @@ public class OpenAPIAction implements Serializable {
 	@Autowired
 	private OpenAPIService openAPIService;
 
-	// 创建订单，返回订单信息，编号等
+	/**
+	 * 创建订单，返回订单信息，编号等
+	 * 
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "/pay.do")
 	@ResponseBody
 	public DataResponse pay(HttpServletRequest request) {
@@ -47,7 +53,7 @@ public class OpenAPIAction implements Serializable {
 				String value = request.getParameter(key);
 				remoteMap.put(key, value);
 			}
-			remoteMap.put("orderid", PayUtils.getOrderIdByUUId());			
+			remoteMap.put("orderid", PayUtils.getOrderIdByUUId());
 			resultMap.put("data", PayUtils.payOrder(remoteMap));
 			if (this.openAPIService.createOrder(remoteMap)) {
 				dr.setResponse(resultMap);
@@ -57,11 +63,17 @@ public class OpenAPIAction implements Serializable {
 				return new DataResponse(false, "创建订单失败！");
 			}
 		} catch (Exception e) {
-
 			return new DataResponse(false, "出错了！：" + e.getMessage());
 		}
 	}
 
+	/**
+	 * 验证订单支付回调, 更新订单信息
+	 * 
+	 * @param request
+	 * @param response
+	 * @param paySaPi
+	 */
 	@RequestMapping(value = "/notifyPay.do", method = RequestMethod.POST)
 	public void notifyPay(HttpServletRequest request, HttpServletResponse response, PaySaPi paySaPi) {
 		// 保证密钥一致性
@@ -80,6 +92,14 @@ public class OpenAPIAction implements Serializable {
 
 	}
 
+	/**
+	 * 获取订单状态
+	 * 
+	 * @param request
+	 * @param response
+	 * @param orderid
+	 * @return
+	 */
 	@RequestMapping("/getOrderStatus.do")
 	@ResponseBody
 	public DataResponse getOrderStatus(HttpServletRequest request, HttpServletResponse response, String orderid) {
@@ -93,4 +113,16 @@ public class OpenAPIAction implements Serializable {
 		}
 		return dr;
 	}
+
+	@RequestMapping("/getBase64Img.do")
+	@ResponseBody
+	public String getBase64Img(String url) {
+		String rst = "";
+		if (SnailUtils.isBlankString(url)) {
+			return rst;
+		}
+		rst = ImgUtils.getBase64ImgString(url);
+		return rst;
+	}
+
 }
