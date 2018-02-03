@@ -248,7 +248,7 @@ public class MemberServiceImpl implements MemberService {
 				rst.setErrorMessage("注册成功！");
 				rst.setState(true);
 				this.dataBaseLogService.log("Id为[" + member.getUserId() + "]的用户[" + member.getName() + "]\r\n注册了游戏！",
-						"注册", "", member.toString(), "游戏管理-会员管理", null);
+						"注册", "", "", "游戏管理-会员管理", null);
 			} else {
 				rst.setErrorMessage("未注册成功！");
 				rst.setState(false);
