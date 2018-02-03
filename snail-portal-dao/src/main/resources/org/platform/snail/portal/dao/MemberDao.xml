@@ -44,6 +44,9 @@
 	</select>
 	<sql id="usersPagingWhereCondition">
 		from T_USERS t where 1=1
+		<if test='condition.userId !=null and condition.userId!=""'>
+			and t.userid =#{condition.userId,jdbcType=VARCHAR}
+		</if>
 		<if test='condition.status!=null and condition.status!=""'>
 			and t.status =#{condition.status,jdbcType=VARCHAR}
 		</if>

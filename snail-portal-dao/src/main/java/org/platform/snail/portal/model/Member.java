@@ -147,7 +147,7 @@ public class Member implements Serializable {
 
 	public void setHeadImg(String headImg) {
 		if (SnailUtils.isBlankString(headImg)) {
-			this.headImg = "https://open.weixin.qq.com/zh_CN/htmledition/res/assets/res-design-download/icon32_appwx_logo.png";
+			//this.headImg = "https://open.weixin.qq.com/zh_CN/htmledition/res/assets/res-design-download/icon32_appwx_logo.png";
 		} else {
 			this.headImg = headImg;
 		}

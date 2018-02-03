@@ -277,6 +277,9 @@ public class MemberServiceImpl implements MemberService {
 			agentSearchVo = this.memberDao.selectMemberVoByAgentId(agentSearchVo.getAgentId());
 			memberSearchVo.setUserId(topUpInfo.getUserId());
 			memberSearchVo = this.memberDao.selectMemberVoByPrimaryKey(memberSearchVo.getUserId());
+			if(SnailUtils.isNotBlankString(memberSearchVo.getRoomId())){
+				return new DataResponse(false,"该玩家正在房间游戏中，请退出房间后再充值！");
+			}
 			String agentCoins = agentSearchVo.getCoins();
 			String agentGems = agentSearchVo.getGems();
 			String agentPkCard = agentSearchVo.getPkCard();
@@ -328,6 +331,9 @@ public class MemberServiceImpl implements MemberService {
 			MemberVo memberUpdateVo = new MemberVo();
 			memberSearchVo.setUserId(topUpInfo.getUserId());
 			memberSearchVo = this.memberDao.selectMemberVoByPrimaryKey(memberSearchVo.getUserId());
+			if(SnailUtils.isNotBlankString(memberSearchVo.getRoomId())){
+				return new DataResponse(false,"该玩家正在房间游戏中，请退出房间后再充值！");
+			}
 			String memberCoins = memberSearchVo.getCoins();
 			String memberGems = memberSearchVo.getGems();
 			String memeberPkCard = memberSearchVo.getPkCard();

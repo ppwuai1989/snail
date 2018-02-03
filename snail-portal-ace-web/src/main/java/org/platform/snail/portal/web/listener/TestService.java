@@ -4,21 +4,30 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.util.Base64;
+import org.platfom.snail.pay.model.QRCodeMsg;
 import org.platform.snail.portal.dao.ReportStatisticsDao;
 import org.platform.snail.portal.model.TBGameReport;
 import org.platform.snail.portal.vo.TBGameReportVo;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
+
+import net.sf.json.JSONObject;
+
+import org.platform.snail.utils.HttpClientUtils;
 import org.platform.snail.utils.ImgUtils;
+import org.platform.snail.utils.PayUtils;
+import org.platform.snail.utils.SnailBeanUtils;
 
 /**
  * @author paopao 测试类 可以做单元测试
@@ -28,15 +37,60 @@ public class TestService {
 
 	public static void main(String[] args) {
 
-		// 抓取图片
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("uid", "6dc7af43978a4029302c7e5b");
+		paramMap.put("price", Float.valueOf("6.00"));
+		paramMap.put("istype", Integer.valueOf("2"));
+		paramMap.put("notify_url", "http://paopao.viphk.ngrok.org/portal/openAPI/notifyPay.do");
+		paramMap.put("return_url", "http://tb.n0b16.cn/payResult.html");
+		paramMap.put("orderid", "1235781545654");
+		paramMap.put("orderuid", "10000026");
+		paramMap.put("goodsname", "1");
+		paramMap.put("key", PayUtils.getKey(paramMap));
+
+		String url = "https://pay.paysapi.com/?format=json";
+		String param = "&uid=6dc7af43978a4029302c7e5b&price=6.00&istype=2"
+				+ "&notify_url=http://paopao.viphk.ngrok.org/portal/openAPI/notifyPay.do"
+				+ "&return_url=http://tb.n0b16.cn/payResult.html" + "&orderid=1235781545654"
+				+ "&orderuid=10000026&goodsname=1&key=" + PayUtils.getKey(paramMap);
 		try {
-			String imgUrl = "http://img2.woyaogexing.com/2018/01/03/671b684da4231b7b!400x400_big.jpg";			
-			String rst = ImgUtils.getBase64ImgString(imgUrl);
-			System.out.println(rst);
-		} catch (Exception e) {			
-			System.out.println(e.getMessage());
+			String i = HttpClientUtils.doPost(url, param);
+			System.out.println(i);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		// 测试json
+		// String jsons = "{" + "'msg':'付款即时到账 未到账可联系我们'," + "'data':{"
+		// + "'qrcode':'HTTPS://QR.ALIPAY.COM/FKX08406GFWYYSF0YRNC10'," +
+		// "'istype':'1'," + "'realprice':0.05"
+		// + "}," + "'code':1," + "'url':'https://www.paysapi.com/'" + "}";
+		// JSONObject json = JSONObject.fromObject(jsons);
+		// System.out.println(json);
+		// System.out.println(json.toString());
+		// QRCodeMsg msg = new QRCodeMsg();
+		// try {
+		// SnailBeanUtils.copyProperties(msg, json);
+		// msg.setDataMsg(msg.getDataMsg(msg.getData()));
+		// } catch (InvocationTargetException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IllegalAccessException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+
+		// 抓取图片
+		// try {
+		// String imgUrl =
+		// "http://img2.woyaogexing.com/2018/01/03/671b684da4231b7b!400x400_big.jpg";
+		// String rst = ImgUtils.getBase64ImgString(imgUrl);
+		// System.out.println(rst);
+		// } catch (Exception e) {
+		// System.out.println(e.getMessage());
+		// e.printStackTrace();
+		// }
 
 		// 报表单元测试
 		// ApplicationContext ac = new
