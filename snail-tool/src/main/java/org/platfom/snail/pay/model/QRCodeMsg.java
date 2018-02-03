@@ -5,6 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.platform.snail.utils.ImgUtils;
+import org.platform.snail.utils.PayUtils;
 import org.platform.snail.utils.SnailBeanUtils;
 
 import net.sf.json.JSONObject;
@@ -18,6 +20,8 @@ public class QRCodeMsg implements Serializable {
 	private String code;
 
 	private String url;
+	
+	private String orderid;
 
 	public String getMsg() {
 		return msg;
@@ -52,12 +56,14 @@ public class QRCodeMsg implements Serializable {
 	public void setData(String data) {
 		this.data = data;
 	}
-	
+
 	private data dataMsg;
 
-	/**通过传入的json字符串 赋值给该类
+	/**
+	 * 通过传入的json字符串 赋值给该类
+	 * 
 	 * @param data
-	 * @return 
+	 * @return
 	 */
 	public data getDataMsg(String data) {
 		data d = new data();
@@ -97,7 +103,7 @@ public class QRCodeMsg implements Serializable {
 		}
 
 		public void setQrcode(String qrcode) {
-			this.qrcode = qrcode;
+			this.qrcode = ImgUtils.getBase64ImgString(PayUtils.QRCODE_URL + qrcode).replaceAll("\n", "").replaceAll("\r", "");
 		}
 
 		public String getIstype() {
@@ -116,6 +122,25 @@ public class QRCodeMsg implements Serializable {
 			this.realprice = realprice;
 		}
 
+		@Override
+		public String toString() {
+			return "data [qrcode=" + qrcode + ", istype=" + istype + ", realprice=" + realprice + "]";
+		}
+
+	}
+
+	@Override
+	public String toString() {
+		return "QRCodeMsg [msg=" + msg + ", code=" + code + ", url=" + url + ", data=" + data + ", dataMsg="
+				+ dataMsg.toString() + "]";
+	}
+
+	public String getOrderid() {
+		return orderid;
+	}
+
+	public void setOrderid(String orderid) {
+		this.orderid = orderid;
 	}
 
 }

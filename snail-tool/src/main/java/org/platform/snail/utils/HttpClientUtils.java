@@ -1,6 +1,7 @@
 package org.platform.snail.utils;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -102,7 +103,7 @@ public class HttpClientUtils {
 	}
 
 	/**
-	 * 
+	 * 请求方式https，curl
 	 * 
 	 * @param url
 	 *            https://
@@ -110,10 +111,11 @@ public class HttpClientUtils {
 	 *            的形式。
 	 * @return
 	 */
-	public static String doPost(String url, String param) throws Exception {
+	public static String doPost(String url, String json) throws Exception {
 		// PrintWriter out = null;
 		trustAll();
-		OutputStreamWriter out = null;
+		//DataOutputStream  out = null;
+		OutputStreamWriter out= null;
 		BufferedReader in = null;
 		String result = "";
 		try {
@@ -124,24 +126,15 @@ public class HttpClientUtils {
 			conn.setDoOutput(true);
 			conn.setDoInput(true);
 			conn.setUseCaches(false);
-			conn.setRequestProperty("Connection", "Keep-Alive");
-			conn.setRequestProperty("Charset", "UTF-8");
-			// 设置文件类型:
+			conn.setRequestProperty("Connection", "Keep-Alive");				
 			conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
 			// 发送POST请求必须设置如下两行
 			conn.setDoOutput(true);
-			conn.setDoInput(true);
-			// 获取URLConnection对象对应的输出流
-			out = new OutputStreamWriter(conn.getOutputStream(), "utf-8");
-			out.write(param);
+			conn.setDoInput(true);			
+			out= new OutputStreamWriter(conn.getOutputStream());
+			out.write(json.toString());
 			out.flush();
-			out.close();
-			// out = new PrintWriter(conn.getOutputStream());
-			// 发送请求参数
-			// out.print(param);
-			// // flush输出流的缓冲
-			// out.flush();
-			// 定义BufferedReader输入流来读取URL的响应
+			out.close();		
 			in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String line;
 			while ((line = in.readLine()) != null) {

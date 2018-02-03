@@ -9,10 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.platfom.snail.pay.model.PaySaPi;
+import org.platfom.snail.pay.model.QRCodeMsg;
 import org.platform.snail.beans.DataResponse;
 import org.platform.snail.portal.service.OpenAPIService;
+import org.platform.snail.utils.HttpClientUtils;
 import org.platform.snail.utils.ImgUtils;
 import org.platform.snail.utils.PayUtils;
+import org.platform.snail.utils.SnailBeanUtils;
 import org.platform.snail.utils.SnailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +23,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.sf.json.JSONObject;
 
@@ -54,10 +59,16 @@ public class OpenAPIAction implements Serializable {
 				remoteMap.put(key, value);
 			}
 			remoteMap.put("orderid", PayUtils.getOrderIdByUUId());
-			resultMap.put("data", PayUtils.payOrder(remoteMap));
+			resultMap = PayUtils.payOrder(remoteMap);
 			if (this.openAPIService.createOrder(remoteMap)) {
-				
-				dr.setResponse(resultMap);
+				ObjectMapper mapper = new ObjectMapper();
+				String jsonReq = mapper.writeValueAsString(resultMap);
+				String jsonRes = HttpClientUtils.doPost(PayUtils.BASE_URL, jsonReq);	
+				JSONObject jsonObj = JSONObject.fromObject(jsonRes);	
+				QRCodeMsg msg = new QRCodeMsg();
+				SnailBeanUtils.copyProperties(msg, jsonObj);	
+				msg.setDataMsg(msg.getDataMsg(msg.getData()));				
+				dr.setResponse(msg);
 				dr.setState(true);
 				return dr;
 			} else {

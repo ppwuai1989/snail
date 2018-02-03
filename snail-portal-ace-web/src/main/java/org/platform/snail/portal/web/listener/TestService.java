@@ -22,6 +22,9 @@ import org.platform.snail.portal.vo.TBGameReportVo;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import net.sf.json.JSONObject;
 
 import org.platform.snail.utils.HttpClientUtils;
@@ -39,7 +42,7 @@ public class TestService {
 
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("uid", "6dc7af43978a4029302c7e5b");
-		paramMap.put("price", Float.valueOf("6.00"));
+		paramMap.put("price", "6.00");
 		paramMap.put("istype", Integer.valueOf("2"));
 		paramMap.put("notify_url", "http://paopao.viphk.ngrok.org/portal/openAPI/notifyPay.do");
 		paramMap.put("return_url", "http://tb.n0b16.cn/payResult.html");
@@ -47,15 +50,19 @@ public class TestService {
 		paramMap.put("orderuid", "10000026");
 		paramMap.put("goodsname", "1");
 		paramMap.put("key", PayUtils.getKey(paramMap));
-
-		String url = "https://pay.paysapi.com/?format=json";
-		String param = "&uid=6dc7af43978a4029302c7e5b&price=6.00&istype=2"
-				+ "&notify_url=http://paopao.viphk.ngrok.org/portal/openAPI/notifyPay.do"
-				+ "&return_url=http://tb.n0b16.cn/payResult.html" + "&orderid=1235781545654"
-				+ "&orderuid=10000026&goodsname=1&key=" + PayUtils.getKey(paramMap);
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonObject;
 		try {
-			String i = HttpClientUtils.doPost(url, param);
-			System.out.println(i);
+			jsonObject = mapper.writeValueAsString(paramMap);
+			String url = "https://pay.paysapi.com/?format=json";			
+
+			// String i = HttpClientUtils.doPost(url, param);
+			String jsons = HttpClientUtils.doPost(url, jsonObject);			
+			JSONObject json = JSONObject.fromObject(jsons);		
+			QRCodeMsg msg = new QRCodeMsg();
+			SnailBeanUtils.copyProperties(msg, json);			
+			msg.setDataMsg(msg.getDataMsg(msg.getData()));
+			System.out.println(msg.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

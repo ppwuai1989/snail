@@ -14,13 +14,15 @@ public class PayUtils {
 
 	public static String UID = Config.getProperty("paysapi.uid");
 
-	public static String NOTIFY_URL = "http://paopao.viphk.ngrok.org/portal/openAPI/notifyPay.do";
+	public static String NOTIFY_URL = Config.getProperty("paysapi.notify_url");
 
-	public static String RETURN_URL = "http://tb.n0b16.cn/payResult.html";
-
-	public static String BASE_URL = "https://pay.paysapi.com";
+	public static String RETURN_URL = Config.getProperty("paysapi.return_url");
 
 	public static String TOKEN = Config.getProperty("paysapi.token");
+
+	public static String QRCODE_URL = Config.getProperty("paysapi.qrcode_url");
+
+	public static String BASE_URL = Config.getProperty("paysapi.base_url");;
 
 	public static Map<String, Object> payOrder(Map<String, Object> remoteMap) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -64,7 +66,7 @@ public class PayUtils {
 
 	public static boolean checkPayKey(PaySaPi paySaPi) {
 		String key = "";
-		
+
 		if (!SnailUtils.isBlankString(paySaPi.getOrderid())) {
 			logger.info("支付回来的订单号：" + paySaPi.getOrderid());
 			key += paySaPi.getOrderid();
@@ -90,7 +92,7 @@ public class PayUtils {
 		logger.info("我们自己拼接的Key：" + SnailUtils.getMd5(key));
 		return paySaPi.getKey().equals(SnailUtils.getMd5(key));
 	}
-	
+
 	public static String getOrderIdByUUId() {
 		int machineId = 1;// 最大支持1-9个集群机器部署
 		int hashCodeV = UUID.randomUUID().toString().hashCode();

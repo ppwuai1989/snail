@@ -29,7 +29,7 @@ public class OpenAPIActionServiceImpl implements OpenAPIService {
 		TopUpRecords records = new TopUpRecords();
 		if (SnailUtils.isBlank(order)) {
 			return false;
-		} else {// orderuid=10000026&orderuname=paopao&goodsname=1&amount=60000&price=6
+		} else {// orderuid=10000026&orderuname=paopao&goodsname=1&amount=60000&price=6.00&istype=2
 			String userId = String.valueOf(order.get("orderuid"));
 			String userName = String.valueOf(order.get("orderuname"));
 			String goodsName = String.valueOf(order.get("goodsname"));

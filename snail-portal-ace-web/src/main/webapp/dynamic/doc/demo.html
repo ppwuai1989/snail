@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="referrer" content="no-referrer" />
+<script src="http://libs.baidu.com/jquery/2.1.1/jquery.min.js"
+	type="text/javascript"></script>
+<script src="http://www.gongjuji.net/Content/files/jquery.md5.js"
+	type="text/javascript"></script>
+<title>Insert title here</title>
+</head>
+<body>
+	<input type="text"  style="width: 150px;" id="imgUrl" ></input>
+	<input type="button" style="width: 150px;" id="login">登录
+	</input>	
+	<img src=""  id="img1"/>
+</body>
+<script type="text/javascript">
+	/* $(document).ready(function() {
+		var code = getQueryString("code");
+		alert(code);
+	}) */
+	var oBtn = document.getElementById('login');
+	oBtn.addEventListener('click', function() {
+		/* 	var paySaPi = {
+		 paysapi_id : "abcdefghijklmnopqrstuv01",
+		 orderid : "1665812499",
+		 price : "6.00",
+		 realprice : "6.02",
+		 orderuid : "10000026",
+		 key : ""
+		 };
+		 token = "5e915d2667990b04bee4371ecc9dfd23";		
+		 var a = paySaPi.orderid + paySaPi.orderuid + paySaPi.paysapi_id
+		 + paySaPi.price + paySaPi.realprice + token;
+		 paySaPi.key = $.md5(a);
+		 var url = "http://paopao.viphk.ngrok.org/portal/openAPI/notifyPay.do";
+		 $.ajax({
+		 type : "POST",
+		 url : url,
+		 contentType : "application/json; charset=utf-8",
+		 data : JSON.stringify(paySaPi),
+		 dataType : "json",
+		 success : function(message) {
+		 if (message > 0) {
+		 alert("请求已提交！我们会尽快与您取得联系");
+		 }
+		 },
+		 error : function(message) {
+		 $("#request-process-patent").html("提交数据失败！");
+		 }
+		 }); */
+		
+		var url = "http://127.0.0.1:8092/portal/openAPI/pay.do?orderuid=10000026&orderuname=paopao&goodsname=1&amount=60000&price=6.00&istype=2";
+		var param=$("#imgUrl").val();
+			url+=param;
+		$.ajax({
+		 type : "GET",
+		 url : url,
+		 contentType : "charset=utf-8",		
+		 dataType : "text",
+		 success : function(rst,state,obj) {
+		 if($("#img2").length < 1){
+		 $("#img1").after("<img src='"+JSON.parse(rst).response.dataMsg.qrcode+"' id='img2' >");
+		 }else{
+			$("#img2").attr("src",JSON.parse(rst).response.dataMsg.qrcode);
+		 }			
+		 }});
+
+	}, false)
+
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null)
+			return unescape(r[2]);
+		return null;
+	}
+
+	var Ajax = {
+		get : function(url, fn) {
+			var obj = new XMLHttpRequest(); // XMLHttpRequest对象用于在后台与服务器交换数据          
+			obj.open('GET', url, true);
+			obj.onreadystatechange = function() {
+				if (obj.readyState == 4 && obj.status == 200
+						|| obj.status == 304) { // readyState == 4说明请求已完成
+					fn.call(this, JSON.parse(obj.responseText),state,res); //从服务器获得数据
+				}
+			};
+			obj.send();
+		},
+		post : function(url, data, fn) { // datat应为'a=a1&b=b1'这种字符串格式，在jq里如果data为对象会自动将对象转成这种字符串格式
+			var obj = new XMLHttpRequest();
+			obj.open("POST", url, true);
+			obj.setRequestHeader("Content-type",
+					"application/x-www-form-urlencoded"); // 添加http头，发送信息至服务器时内容编码类型
+			obj.onreadystatechange = function() {
+				if (obj.readyState == 4
+						&& (obj.status == 200 || obj.status == 304)) { // 304未修改
+					fn.call(this, JSON.parse(obj.responseText));
+				}
+			};
+			obj.send(data);
+		}
+	}
+	
+	function convertNullToZero(num){
+		if(!num){
+		return 0;
+		}
+		return num
+	}
+
+	//window.onload = getCode;
+</script>
+</html>
