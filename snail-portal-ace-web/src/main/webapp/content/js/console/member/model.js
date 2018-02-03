@@ -123,6 +123,7 @@ var _colModel = function() {
 				name : 'headImg',
 				width : 32,
 				editable : true,
+				title:false,
 				editoptions : {
 					readonly : true
 				},

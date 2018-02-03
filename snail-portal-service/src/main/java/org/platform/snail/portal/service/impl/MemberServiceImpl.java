@@ -68,14 +68,17 @@ public class MemberServiceImpl implements MemberService {
 				isSearch = "1";
 			}
 		}
-		//long before = System.currentTimeMillis();
+		// long before = System.currentTimeMillis();
 		List<MemberVo> list = this.memberDao.findUsersList(condition, start, start + limit, orderBy, isSearch, agentId);
-//		long middle = System.currentTimeMillis();
-//		System.out.println("查询时间：[" + (middle - before) + "]毫秒");
+		// long middle = System.currentTimeMillis();
+		// System.out.println("查询时间：[" + (middle - before) + "]毫秒");
 		for (MemberVo i : list) {
+			if(SnailUtils.isBlankString(i.getHeadImg())){
+				i.setHeadImg("https://open.weixin.qq.com/zh_CN/htmledition/res/assets/res-design-download/icon32_appwx_logo.png");
+			}			
 			if (i.getHeadImg().indexOf("wx.qlogo.cn") < 0 && i.getHeadImg().indexOf("open.weixin.qq.com") < 0) {
 				i.setHeadImg(ImgUtils.getBase64ImgString(i.getHeadImg()));
-			}			
+			}
 		}
 		// long after = System.currentTimeMillis();
 		// System.out.println("转换图片时间：[" + (after - middle) + "]毫秒");
