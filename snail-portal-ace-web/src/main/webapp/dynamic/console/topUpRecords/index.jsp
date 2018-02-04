@@ -95,18 +95,18 @@
 			$("#topUpWay").combobox("loadData", themecombo2);
 
 			//支付状态
-			var status=odparse("STATIC_DATA_08").split(';');
+			var payStatus=odparse("STATIC_DATA_08").split(';');
 			var themeComboStatus = [ {
 				'text' : '全部',
 				'value' : ''
 			} ];
-			for (var i = 0; i < status.length; i++) {
+			for (var i = 0; i < payStatus.length; i++) {
 				themeComboStatus.push({
-					"text" : status[i].split(':')[1],
-					"value" : status[i].split(':')[0]
+					"text" : payStatus[i].split(':')[1],
+					"value" : payStatus[i].split(':')[0]
 				});
 			}
-			$("#status").combobox("loadData", themeComboStatus);
+			$("#payStatus").combobox("loadData", themeComboStatus);
 		})
 		window.onresize = function() {
 			console.log('autoWidthJqgrid');
