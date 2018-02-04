@@ -226,8 +226,8 @@ var _colModel = function() {
 				editable : false,
 				formatter : 'date',
 				formatoptions : {
-					srcformat : 'Y-m-d h:i:s',
-					newformat : 'Y-m-d h:i:s'
+					srcformat : 'Y-m-d H:i:s',
+					newformat : 'Y-m-d H:i:s'
 				}
 			}, {
 				name : 'weChatId',
@@ -249,8 +249,8 @@ var _colModel = function() {
 					readonly : true
 				},
 				formatoptions : {
-					srcformat : 'Y-m-d h:i:s',
-					newformat : 'Y-m-d h:i:s'
+					srcformat : 'Y-m-d H:i:s',
+					newformat : 'Y-m-d H:i:s'
 				}
 			} ];
 }

@@ -91,9 +91,7 @@
 												<button type="submit" id="btn-login-submit"
 													class="width-35 pull-right btn btn-sm btn-primary">
 													<i class="ace-icon fa fa-key"></i> <span class="bigger-110">登录</span>
-												</button>
-												<a
-													href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxe96bbd4187ab4e71&redirect_uri=http://paopao.viphk.ngrok.org/portal/weChat/weChatLogin.do&response_type=code&scope=snsapi_userinfo#wechat_redirect">微信登录</a>
+												</button>												
 											</div>
 
 											<div class="space-4"></div>

@@ -51,14 +51,14 @@ var _colModel = function() {
 				name : 'publishTime',
 				width : 120,
 				formatter:'date',
-				formatoptions:{srcformat:'Y-m-d h:i:s',newformat: 'Y-m-d h:i:s'},
+				formatoptions:{srcformat:'Y-m-d H:i:s',newformat: 'Y-m-d H:i:s'},
 				sortable : true,
 				editable : false
 			}, {
 				name : 'deadline',
 				width : 120,
 				formatter:'date',
-				formatoptions:{srcformat:'Y-m-d h:i:s',newformat: 'Y-m-d h:i:s'},
+				formatoptions:{srcformat:'Y-m-d H:i:s',newformat: 'Y-m-d H:i:s'},
 				sortable : true,
 				editable : false
 			} ];

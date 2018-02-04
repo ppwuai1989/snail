@@ -24,7 +24,7 @@ var _colModel = function() {
 		sortable : true,
 		editable : false,
 		formatter:'date',
-		formatoptions:{srcformat:'Y-m-d h:i:s',newformat: 'Y-m-d h:i:s'}
+		formatoptions:{srcformat:'Y-m-d H:i:s',newformat: 'Y-m-d H:i:s'}
 	}, {
 		name : 'remark',
 		index : 'remark',
