@@ -61,18 +61,9 @@
 								<span class="line-height-1 smaller-90">系统状态</span>
 							</span> <span class="btn btn-app btn-sm btn-grey no-hover"
 								style="width: auto; min-width: 80px; display: none;"> <span
-								class="line-height-1 bigger-170" id="switch-leftTime-0" name="switch-leftTime"></span> <br>
-								<span class="line-height-1 smaller-90">下次转换时间</span>
-							</span>
-							<span class="btn btn-app btn-sm btn-grey no-hover"
-								style="width: auto; min-width: 80px; display: none;"> <span
-								class="line-height-1 bigger-170" id="switch-leftTime-1" name="switch-leftTime"></span> <br>
-								<span class="line-height-1 smaller-90">下次转换时间</span>
-							</span>
-							<span class="btn btn-app btn-sm btn-grey no-hover"
-								style="width: auto; min-width: 80px; display: none;"> <span
-								class="line-height-1 bigger-170" id="switch-leftTime-2" name="switch-leftTime"></span> <br>
-								<span class="line-height-1 smaller-90">下次转换时间</span>
+								class="line-height-1 bigger-170" id="switch-leftTime"
+								name="switch-leftTime"></span> <br> <span
+								class="line-height-1 smaller-90">下次转换时间</span>
 							</span>
 						</div>
 					</form>
@@ -126,6 +117,7 @@
 		}
 	</script>
 	<script type="text/javascript">
+		var leftTimer = null;
 		$(document).ready(function() {
 			//游戏类型
 			var gameType = odparse("STATIC_DATA_09").split(';');
@@ -159,70 +151,70 @@
 			/*加载或更新系统状态信息begin*/
 			getSystemState("");
 			$("#system-gameType").combobox({
-				onSelect:function(e){
+				onSelect : function(e) {
 					getSystemState(e.value);
 				}
-			});			
+			});
 			/*加载或更新系统状态信息end*/
 		});
-		function getSystemState(type){
-			$.ajax({
-				url:'${pageContext.request.contextPath}/gameControl/selectSystemState.do?gameType='+type,
-				type : 'get',
-				success: function(rst){
-					if(rst.state==true){
-						$("#system-income").text(rst.response.income);
-						if(rst.response.gameType!=null&&rst.response.gameType!=""){
-							var stateText="";
-							if(rst.response.state=='1'){
-								stateText='放水期';
-							}else{
-								stateText='蓄水期';
-							}									
-							$("#system-state").text(stateText);										
-							var leftTime=rst.response.nextSwitchTime/1000;											
-							getLeftTime(rst.response.gameType,leftTime);	
-							$("#system-state").parent().show();
-							
+		function getSystemState(type) {
+			$
+					.ajax({
+						url : '${pageContext.request.contextPath}/gameControl/selectSystemState.do?gameType='
+								+ type,
+						type : 'get',
+						success : function(rst) {
+							if (rst.state == true) {
+								$("#system-income").text(rst.response.income);
+								if (rst.response.gameType != null
+										&& rst.response.gameType != "") {
+									var stateText = "";
+									if (rst.response.state == '1') {
+										stateText = '放水期';
+									} else {
+										stateText = '蓄水期';
+									}
+									$("#system-state").text(stateText);
+									var leftTime = rst.response.nextSwitchTime / 1000;
+									getLeftTime(leftTime);
+									$("#system-state").parent().show();
+									$("#switch-leftTime").parent().show();
+								} else {
+									$("#system-state").parent().hide();
+									$("#switch-leftTime").parent().hide();
+								}
+							}
 						}
-						else{									
-							$("#system-state").parent().hide();
-							$("span[name='switch-leftTime']").parent().hide();
-						}
-					}							
-				}
-			});	
+					});
 		}
-		function getLeftTime(which,count) {
-			which="#switch-leftTime-"+which;
+		function getLeftTime(count) {
+			window.clearInterval(leftTimer);
+			var which = "#switch-leftTime";
 			$(which).text(timeMaker(count));
-			$("span[name='switch-leftTime']").parent().hide();
-			$(which).parent().show();
-			 window.setInterval(function() {		
+			leftTimer = window.setInterval(function() {
 				count--;
-				if(count>0){
-					var leftTime=timeMaker(count);				
-					$(which).text(leftTime);					
-				}else{
+				if (count > 0) {
+					var leftTime = timeMaker(count);
+					$(which).text(leftTime);
+				} else {
 					$(which).text("转换启动！");
-				}				
-			}, 1000);			
-		}
-		function timeMaker(count){
-			var leftTime = {
-					hour : 0,
-					minute : 0,
-					second : 0,
-					getTime : function() {
-						return leftTime.hour + ":" + leftTime.minute + ":" + leftTime.second;
-					}
 				}
+			}, 1000);
+		}
+		function timeMaker(count) {
+			var leftTime = {
+				hour : 0,
+				minute : 0,
+				second : 0,
+				getTime : function() {
+					return leftTime.hour + ":" + leftTime.minute + ":"
+							+ leftTime.second;
+				}
+			}
 			if (count > 0) {
 				leftTime.hour = Math.floor(count / (60 * 60));
-				leftTime.minute = Math.floor(count / 60)
-						- (leftTime.hour * 60);
-				leftTime.second = Math.floor(count)
-						- (leftTime.hour * 60 * 60)
+				leftTime.minute = Math.floor(count / 60) - (leftTime.hour * 60);
+				leftTime.second = Math.floor(count) - (leftTime.hour * 60 * 60)
 						- (leftTime.minute * 60);
 			}
 			if (leftTime.hour <= 9)
