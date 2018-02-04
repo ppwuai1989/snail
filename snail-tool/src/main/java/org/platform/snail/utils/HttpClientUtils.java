@@ -39,8 +39,6 @@ import net.sf.json.JSONObject;
 
 public class HttpClientUtils {
 
-	
-
 	public static JSONObject doGet(String url) {
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 		HttpGet httpGet = new HttpGet(url);
@@ -114,8 +112,8 @@ public class HttpClientUtils {
 	public static String doPost(String url, String json) throws Exception {
 		// PrintWriter out = null;
 		trustAll();
-		//DataOutputStream  out = null;
-		OutputStreamWriter out= null;
+		DataOutputStream out = null;
+		//OutputStreamWriter out = null;
 		BufferedReader in = null;
 		String result = "";
 		try {
@@ -126,16 +124,16 @@ public class HttpClientUtils {
 			conn.setDoOutput(true);
 			conn.setDoInput(true);
 			conn.setUseCaches(false);
-			conn.setRequestProperty("Connection", "Keep-Alive");				
+			conn.setRequestProperty("Connection", "Keep-Alive");
 			conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
 			// 发送POST请求必须设置如下两行
 			conn.setDoOutput(true);
-			conn.setDoInput(true);			
-			out= new OutputStreamWriter(conn.getOutputStream());
-			out.write(json.toString());
+			conn.setDoInput(true);
+			out = new DataOutputStream(conn.getOutputStream());			
+			out.writeBytes(json);
 			out.flush();
-			out.close();		
-			in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			out.close();
+			in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
 			String line;
 			while ((line = in.readLine()) != null) {
 				result += line;
@@ -162,7 +160,6 @@ public class HttpClientUtils {
 		return result;
 	}
 
-	
 	private static void trustAll() {
 		try {
 			trustAllHttpsCertificates();

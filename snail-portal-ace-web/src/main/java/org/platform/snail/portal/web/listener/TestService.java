@@ -25,6 +25,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 
 import org.platform.snail.utils.HttpClientUtils;
@@ -54,15 +55,24 @@ public class TestService {
 		String jsonObject;
 		try {
 			jsonObject = mapper.writeValueAsString(paramMap);
-			String url = "https://pay.paysapi.com/?format=json";			
+			String url = "https://pay.paysapi.com/?format=json";
 
 			// String i = HttpClientUtils.doPost(url, param);
-			String jsons = HttpClientUtils.doPost(url, jsonObject);			
-			JSONObject json = JSONObject.fromObject(jsons);		
-			QRCodeMsg msg = new QRCodeMsg();
-			SnailBeanUtils.copyProperties(msg, json);			
-			msg.setDataMsg(msg.getDataMsg(msg.getData()));
-			System.out.println(msg.toString());
+			System.out.println(jsonObject);
+			String jsons = HttpClientUtils.doPost(url, jsonObject);
+			
+			// QRCodeMsg msg = new QRCodeMsg();
+			// SnailBeanUtils.copyProperties(msg, json);
+			// msg.setDataMsg(msg.getDataMsg(msg.getData()));
+			// System.out.println(msg.toString());
+			Map<String, Object> jsonMsg = JSONObject.fromObject(jsons);
+			Map<String, Object> jsonData = JSONObject.fromObject(jsonMsg.get("data"));
+			//String base64Img = ImgUtils.getBase64ImgString(PayUtils.QRCODE_URL + jsonData.get("qrcode")).replaceAll("\n", "").replaceAll("\r", "");
+			String base64Img = ImgUtils.getBase64ImgString(PayUtils.QRCODE_URL + jsonData.get("qrcode"));
+			jsonData.put("qrcode", base64Img);
+			jsonMsg.put("data", jsonData);
+		
+			System.out.println(jsonMsg);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

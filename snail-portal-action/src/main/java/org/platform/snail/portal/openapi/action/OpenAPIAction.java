@@ -62,13 +62,24 @@ public class OpenAPIAction implements Serializable {
 			resultMap = PayUtils.payOrder(remoteMap);
 			if (this.openAPIService.createOrder(remoteMap)) {
 				ObjectMapper mapper = new ObjectMapper();
-				String jsonReq = mapper.writeValueAsString(resultMap);
-				String jsonRes = HttpClientUtils.doPost(PayUtils.BASE_URL, jsonReq);	
-				JSONObject jsonObj = JSONObject.fromObject(jsonRes);	
-				QRCodeMsg msg = new QRCodeMsg();
-				SnailBeanUtils.copyProperties(msg, jsonObj);	
-				msg.setDataMsg(msg.getDataMsg(msg.getData()));				
-				dr.setResponse(msg);
+				resultMap.remove("amount");
+				resultMap.remove("orderuname");//请求时去除姓名
+				String jsonReq = mapper.writeValueAsString(resultMap);					
+				System.out.println(jsonReq);
+				String jsonRes = HttpClientUtils.doPost(PayUtils.BASE_URL, jsonReq);			
+				Map<String, Object> jsonMsg = JSONObject.fromObject(jsonRes);
+				Map<String, Object> jsonData = JSONObject.fromObject(jsonMsg.get("data"));				
+				String base64Img = ImgUtils.getBase64ImgString(PayUtils.QRCODE_URL + jsonData.get("qrcode"));
+				jsonData.put("qrcode", base64Img);
+				jsonMsg.put("data", jsonData);
+				jsonMsg.put("orderid", remoteMap.get("orderid"));
+				// QRCodeMsg msg = new QRCodeMsg();
+				// SnailBeanUtils.copyProperties(msg, jsonObj);
+				// msg.setDataMsg(msg.getDataMsg(msg.getData()));
+				// System.out.println(msg.toString());
+				// dr.setResponse(msg);
+				System.out.println(jsonMsg);
+				dr.setResponse(jsonMsg);
 				dr.setState(true);
 				return dr;
 			} else {
