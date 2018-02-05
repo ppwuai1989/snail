@@ -50,10 +50,11 @@ jQuery(function($) {
 						rownumWidth : 60,
 						multiselect : false,
 						// multikey: "ctrlKey",
-						multiboxonly : true,						
+						multiboxonly : true,
 						loadComplete : function(XMLHttpRequest, textStatus) {
-							
-							console.log("loadComplete----------------------------------------");
+
+							console
+									.log("loadComplete----------------------------------------");
 							var table = this;
 							$(cfg.grid_selector).jqGrid('setGridWidth',
 									$(".page-content").width());
@@ -63,23 +64,26 @@ jQuery(function($) {
 								updatePagerIcons(table);
 								enableTooltips(table);
 							}, 0);
-						},		
+						},
 						gridComplete : function(XMLHttpRequest, textStatus) {
-							console.log("kicked Start----------------------------------------");
-//							var redirect = XMLHttpRequest.getResponseHeader("KICKED");
-//							 if (redirect == "KICKED") {  
-//					                var win = window;    
-//					                while (win != win.top){  
-//					                    win = win.top;  
-//					                }  
-//					              //将后端重定向的地址取出来,使用win.location.href去实现重定向的要求  
-//					              win.location.href= XMLHttpRequest.getResponseHeader("KICKEDPATH");    
-//					            }  
-							},
+							console
+									.log("kicked Start----------------------------------------");
+							// var redirect =
+							// XMLHttpRequest.getResponseHeader("KICKED");
+							// if (redirect == "KICKED") {
+							// var win = window;
+							// while (win != win.top){
+							// win = win.top;
+							// }
+							// //将后端重定向的地址取出来,使用win.location.href去实现重定向的要求
+							// win.location.href=
+							// XMLHttpRequest.getResponseHeader("KICKEDPATH");
+							// }
+						},
 
 						editurl : cfg.grid_edit_data_url,// nothing is saved
 						addurl : cfg.grid_add_data_url,
-						deleteurl : cfg.grid_delete_data_url,						
+						deleteurl : cfg.grid_delete_data_url,
 						caption : cfg.caption
 
 					// ,autowidth: true,
@@ -340,9 +344,13 @@ function style_edit_form(form) {
 		format : 'yyyy-mm-dd',
 		autoclose : true
 	}).end().find('input[name=status]').addClass('ace ace-switch ace-switch-5')
-			.after('<span class="lbl"></span>')
-			.end().find('input[name=isAgent]').addClass('ace ace-switch ace-switch-4')
-			.after('<span class="lbl"></span>');
+			.after('<span class="lbl"></span>').end().find(
+					'input[name=isAgent]').addClass(
+					'ace ace-switch ace-switch-4').after(
+					'<span class="lbl"></span>').end().find(
+					'input[name=isOperator]').addClass(
+					'ace ace-switch ace-switch-4').after(
+					'<span class="lbl"></span>');
 	var buttons = form.next().find('.EditButton .fm-button');
 	buttons.addClass('btn btn-sm').find('[class*="-icon"]').hide();// ui-icon,
 	buttons.eq(0).addClass('btn-primary').prepend(

@@ -35,6 +35,7 @@
 			jdbcType="INTEGER" />
 		<result column="AGENT_LEVEL" property="agentLevel" jdbcType="VARCHAR" />
 		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="is_operator" property="isOperator" jdbcType="VARCHAR" />
 	</resultMap>
 	<resultMap id="memberVo" extends="member"
 		type="org.platform.snail.portal.vo.MemberVo">
@@ -152,6 +153,9 @@
 		update
 		t_users
 		<set>
+			<if test="member.isOperator != null and member.isOperator !=''">
+				is_operator = #{member.isOperator,jdbcType=VARCHAR},
+			</if>
 			<if test="member.name != null and member.name!=''">
 				NAME = #{member.name,jdbcType=VARCHAR},
 			</if>

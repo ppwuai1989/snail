@@ -3,7 +3,7 @@ var _colNames = [ '代理标识', '代理等级', '代理编号', '上级编号'
 		'<span class="label label-lg label-pink arrowed-right">金币</span>',
 		'<span class="label label-lg label-grey arrowed-right">房卡</span>',
 		'<span class="label label-lg label-success arrowed-right">比武卡</span>',
-		'积分', '状态', '最后登录时间', '微信号', '注册日期' ];
+		'积分', '状态', '最后登录时间', '微信号','超级用户', '注册日期' ];
 var _colModel = function() {
 	return [
 			{
@@ -238,6 +238,28 @@ var _colModel = function() {
 					size : "20",
 					maxlength : "11",
 					readonly : true
+				}
+			}, {
+				name : 'isOperator',
+				width : 30,
+				editable : true,
+				edittype : "checkbox",
+				editoptions : {
+					value : "1:0",
+				},
+				renderer : function(value) {
+					var rst = "";
+					switch (value) {
+					case '1':
+						rst = "是";
+						break;
+					case '0':
+						rst = "否";
+						break;
+					default:
+						rst = "N/A";
+					}
+					return rst;
 				}
 			}, {
 				name : 'createTime',

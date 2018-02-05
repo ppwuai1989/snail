@@ -48,6 +48,8 @@ public class Member implements Serializable {
 	private Date createTime;
 
 	private String status;
+	
+	private String isOperator;
 
 	public String getProvince() {
 		return province;
@@ -315,6 +317,14 @@ public class Member implements Serializable {
 
 	public void setScore(String score) {
 		this.score = score;
+	}
+
+	public String getIsOperator() {
+		return isOperator;
+	}
+
+	public void setIsOperator(String isOperator) {
+		this.isOperator = isOperator;
 	}
 
 }
