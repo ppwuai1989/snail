@@ -16,7 +16,7 @@
 	</resultMap>
 
 	<insert id="insert" parameterType="org.platform.snail.model.Logs">
-		insert into LOGS (
+		insert into logs (
 		ID,
 		LOG,
 		USER_ID,

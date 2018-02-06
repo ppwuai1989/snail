@@ -179,7 +179,7 @@
 		)
 	</insert>
 	<update id="updatePassword">
-		update USERS
+		update users
 		set password =
 		#{password,jdbcType=VARCHAR}
 		where USER_ID = #{userId,jdbcType=INTEGER}
@@ -379,7 +379,7 @@
 		t.department_name name,
 		a.name areaName,
 		dict.name levels
-		from DEPARTMENT t, province a,(select * from dict d
+		from department t, province a,(select * from dict d
 		where
 		d.category_id='23') dict
 		where substr(t.AREA_CODE,0,8) = a.code
