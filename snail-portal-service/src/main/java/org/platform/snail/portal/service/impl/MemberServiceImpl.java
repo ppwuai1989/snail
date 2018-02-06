@@ -459,7 +459,6 @@ public class MemberServiceImpl implements MemberService {
 				return new DataResponse(false, "手机号已经被其他玩家绑定，请重新输入，或联系客服！");
 			}
 			// 向用户表插入数据，并且向角色-权限表中添加 该用户数据，使其获得相应权限
-
 			Users user = new Users();
 			user.setAccount(memberInfo.getMobile());// 设置手机为账户
 			user.setSex(memberInfo.getSex());

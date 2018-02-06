@@ -63,12 +63,12 @@ public class OpenAPIAction implements Serializable {
 			if (this.openAPIService.createOrder(remoteMap)) {
 				ObjectMapper mapper = new ObjectMapper();
 				resultMap.remove("amount");
-				resultMap.remove("orderuname");//请求时去除姓名
-				String jsonReq = mapper.writeValueAsString(resultMap);					
+				resultMap.remove("orderuname");// 请求时去除姓名
+				String jsonReq = mapper.writeValueAsString(resultMap);
 				System.out.println(jsonReq);
-				String jsonRes = HttpClientUtils.doPost(PayUtils.BASE_URL, jsonReq);			
+				String jsonRes = HttpClientUtils.doPost(PayUtils.BASE_URL, jsonReq);
 				Map<String, Object> jsonMsg = JSONObject.fromObject(jsonRes);
-				Map<String, Object> jsonData = JSONObject.fromObject(jsonMsg.get("data"));				
+				Map<String, Object> jsonData = JSONObject.fromObject(jsonMsg.get("data"));
 				String base64Img = ImgUtils.getBase64ImgString(PayUtils.QRCODE_URL + jsonData.get("qrcode"));
 				jsonData.put("qrcode", base64Img);
 				jsonMsg.put("data", jsonData);
@@ -137,6 +137,12 @@ public class OpenAPIAction implements Serializable {
 		return dr;
 	}
 
+	/**
+	 * 解析跨域图片 返回 "data:image/png;base64,XXXXX"图片
+	 * 
+	 * @param url
+	 * @return
+	 */
 	@RequestMapping("/getBase64Img.do")
 	@ResponseBody
 	public String getBase64Img(String url) {
@@ -148,4 +154,27 @@ public class OpenAPIAction implements Serializable {
 		return rst;
 	}
 
+	/**
+	 * 申请成为代理(此接口不完善，后期需要改善为 添加一条 代理申请记录，由后台审核通过)
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/applyToBeAgent.do")
+	@ResponseBody
+	public DataResponse applyToBeAgent(HttpServletRequest request) {
+		// 解析request中参数
+		try {
+			Map<String, String> reqMap = new HashMap<String, String>();
+			Enumeration<String> e = request.getParameterNames();
+			while (e.hasMoreElements()) {
+				String key = e.nextElement();
+				String value = request.getParameter(key);
+				reqMap.put(key, value);
+			}
+			return this.openAPIService.applyToBEAgent(reqMap);
+		} catch (Exception e) {
+			return new DataResponse(false, "申请代理异常！");
+		}
+
+	}
 }
