@@ -10,9 +10,9 @@ import org.apache.http.message.BasicNameValuePair;
 public class WeChatRequest implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String getCode = "https://open.weixin.qq.com/connect/oauth2/authorize?" + "appid=wxe96bbd4187ab4e71"
-			+ "&redirect_uri=http://paopao.viphk.ngrok.org/portal/weChat/weChatLogin.do" + "&response_type=code"
-			+ "&scope=snsapi_userinfo" + "&state=123" + "#wechat_redirect";
+//	private String getCode = "https://open.weixin.qq.com/connect/oauth2/authorize?" + "appid=wxe96bbd4187ab4e71"
+//			+ "&redirect_uri=http://paopao.viphk.ngrok.org/portal/weChat/weChatLogin.do" + "&response_type=code"
+//			+ "&scope=snsapi_userinfo" + "&state=123" + "#wechat_redirect";
 
 	public String getOAuthInfo() {
 		String url = accessTokenUrl + "?appid=" + appId + "&secret=" + appSecret + "&code=" + code + "&grant_type="

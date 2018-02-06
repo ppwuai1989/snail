@@ -44,7 +44,7 @@
 		select 1 from dual
 	</select>
 	<sql id="usersPagingWhereCondition">
-		from T_USERS t where 1=1
+		from t_users t where 1=1
 		<if test='condition.userId !=null and condition.userId!=""'>
 			and t.userid =#{condition.userId,jdbcType=VARCHAR}
 		</if>

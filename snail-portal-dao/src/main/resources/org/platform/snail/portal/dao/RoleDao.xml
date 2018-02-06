@@ -16,7 +16,7 @@
 		select 1 from dual
 	</select>
 	<insert id="insertRole" parameterType="org.platform.snail.model.Role">
-		insert into ROLE (ROLE_ID,
+		insert into role (ROLE_ID,
 		ROLE_NAME, CREATE_TIME,
 		CREATE_USER_ID,
 		REMARK)
@@ -26,7 +26,7 @@
 		#{role.remark,jdbcType=VARCHAR})
 	</insert>
 	<update id="updateRoleByPrimaryKey" parameterType="org.platform.snail.model.Role">
-		update ROLE
+		update role
 		set ROLE_NAME = #{role.roleName,jdbcType=VARCHAR},
 		REMARK =
 		#{role.remark,jdbcType=VARCHAR}
@@ -35,10 +35,10 @@
 	</update>
 
 	<sql id="rolePagingWhereCondition">
-		from Role,USERS where Role.CREATE_USER_ID=USERS.USER_ID
+		from role,users where role.CREATE_USER_ID=users.USER_ID
 
 		<if test='condition.roleName!=null and condition.roleName!=""'>
-			and Role.role_name like
+			and role.role_name like
 			concat(#{condition.roleName,jdbcType=VARCHAR},'%')
 		</if>
 	</sql>
@@ -47,8 +47,8 @@
 		<include refid="rolePagingWhereCondition" />
 	</select>
 	<select id="findRoleList" resultMap="roleVo">
-		select Role.role_id, Role.role_name, Role.create_time,
-		Role.create_user_id, Role.remark ,
+		select role.role_id, role.role_name, role.create_time,
+		role.create_user_id, role.remark ,
 		users.name
 		<include refid="rolePagingWhereCondition" />
 		<choose>
@@ -56,19 +56,19 @@
 				ORDER BY ${orderBy}
 			</when>
 			<otherwise>
-				ORDER BY Role.role_id
+				ORDER BY role.role_id
 			</otherwise>
 		</choose>
 		limit #{start},#{limit}
 	</select>
 	<select id="selectRoleVoByPrimaryKey" resultMap="roleVo"
 		parameterType="java.lang.String">
-		select Role.role_id, Role.role_name, Role.create_time,
-		Role.create_user_id, Role.remark ,
+		select role.role_id, role.role_name, role.create_time,
+		role.create_user_id, role.remark ,
 		users.name
-		from Role,USERS where
-		Role.CREATE_USER_ID=USERS.USER_ID
-		and Role.role_id =
+		from role,users where
+		role.CREATE_USER_ID=users.USER_ID
+		and role.role_id =
 		#{roleId,jdbcType=INTEGER}
 	</select>
 	<select id="selectRoleResourceTreeList" resultType="map">
