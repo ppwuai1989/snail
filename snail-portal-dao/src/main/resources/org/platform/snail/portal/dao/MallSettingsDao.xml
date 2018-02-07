@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.platform.snail.portal.dao.MallSettingsDao">
+	<resultMap id="settings" type="org.platform.snail.portal.model.MallSettings">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="goods_id" jdbcType="VARCHAR" property="goodsId" />
+		<result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+		<result column="amount" jdbcType="INTEGER" property="amount" />
+		<result column="price" jdbcType="VARCHAR" property="price" />
+		<result column="junior_rate" jdbcType="VARCHAR" property="juniorRate" />
+		<result column="medium_rate" jdbcType="VARCHAR" property="mediumRate" />
+		<result column="senior_rate" jdbcType="VARCHAR" property="seniorRate" />
+		<result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+	</resultMap>
+	<resultMap id="settingsVo" type="org.platform.snail.portal.vo.MallSettingsVo"
+		extends="settings">
+	</resultMap>
+
+	<!-- insert into t_mall_settings
+	(goods_id,goods_name,amount,price,junior_rate,medium_rate,senior_rate,create_time)
+	values(1,'金币',120000,'12','0.95','0.9','0.8',now()); -->
+
+	<sql id="findListWhereCondition">
+
+		<if test="condition.categoryId!=null and condition.categoryId!=''">
+
+		</if>
+		<if test="condition.name!=null and condition.name!=''">
+
+		</if>
+	</sql>
+
+	<select id="findListCount" resultType="int">
+		select count(*)
+		<include refid="findListWhereCondition" />
+	</select>
+
+	<select id="findList">
+		select
+	</select>
+
+</mapper>
