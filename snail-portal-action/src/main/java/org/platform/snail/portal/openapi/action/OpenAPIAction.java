@@ -175,6 +175,39 @@ public class OpenAPIAction implements Serializable {
 		} catch (Exception e) {
 			return new DataResponse(false, "申请代理异常！");
 		}
-
 	}
+
+	/**
+	 * 获取商城信息 返回参数列表格式 rst{ coins{ list1{id,amount,price,...}, list2, list3 }}
+	 * 
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/getMallInfo.do")
+	@ResponseBody
+	public DataResponse getMallInfo(HttpServletRequest request) {
+		// 解析request中参数
+		try {
+			Map<String, String> reqMap = new HashMap<String, String>();
+			Enumeration<String> e = request.getParameterNames();
+			while (e.hasMoreElements()) {
+				String key = e.nextElement();
+				String value = request.getParameter(key);
+				reqMap.put(key, value);
+			}
+			if (reqMap.containsKey("userId")) {
+				String userId = reqMap.get("userId");
+				int way = 1;
+				// if (SnailUtils.isNotBlankString(reqMap.get("way"))) {
+				// way = Integer.valueOf(reqMap.get("way"));
+				// }
+				return this.openAPIService.getMallInfo(userId, way);
+			} else {
+				return new DataResponse(false, "请检查参数格式！");
+			}
+		} catch (Exception e) {
+			return new DataResponse(false, "获取商城信息异常！");
+		}
+	}
+
 }

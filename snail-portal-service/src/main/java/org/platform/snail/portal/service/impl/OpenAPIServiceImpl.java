@@ -1,18 +1,22 @@
 package org.platform.snail.portal.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.platfom.snail.pay.model.PaySaPi;
 import org.platform.snail.beans.DataResponse;
 import org.platform.snail.beans.ValidateResult;
 import org.platform.snail.model.Users;
+import org.platform.snail.portal.dao.MallSettingsDao;
 import org.platform.snail.portal.dao.MemberDao;
 import org.platform.snail.portal.dao.OpenAPIDao;
 import org.platform.snail.portal.dao.UsersDao;
 import org.platform.snail.portal.model.Member;
 import org.platform.snail.portal.model.TopUpRecords;
 import org.platform.snail.portal.service.OpenAPIService;
+import org.platform.snail.portal.vo.MallSettingsVo;
 import org.platform.snail.portal.vo.MemberVo;
 import org.platform.snail.portal.vo.TopUpRecordsVo;
 import org.platform.snail.utils.CommonKeys;
@@ -22,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("openAPIService")
-public class OpenAPIActionServiceImpl implements OpenAPIService {
+public class OpenAPIServiceImpl implements OpenAPIService {
 
 	@Autowired
 	private OpenAPIDao openAPIDao;
@@ -30,6 +34,8 @@ public class OpenAPIActionServiceImpl implements OpenAPIService {
 	private MemberDao memberDao;
 	@Autowired
 	private UsersDao usersDao;
+	@Autowired
+	private MallSettingsDao mallSettingsDao;
 
 	@Override
 	public boolean createOrder(Map<String, Object> order) throws Exception {
@@ -197,6 +203,93 @@ public class OpenAPIActionServiceImpl implements OpenAPIService {
 		} else {
 			return new DataResponse(false, "未查询到会员信息，申请失败！");
 		}
+	}
+
+	@Override
+	public DataResponse getMallInfo(String userId, int way) throws Exception {
+		DataResponse rst = new DataResponse();
+		MemberVo memInfo = this.memberDao.selectMemberVoByPrimaryKey(userId);
+		if (memInfo != null) {
+			long s = System.currentTimeMillis();
+			// 程序方式实现
+			if (way == 1) {
+				List<MallSettingsVo> list = this.mallSettingsDao.findAllList();
+				if (list != null && list.size() > 0) {
+					Map<String, Object> rstMap = this.getMallInfoMap(list, memInfo.getAgentLevel());
+					rst.setResponse(rstMap);
+					rst.setState(true);
+				} else {
+					return new DataResponse(false, "商城信息为空！");
+				}
+			} else {
+				// sql实现
+				List<MallSettingsVo> list = this.mallSettingsDao.findAllListByAgentLevel(memInfo.getAgentLevel());
+				if (list != null && list.size() > 0) {
+					rst.setResponse(list);
+					rst.setState(true);
+				} else {
+					return new DataResponse(false, "商城信息为空！");
+				}
+			}
+			long e = System.currentTimeMillis();
+			System.out.println("service耗时：" + (e - s) + "毫秒");
+		} else {
+			return new DataResponse(false, "会员信息不存在！");
+		}
+		return rst;
+	}
+
+	private Map<String, Object> getMallInfoMap(List<MallSettingsVo> list, String level) {
+		Map<String, Object> rstMap = new HashMap<String, Object>();
+		List<Map<String, String>> coinsList = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> pkCardList = new ArrayList<Map<String, String>>();
+		Map<String, String> settingsMap = new HashMap<String, String>();
+		for (MallSettingsVo i : list) {
+			String rate = "1";
+			switch (level) {
+			case CommonKeys.junior:
+				rate = i.getJuniorRate();
+				break;
+			case CommonKeys.medium:
+				rate = i.getMediumRate();
+				break;
+			case CommonKeys.senior:
+				rate = i.getSeniorRate();
+				break;
+			default:
+				break;
+			}
+			settingsMap = getSettings(i, rate);
+			if (settingsMap != null) {
+				switch (i.getGoodsId()) {
+				case CommonKeys.goods_coins:
+					coinsList.add(settingsMap);
+					break;
+				case CommonKeys.goods_pkCard:
+					pkCardList.add(settingsMap);
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		rstMap.put("coins", coinsList);
+		rstMap.put("pkCard", pkCardList);
+		return rstMap;
+	}
+
+	private Map<String, String> getSettings(MallSettingsVo vo, String rate) {
+		Map<String, String> rstMap = new HashMap<String, String>();
+		rstMap.put("price", vo.getPrice());
+		rstMap.put("amount", vo.getAmount());
+		rstMap.put("rate", rate);
+		String realAmount = vo.getAmount();
+		if (!rate.equals("1")) {
+			int real = (int) (Float.valueOf(realAmount) * Float.valueOf(rate));
+			realAmount = String.valueOf(real);
+		}
+		rstMap.put("realAmount", realAmount);
+		return rstMap;
 	}
 
 }

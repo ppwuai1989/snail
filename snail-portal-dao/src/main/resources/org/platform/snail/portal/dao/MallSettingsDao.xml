@@ -14,19 +14,15 @@
 	</resultMap>
 	<resultMap id="settingsVo" type="org.platform.snail.portal.vo.MallSettingsVo"
 		extends="settings">
+		<result column="real_amount" jdbcType="VARCHAR" property="realAmount" />
+		<result column="rate" jdbcType="VARCHAR" property="rate" />
 	</resultMap>
 
-	<!-- insert into t_mall_settings
-	(goods_id,goods_name,amount,price,junior_rate,medium_rate,senior_rate,create_time)
-	values(1,'金币',120000,'12','0.95','0.9','0.8',now()); -->
-
 	<sql id="findListWhereCondition">
-
-		<if test="condition.categoryId!=null and condition.categoryId!=''">
-
-		</if>
-		<if test="condition.name!=null and condition.name!=''">
-
+		from t_mall_settings t
+		where 1=1
+		<if test="condition.goodsId!=null and condition.goodsId!=''">
+			and t.goods_id=#{condition.goodsId,jdbcType=INTEGER}
 		</if>
 	</sql>
 
@@ -35,8 +31,129 @@
 		<include refid="findListWhereCondition" />
 	</select>
 
-	<select id="findList">
-		select
+	<select id="findList" resultMap="settingsVo">
+		select *
+		<include refid="findListWhereCondition" />
+		<choose>
+			<when test="orderBy!=null and orderBy!=''">
+				ORDER BY ${orderBy}
+			</when>
+			<otherwise>
+				ORDER BY t.goods_id
+			</otherwise>
+		</choose>
+		limit #{start},#{limit}
 	</select>
 
+	<insert id="insertSettings" parameterType="org.platform.snail.portal.model.MallSettings">
+		insert into t_mall_settings
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="goods_id != null">
+				goods_id,
+			</if>
+			<if test="amount != null">
+				amount,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="junior_rate != null">
+				junior_rate,
+			</if>
+			<if test="medium_rate != null">
+				medium_rate,
+			</if>
+			<if test="senior_rate != null">
+				senior_rate,
+			</if>
+			create_time,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="goodsId != null">
+				#{goodsId,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null">
+				#{amount,jdbcType=INTEGER},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=VARCHAR},
+			</if>
+			<if test="juniorRate != null">
+				#{juniorRate,jdbcType=VARCHAR},
+			</if>
+			<if test="mediumRate != null">
+				#{mediumRate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="seniorRate != null">
+				#{seniorRate,jdbcType=TIMESTAMP},
+			</if>
+			now(),
+		</trim>
+	</insert>
+
+	<update id="updateSettingsById">
+		update t_mall_settings t
+		<set>
+			<if test="goodsId != null and goodsId !=''">
+				t.goods_id=#{goodsId,jdbcType=VARCHAR}
+			</if>
+			<if test="amount != null and amount !=''">
+				t.amount=#{amount,jdbcType=INTEGER}
+			</if>
+			<if test="price != null and price !=''">
+				t.price=#{price,jdbcType=VARCHAR}
+			</if>
+			<if test="juniorRate != null and juniorRate !=''">
+				t.junior_rate=#{juniorRate,jdbcType=VARCHAR}
+			</if>
+			<if test="mediumRate != null and mediumRate !=''">
+				t.medium_rate=#{mediumRate,jdbcType=VARCHAR}
+			</if>
+			<if test="seniorRate != null and seniorRate !=''">
+				t.senior_rate=#{seniorRate,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where t.id=#{id,jdbcType=INTEGER}
+	</update>
+
+	<delete id="deleteSettingsById" parameterType="java.lang.Integer">
+		delete from
+		t_mall_settings t
+		where t.id=#{id,jdbcType=INTEGER}
+	</delete>
+
+	<select id="isExitsUnique" resultType="int">
+		select count(*) from
+		t_mall_settings t
+		where
+		t.goods_id=#{goodsId,jdbcType=VARCHAR} and
+		t.price=#{price,jdbcType=VARCHAR}
+	</select>
+
+	<select id="findAllList" resultMap="settingsVo">
+		select * from t_mall_settings
+		t order by t.goods_id desc,t.price desc
+	</select>
+
+	<select id="findAllListByAgentLevel" resultMap="settingsVo">
+		SELECT
+		t.id,
+		t.goods_id,
+		t.price,
+		t.amount,
+		r.rate,
+		t.amount * r.rate real_amount
+		FROM
+		t_mall_settings t,(
+		SELECT t.id,(CASE WHEN
+		#{level,jdbcType=VARCHAR}='1' THEN t.junior_rate WHEN
+		#{level,jdbcType=VARCHAR}='2' THEN
+		t.medium_rate WHEN
+		#{level,jdbcType=VARCHAR}='3' THEN t.senior_rate
+		else '1' END) rate
+		from
+		t_mall_settings t) r
+		WHERE t.id=r.id
+		order by t.goods_id desc,t.price desc
+	</select>
 </mapper>
