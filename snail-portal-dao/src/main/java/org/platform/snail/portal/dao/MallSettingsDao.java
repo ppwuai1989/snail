@@ -19,11 +19,12 @@ public interface MallSettingsDao {
 
 	public abstract int deleteSettingsById(String id);
 
-	public abstract int isExitsUnique(@Param("goodsId") String goodsId, @Param("price") String price);
-	
-	//查出所有商城信息
+	public abstract int isExitsUnique(@Param("goodsId") String goodsId, @Param("price") String price,
+			@Param("id") String id);
+
+	// 查出所有商城信息
 	public abstract List<MallSettingsVo> findAllList();
-	
+
 	public abstract List<MallSettingsVo> findAllListByAgentLevel(@Param("level") String level);
 
 }

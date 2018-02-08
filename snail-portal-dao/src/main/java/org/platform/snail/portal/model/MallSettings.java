@@ -84,5 +84,11 @@ public class MallSettings implements Serializable {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-
+	@Override
+	public String toString() {
+		return "MallSettings [id=" + id + ", goodsId=" + goodsId + ", goodsName=" + goodsName + ", amount=" + amount
+				+ ", price=" + price + ", juniorRate=" + juniorRate + ", mediumRate=" + mediumRate + ", seniorRate="
+				+ seniorRate + ", createTime=" + createTime + "]";
+	}
+	
 }

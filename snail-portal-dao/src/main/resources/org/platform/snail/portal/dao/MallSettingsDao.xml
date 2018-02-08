@@ -39,7 +39,7 @@
 				ORDER BY ${orderBy}
 			</when>
 			<otherwise>
-				ORDER BY t.goods_id
+				order by t.goods_id ,t.price
 			</otherwise>
 		</choose>
 		limit #{start},#{limit}
@@ -48,7 +48,7 @@
 	<insert id="insertSettings" parameterType="org.platform.snail.portal.model.MallSettings">
 		insert into t_mall_settings
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="goods_id != null">
+			<if test="goodsId != null">
 				goods_id,
 			</if>
 			<if test="amount != null">
@@ -57,13 +57,13 @@
 			<if test="price != null">
 				price,
 			</if>
-			<if test="junior_rate != null">
+			<if test="juniorRate != null">
 				junior_rate,
 			</if>
-			<if test="medium_rate != null">
+			<if test="mediumRate != null">
 				medium_rate,
 			</if>
-			<if test="senior_rate != null">
+			<if test="seniorRate != null">
 				senior_rate,
 			</if>
 			create_time,
@@ -95,22 +95,22 @@
 		update t_mall_settings t
 		<set>
 			<if test="goodsId != null and goodsId !=''">
-				t.goods_id=#{goodsId,jdbcType=VARCHAR}
+				t.goods_id=#{goodsId,jdbcType=VARCHAR},
 			</if>
 			<if test="amount != null and amount !=''">
-				t.amount=#{amount,jdbcType=INTEGER}
+				t.amount=#{amount,jdbcType=INTEGER},
 			</if>
 			<if test="price != null and price !=''">
-				t.price=#{price,jdbcType=VARCHAR}
+				t.price=#{price,jdbcType=VARCHAR},
 			</if>
 			<if test="juniorRate != null and juniorRate !=''">
-				t.junior_rate=#{juniorRate,jdbcType=VARCHAR}
+				t.junior_rate=#{juniorRate,jdbcType=VARCHAR},
 			</if>
 			<if test="mediumRate != null and mediumRate !=''">
-				t.medium_rate=#{mediumRate,jdbcType=VARCHAR}
+				t.medium_rate=#{mediumRate,jdbcType=VARCHAR},
 			</if>
 			<if test="seniorRate != null and seniorRate !=''">
-				t.senior_rate=#{seniorRate,jdbcType=VARCHAR}
+				t.senior_rate=#{seniorRate,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where t.id=#{id,jdbcType=INTEGER}
@@ -128,11 +128,14 @@
 		where
 		t.goods_id=#{goodsId,jdbcType=VARCHAR} and
 		t.price=#{price,jdbcType=VARCHAR}
+		<if test="id != null and id !=''">
+			and t.id!=#{id,jdbcType=INTEGER}
+		</if>
 	</select>
 
 	<select id="findAllList" resultMap="settingsVo">
 		select * from t_mall_settings
-		t order by t.goods_id desc,t.price desc
+		t order by t.goods_id ,t.price 
 	</select>
 
 	<select id="findAllListByAgentLevel" resultMap="settingsVo">
@@ -154,6 +157,6 @@
 		from
 		t_mall_settings t) r
 		WHERE t.id=r.id
-		order by t.goods_id desc,t.price desc
+		order by t.goods_id ,t.price
 	</select>
 </mapper>

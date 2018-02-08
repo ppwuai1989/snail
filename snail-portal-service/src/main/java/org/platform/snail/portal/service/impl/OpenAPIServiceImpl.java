@@ -232,7 +232,7 @@ public class OpenAPIServiceImpl implements OpenAPIService {
 				}
 			}
 			long e = System.currentTimeMillis();
-			System.out.println("service耗时：" + (e - s) + "毫秒");
+			//System.out.println("service耗时：" + (e - s) + "毫秒");
 		} else {
 			return new DataResponse(false, "会员信息不存在！");
 		}
