@@ -215,7 +215,8 @@ public class OpenAPIServiceImpl implements OpenAPIService {
 			if (way == 1) {
 				List<MallSettingsVo> list = this.mallSettingsDao.findAllList();
 				if (list != null && list.size() > 0) {
-					Map<String, Object> rstMap = this.getMallInfoMap(list, memInfo.getAgentLevel());
+					Map<String, Object> rstMap = this.getMallInfoMap(list,
+							memInfo.getAgentLevel() == null ? "" : memInfo.getAgentLevel());
 					rst.setResponse(rstMap);
 					rst.setState(true);
 				} else {
@@ -232,7 +233,7 @@ public class OpenAPIServiceImpl implements OpenAPIService {
 				}
 			}
 			long e = System.currentTimeMillis();
-			//System.out.println("service耗时：" + (e - s) + "毫秒");
+			// System.out.println("service耗时：" + (e - s) + "毫秒");
 		} else {
 			return new DataResponse(false, "会员信息不存在！");
 		}
@@ -244,8 +245,8 @@ public class OpenAPIServiceImpl implements OpenAPIService {
 		List<Map<String, String>> coinsList = new ArrayList<Map<String, String>>();
 		List<Map<String, String>> pkCardList = new ArrayList<Map<String, String>>();
 		Map<String, String> settingsMap = new HashMap<String, String>();
+		String rate = "1";
 		for (MallSettingsVo i : list) {
-			String rate = "1";
 			switch (level) {
 			case CommonKeys.junior:
 				rate = i.getJuniorRate();

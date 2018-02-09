@@ -183,6 +183,9 @@
 									$("#system-state").parent().hide();
 									$("#switch-leftTime").parent().hide();
 								}
+							} else {
+								$("#system-state").parent().hide();
+								$("#switch-leftTime").parent().hide();
 							}
 						}
 					});

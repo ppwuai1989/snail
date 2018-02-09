@@ -174,9 +174,9 @@
 									</h4>
 
 									<div class="space-6"></div>
-									<p>输入注册的Email</p>
+									<p>请拨打客服电话：12345678910</p>
 									<div class="space-6"></div>
-									<form>
+									<!-- <form>
 										<fieldset>
 											<label class="block clearfix"> <span
 												class="block input-icon input-icon-right"> <input
@@ -195,7 +195,7 @@
 												</button>
 											</div>
 										</fieldset>
-									</form>
+									</form> -->
 								</div>
 								<!-- /.widget-main -->
 
@@ -295,11 +295,11 @@
 	</div>
 	<!-- /.main-content -->
 	<div align="center">
-		<h6>
+		<!-- <h6>
 			建议WIN7以上系统使用IE9以上浏览器，XP、MAC系统使用<a
 				href="http://rj.baidu.com/soft/detail/14744.html?ald"
 				target="_blank">谷歌浏览器</a> 分辨率1024*768以上为佳
-		</h6>
+		</h6> -->
 	</div>
 </div>
 <!-- /.main-container -->

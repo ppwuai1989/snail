@@ -175,7 +175,6 @@
 				select * from t_system_state t
 				where
 				t.game_type=#{gameType,jdbcType=VARCHAR}
-
 			</when>
 			<otherwise>
 				select sum(income) income from t_system_state
