@@ -231,7 +231,7 @@
 
 	</insert>
 	<select id="selectRoleList" resultMap="role">
-		select * from ROLE t
+		select * from role t
 	</select>
 	<select id="selectRoleListByUserId" resultMap="role">
 		select *
